@@ -2,15 +2,14 @@
 using Core.Common.Enums;
 using Core.Entities;
 using Core.Interfaces;
+using Core.ViewModels.HoleVM;
 using Core.ViewModels.SaleBillPrintVM;
 using Core.ViewModels.SaleBillVM;
-using iTextSharp.text.pdf;
 using iTextSharp.text;
-using Microsoft.AspNetCore.Http;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Core.ViewModels.HoleVM;
 
 namespace SiteFront.Areas.Cashier.Controllers
 {
@@ -321,7 +320,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             if (allDagagAmount > 0)
             {
                 var realDagagAmount = _chickenHoleMovementRepo.GetAllAsync(c => dagagHoleIds.Contains(c.HoleId)).Result
-                    .Where(c=>c.Date.Date==today.Date).Sum(c => c.AmountIn - c.AmountOut);
+                    .Where(c => c.Date.Date == today.Date).Sum(c => c.AmountIn - c.AmountOut);
                 if (allDagagAmount > realDagagAmount || realDagagAmount == 0)
                     return BadRequest();
             }
@@ -593,7 +592,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 double halfDagag = productById.HalfDagag ?? 0.0;
                 var dagagValue = (dagag + halfDagag * 0.5) * detailAmount;
 
-                foreach (var dagagHole in dagagHoles.OrderByDescending(d=>d.EndTime))
+                foreach (var dagagHole in dagagHoles.OrderByDescending(d => d.EndTime))
                 {
                     if (dagagHole.Amount >= dagagValue)
                     {
@@ -645,7 +644,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             if (productById.Nafr != null)
             {
                 var nafrValue = (double)productById.Nafr * detailAmount;
-                foreach (var meatHole in meatHoles.OrderByDescending(m=>m.EndTime))
+                foreach (var meatHole in meatHoles.OrderByDescending(m => m.EndTime))
                 {
                     if (meatHole.NafrAmount >= nafrValue)
                     {

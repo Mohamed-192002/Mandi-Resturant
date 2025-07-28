@@ -1,16 +1,14 @@
 using Core.Interfaces;
-using Infrastracture.Services.Permission;
 using Infrastracture.Services;
+using Infrastracture.Services.Permission;
 using Infrastructure.Data;
 using Infrastructure.Helper;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
-using Microsoft.AspNetCore.Identity;
-using Core.Entities;
-using SiteFront.Services;
 using SiteFront.Hubs;
+using SiteFront.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

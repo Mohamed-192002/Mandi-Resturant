@@ -141,10 +141,10 @@ namespace SiteFront.Areas.Owner.Controllers
 
                     //ChickenHoleMovement
                     var chickenHoleMovementById = await _chickenHoleMovementRepo.SingleOrDefaultAsync(c => c.HoleMovementType == HoleMovementType.Fill && c.HoleMovementTypeId == chickenFillingById.Id);
-                    if(chickenHoleMovementById != null)
+                    if (chickenHoleMovementById != null)
                     {
-                        chickenHoleMovementById.LastEditDate= DateTime.Now;
-                        chickenHoleMovementById.LastEditUser= _userManager.GetUserAsync(HttpContext.User).Result.Id;
+                        chickenHoleMovementById.LastEditDate = DateTime.Now;
+                        chickenHoleMovementById.LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
                         chickenHoleMovementById.HoleId = model.ChickenFillingRegisterVM.HoleId;
                         chickenHoleMovementById.AmountIn = model.ChickenFillingRegisterVM.Amount;
                         _chickenHoleMovementRepo.Update(chickenHoleMovementById);

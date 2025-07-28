@@ -3,11 +3,6 @@ using Core.ViewModels.CustomerVM;
 using Core.ViewModels.DeliveryVM;
 using Core.ViewModels.HoleVM;
 using Core.ViewModels.ProductVM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.ViewModels.SaleBillVM
 {

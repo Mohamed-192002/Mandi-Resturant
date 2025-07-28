@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using Core.Common.Enums;
 using Core.Common;
+using Core.Common.Enums;
 using Core.Entities;
 using Core.Interfaces;
-using Core.ViewModels.ChickenFillingVM;
+using Core.ViewModels.MeatFillingVM;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
-using Core.ViewModels.MeatFillingVM;
 
 namespace SiteFront.Areas.Owner.Controllers
 {

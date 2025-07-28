@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Core.Common.Enums;
 using Core.Common;
+using Core.Common.Enums;
 using Core.Entities;
 using Core.Interfaces;
 using Core.ViewModels.DeliveryBillVM;
@@ -46,7 +46,7 @@ namespace SiteFront.Areas.Owner.Controllers
         [Authorize("Permissions.DriverBillReportIndex")]
         public async Task<IActionResult> Search(DriverBillReportVM model)
         {
-            var deliveryBills = await _saleBillRepo.GetAllAsync(d => !d.IsDeleted  && d.BillType == BillType.Driver, true, d => d.Driver);
+            var deliveryBills = await _saleBillRepo.GetAllAsync(d => !d.IsDeleted && d.BillType == BillType.Driver, true, d => d.Driver);
             var deliveryBillGetVM = _mapper.Map<List<DeliveryBillGetVM>>(deliveryBills);
             if (model.DriverId != null)
             {

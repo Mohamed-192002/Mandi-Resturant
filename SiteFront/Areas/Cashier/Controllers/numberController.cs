@@ -1,9 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace SiteFront.Areas.Cashier.Controllers
 {
@@ -36,7 +34,7 @@ namespace SiteFront.Areas.Cashier.Controllers
         public async Task<IActionResult> GetLastPhoneNumber()
         {
             var phoneRecord = _numberRepo.GetAllAsync().Result
-                .OrderByDescending(p => p.CreatedAt).FirstOrDefault(); 
+                .OrderByDescending(p => p.CreatedAt).FirstOrDefault();
 
             if (phoneRecord == null)
                 return NotFound(new { message = "No phone number found." });

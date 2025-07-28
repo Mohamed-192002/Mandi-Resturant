@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Common.Enums
+﻿namespace Core.Common.Enums
 {
     public enum HoleMovementType
     {
-        Fill=1,
+        Fill = 1,
         Sale,
         Transfer
     }

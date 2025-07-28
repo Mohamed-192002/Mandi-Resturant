@@ -99,7 +99,7 @@ namespace SiteFront.Services
                                         CreatedUser = Guid.NewGuid(),
                                         LastEditUser = Guid.NewGuid()
                                     };
-                                     chickenHoleMovementRepo.Add(addition);
+                                    chickenHoleMovementRepo.Add(addition);
                                     await chickenHoleMovementRepo.SaveAllAsync();
                                     // Send real-time update
                                     var dagagHoleDataVMNew = holeRepo.GetAllAsync(c => !c.IsDeleted && c.HoleType == HoleType.دجاج, true).Result
@@ -164,8 +164,8 @@ namespace SiteFront.Services
                                         Date = now,
                                         NafrAmountIn = 0,
                                         NafrAmountOut = previousHole.NafrAmount,
-                                        HalfNafrAmountIn=0,
-                                        HalfNafrAmountOut= previousHole.HalfNafrAmount,
+                                        HalfNafrAmountIn = 0,
+                                        HalfNafrAmountOut = previousHole.HalfNafrAmount,
                                         HoleMovementType = HoleMovementType.Transfer,
                                         HoleMovementTypeId = 0,
                                         CreatedDate = now,
@@ -219,7 +219,7 @@ namespace SiteFront.Services
                             }
                         }
                     }
-                  
+
                 }
                 catch (Exception ex)
                 {

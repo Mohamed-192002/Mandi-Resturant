@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SiteFront.Models;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace SiteFront.Services
 {
@@ -36,7 +34,7 @@ namespace SiteFront.Services
 
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            _httpClient.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var response = await _httpClient.PostAsync(apiUrl, content);
             return response.IsSuccessStatusCode;

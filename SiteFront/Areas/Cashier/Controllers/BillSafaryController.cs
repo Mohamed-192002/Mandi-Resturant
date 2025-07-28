@@ -4,9 +4,8 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.ViewModels.SaleBillPrintVM;
 using Core.ViewModels.SaleBillVM;
-using iTextSharp.text.pdf;
 using iTextSharp.text;
-using Microsoft.AspNetCore.Http;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -156,7 +155,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     allHalfNafrAmount = allHalfNafrAmount + halfNafrValue;
                 }
             }
-            var realDagagAmount = _chickenHoleMovementRepo.GetAllAsync(c=>c.Date.Date == today.Date).Result.Sum(c => c.AmountIn - c.AmountOut);
+            var realDagagAmount = _chickenHoleMovementRepo.GetAllAsync(c => c.Date.Date == today.Date).Result.Sum(c => c.AmountIn - c.AmountOut);
             var realNafrAmount = _meatHoleMovementRepo.GetAllAsync(c => c.Date.Date == today.Date).Result.Sum(c => c.NafrAmountIn - c.NafrAmountOut);
             var realHalfNafrAmount = _meatHoleMovementRepo.GetAllAsync(c => c.Date.Date == today.Date).Result.Sum(c => c.HalfNafrAmountIn - c.HalfNafrAmountOut);
             if (allDagagAmount > realDagagAmount || allNafrAmount > realNafrAmount || allHalfNafrAmount > realHalfNafrAmount)
@@ -480,7 +479,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 {
                     document.Add(new Paragraph(al.Process($"ملاحظات : {model.Notes}"), arabicFont) { Alignment = Element.ALIGN_CENTER });
                 }
-                if(model.Discount != 0)
+                if (model.Discount != 0)
                 {
                     document.Add(new Paragraph(al.Process($" الخصم : {model.Discount}"), arabicFont) { Alignment = Element.ALIGN_CENTER });
                 }

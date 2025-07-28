@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
-using System.Drawing;
 
 namespace SiteFront.Areas.Owner.Controllers
 {
@@ -148,7 +147,7 @@ namespace SiteFront.Areas.Owner.Controllers
                     return NotFound();
                 var saleBills = await _saleBillRepo.GetAllAsync(s => s.DeliveryId == id);
                 var deliveryBills = await _deliveryBillRepo.GetAllAsync(d => d.DeliveryId == id);
-                if(saleBills.Count() == 0 && deliveryBills.Count() == 0)
+                if (saleBills.Count() == 0 && deliveryBills.Count() == 0)
                 {
                     _deliveryRepo.Delete(deliveryById);
                     await _deliveryRepo.SaveAllAsync();

@@ -1,12 +1,7 @@
 ﻿using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
@@ -104,7 +99,7 @@ namespace Infrastructure.Services
             var result = Entity.Where(i => true);
             foreach (var includeExpression in includes)
                 result = result.Include(includeExpression);
-           // return await result.ToListAsync();
+            // return await result.ToListAsync();
             if (NoTracking)
                 return await result.AsNoTracking().ToListAsync();
             else
@@ -239,8 +234,8 @@ namespace Infrastructure.Services
 
         #region Get Current Identity
 
-      
-       
+
+
 
         public ICollection<TType> GetColmounAsync<TType>(Expression<Func<T, TType>> LamdaExpression) where TType : class
         {
@@ -271,7 +266,7 @@ namespace Infrastructure.Services
 
         }
 
-        public bool Any(Expression<Func<T,bool>> whereCondition)
+        public bool Any(Expression<Func<T, bool>> whereCondition)
         {
             return Entity.Any(whereCondition);
         }

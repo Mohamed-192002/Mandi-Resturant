@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Core.Common.Enums;
 using Core.Entities;
 using Core.Interfaces;
-using Core.ViewModels.DeliveryVM;
 using Core.ViewModels.HoleVM;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -78,7 +76,7 @@ namespace SiteFront.Areas.Owner.Controllers
             var holeById = await _holeRepo.GetByIdAsync(id);
             if (holeById == null)
                 return NotFound();
-            return Json(new { id = holeById.Id, name = holeById.Name , holeType= holeById .HoleType});
+            return Json(new { id = holeById.Id, name = holeById.Name, holeType = holeById.HoleType });
         }
 
         [HttpPost]

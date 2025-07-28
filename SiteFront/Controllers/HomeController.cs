@@ -38,7 +38,7 @@ namespace SiteFront.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-            catch 
+            catch
             {
                 return RedirectToAction("Index", "Login", new { area = "Auth" });
             }

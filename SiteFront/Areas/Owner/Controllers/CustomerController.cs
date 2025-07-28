@@ -54,7 +54,7 @@ namespace SiteFront.Areas.Owner.Controllers
             if (ModelState.IsValid)
             {
                 var checkCustomer = await _customerRepo.SingleOrDefaultAsync(s => s.Phone == model.CustomerRegisterVM.Phone);
-                if(checkCustomer != null)
+                if (checkCustomer != null)
                 {
                     _toastNotification.AddInfoToastMessage("هذا العميل موجود بالفعل");
                     return RedirectToAction("Index");

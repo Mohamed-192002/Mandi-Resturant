@@ -1,29 +1,24 @@
 ﻿using AutoMapper;
+using Core.Common;
+using Core.Dtos;
 using Core.Dtos.RolesDto;
 using Core.Dtos.UserDto;
-using Core.Dtos;
 using Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Common;
-using Core.ViewModels.ExpenseTypeVM;
-using Core.ViewModels.ExpenseVM;
-using Core.ViewModels.DeliveryVM;
-using Core.ViewModels.SaleBillVM;
+using Core.ViewModels.ChickenFillingVM;
 using Core.ViewModels.CustomerVM;
 using Core.ViewModels.DeliveryBillVM;
-using Core.ViewModels.HoleVM;
-using Core.ViewModels.ProductVM;
-using Core.ViewModels.ChickenFillingVM;
-using Core.ViewModels.MeatFillingVM;
+using Core.ViewModels.DeliveryVM;
 using Core.ViewModels.DriverVM;
+using Core.ViewModels.ExpenseTypeVM;
+using Core.ViewModels.ExpenseVM;
+using Core.ViewModels.HoleVM;
+using Core.ViewModels.MeatFillingVM;
+using Core.ViewModels.ProductVM;
+using Core.ViewModels.SaleBillVM;
 
 namespace Infrastructure.Helper
 {
-    public class AutoMapperProfiles:Profile
+    public class AutoMapperProfiles : Profile
     {
         public AutoMapperProfiles()
         {

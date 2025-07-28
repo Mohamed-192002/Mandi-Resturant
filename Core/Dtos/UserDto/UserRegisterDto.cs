@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Core.Dtos.UserDto
 {
     public class UserRegisterDto
     {
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
-       [Display(Name = "Name")]
+        [Display(Name = "Name")]
         public string Name { get; set; } = "";
 
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
-        [StringLength(10,ErrorMessage = "أدخل رقم هاتف صحيح", MinimumLength =10)]
+        [StringLength(10, ErrorMessage = "أدخل رقم هاتف صحيح", MinimumLength = 10)]
         [Display(Name = "Phone")]
         public string PhoneNumber { get; set; } = "";
 
@@ -36,7 +31,7 @@ namespace Core.Dtos.UserDto
         public string ConfirmPassword { get; set; } = "";
 
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
-        public List<CommonDto> Roles { get; set; }= new List<CommonDto>();
+        public List<CommonDto> Roles { get; set; } = new List<CommonDto>();
 
 
     }

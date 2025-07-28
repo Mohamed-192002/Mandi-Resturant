@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
@@ -30,7 +25,7 @@ namespace Core.Interfaces
 
         #region GetALL Async =>(IEnumerable)
         Task<IEnumerable<T>> GetAllAsync(bool NoTracking = false);
-        Task<IEnumerable<T>> GetAllAsync(bool NoTracking = false,params Expression<Func<T, object>>[] includes);
+        Task<IEnumerable<T>> GetAllAsync(bool NoTracking = false, params Expression<Func<T, object>>[] includes);
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> whereCondition, bool NoTracking = false);
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> whereCondition, bool NoTracking = false, params Expression<Func<T, object>>[] includes);
 
@@ -77,8 +72,8 @@ namespace Core.Interfaces
         #endregion
 
         #region Get Current Identity
-      
-          ICollection<TType> GetColmounAsync<TType>(Expression<Func<T, TType>> LamdaExpression) where TType : class;
+
+        ICollection<TType> GetColmounAsync<TType>(Expression<Func<T, TType>> LamdaExpression) where TType : class;
 
         ICollection<TType> GetCoulmnAsync<TType>(Expression<Func<T, bool>> where, Expression<Func<T, TType>> select) where TType : class;
         #endregion

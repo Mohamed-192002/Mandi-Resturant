@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastracture.Services.Permission
 {
-  public  class PermissionRequirement : IAuthorizationRequirement
+    public class PermissionRequirement : IAuthorizationRequirement
     {
         public string Permission { get; private set; }
 

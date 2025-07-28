@@ -3,23 +3,21 @@ using Core.Common;
 using Core.Common.Enums;
 using Core.Entities;
 using Core.Interfaces;
-using Core.ViewModels.CustomerVM;
 using Core.ViewModels.DeliveryBillVM;
+using Core.ViewModels.DeliveryVM;
 using Core.ViewModels.HoleVM;
 using Core.ViewModels.ProductVM;
 using Core.ViewModels.ResturantDeliveryVM;
 using Core.ViewModels.SaleBillPrintVM;
 using Core.ViewModels.SaleBillVM;
-using iTextSharp.text.pdf;
 using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using SiteFront.Services;
 using System.Diagnostics;
-using Core.ViewModels.DeliveryVM;
 
 namespace SiteFront.Areas.Cashier.Controllers
 {
@@ -137,7 +135,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Id = h.Id,
                     Name = h.Name,
                     HoleType = h.HoleType,
-                    EndTime = _meatFillingRepo.GetAllAsync(m=>m.HoleId==h.Id && m.Date.Date == today.Date).Result.LastOrDefault()?.EndTime ?? null,
+                    EndTime = _meatFillingRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result.LastOrDefault()?.EndTime ?? null,
                     NafrAmount = (int)_meatHoleMovementRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result.Sum(c => c.NafrAmountIn - c.NafrAmountOut),
                     HalfNafrAmount = (int)_meatHoleMovementRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result.Sum(c => c.HalfNafrAmountIn - c.HalfNafrAmountOut),
                 }).ToList();
@@ -170,7 +168,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             if (ModelState.IsValid)
             {
                 var checkCustomer = await _customerRepo.SingleOrDefaultAsync(c => c.Phone == model.CustomerRegisterVM.Phone);
-                if(checkCustomer == null)
+                if (checkCustomer == null)
                 {
                     var customerDb = _mapper.Map<Customer>(model.CustomerRegisterVM);
                     customerDb.CreatedDate = DateTime.Now;
@@ -186,11 +184,11 @@ namespace SiteFront.Areas.Cashier.Controllers
                     checkCustomer.LastEditDate = DateTime.Now;
                     checkCustomer.LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
                     checkCustomer.Name = model.CustomerRegisterVM.Name;
-                    checkCustomer.Address=model.CustomerRegisterVM.Address;
-                    checkCustomer.Address2=model.CustomerRegisterVM.Address2;
-                    checkCustomer.Address3=model.CustomerRegisterVM.Address3;
-                    checkCustomer.Address4=model.CustomerRegisterVM.Address4;
-                    checkCustomer.AnotherPhone=model.CustomerRegisterVM.AnotherPhone;
+                    checkCustomer.Address = model.CustomerRegisterVM.Address;
+                    checkCustomer.Address2 = model.CustomerRegisterVM.Address2;
+                    checkCustomer.Address3 = model.CustomerRegisterVM.Address3;
+                    checkCustomer.Address4 = model.CustomerRegisterVM.Address4;
+                    checkCustomer.AnotherPhone = model.CustomerRegisterVM.AnotherPhone;
                     _customerRepo.Update(checkCustomer);
                     await _customerRepo.SaveAllAsync();
                     return Ok(checkCustomer.Id);
@@ -206,7 +204,7 @@ namespace SiteFront.Areas.Cashier.Controllers
         public async Task<IActionResult> GetCustomerData(string phone)
         {
             var customerDb = await _customerRepo.SingleOrDefaultAsync(c => c.Phone == phone);
-            if(customerDb != null)
+            if (customerDb != null)
             {
                 return Json(customerDb);
             }
@@ -278,7 +276,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 Id = b.Id,
                 Date = b.Date,
                 FinalTotal = b.FinalTotal,
-                DriverId=(int)(b.DriverId != null ? b.DriverId : 0),
+                DriverId = (int)(b.DriverId != null ? b.DriverId : 0),
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
                 CustomerPhone = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Phone : null,
@@ -301,7 +299,7 @@ namespace SiteFront.Areas.Cashier.Controllers
         }
 
         //Send WhatsApp Message
-        public async Task<IActionResult> HandleBillDriver(int driverId,int saleBillId)
+        public async Task<IActionResult> HandleBillDriver(int driverId, int saleBillId)
         {
             var driverById = await _driverRepo.GetByIdAsync(driverId);
             if (driverById == null)
@@ -392,7 +390,7 @@ namespace SiteFront.Areas.Cashier.Controllers
         public async Task<IActionResult> CustomerRecieve()
         {
             var today = DateTime.Today;
-            var deliveryBills = await _saleBillRepo.GetAllAsync(d => !d.MoneyDelivered && d.Date.Date == today.Date && d.BillType == BillType.Reservation, true,d => d.Customer);
+            var deliveryBills = await _saleBillRepo.GetAllAsync(d => !d.MoneyDelivered && d.Date.Date == today.Date && d.BillType == BillType.Reservation, true, d => d.Customer);
             var deliveryBillGetVM = deliveryBills.Select(b => new DeliveryBillGetVM
             {
                 Id = b.Id,
@@ -522,7 +520,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             {
                 _toastNotification.AddErrorToastMessage("لم يتم الالغاء حدث خطأ");
             }
-            
+
             return RedirectToAction(nameof(CustomerRecieve));
         }
 

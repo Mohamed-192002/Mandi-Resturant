@@ -5,13 +5,11 @@ using Core.Interfaces;
 using Core.ViewModels.HoleVM;
 using Core.ViewModels.SaleBillPrintVM;
 using Core.ViewModels.SaleBillVM;
-using iTextSharp.text.pdf;
 using iTextSharp.text;
-using Microsoft.AspNetCore.Http;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Microsoft.IdentityModel.Tokens;
 
 namespace SiteFront.Areas.Cashier.Controllers
 {

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.Common;
 using Core.Entities;
 using Core.Interfaces;
 using Core.ViewModels.ProductVM;

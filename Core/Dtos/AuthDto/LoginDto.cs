@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Core.Dtos.AuthDto
 {
-   public class LoginDto
+    public class LoginDto
     {
 
         [Required(ErrorMessage = "هذا الحقل مطلوب")]

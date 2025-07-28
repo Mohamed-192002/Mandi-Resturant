@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
-using Core.ViewModels.DeliveryVM;
 using Core.ViewModels.DriverVM;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

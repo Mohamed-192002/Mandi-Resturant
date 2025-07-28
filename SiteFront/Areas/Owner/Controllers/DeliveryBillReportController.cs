@@ -29,7 +29,7 @@ namespace SiteFront.Areas.Owner.Controllers
         public async Task<IActionResult> Index()
         {
             var deliveryBills = await _saleBillRepo.GetAllAsync(d => !d.IsDeleted && d.BillType == BillType.Delivery, true, d => d.Delivery);
-            var deliveryBillGetVM=_mapper.Map<List<DeliveryBillGetVM>>(deliveryBills);
+            var deliveryBillGetVM = _mapper.Map<List<DeliveryBillGetVM>>(deliveryBills);
             var deliveries = await _deliveryRepo.GetAllAsync(d => !d.IsDeleted, true);
             var deliveryBillReportVM = new DeliveryBillReportVM
             {
@@ -48,7 +48,7 @@ namespace SiteFront.Areas.Owner.Controllers
         {
             var deliveryBills = await _saleBillRepo.GetAllAsync(d => !d.IsDeleted && d.BillType == BillType.Delivery, true, d => d.Delivery);
             var deliveryBillGetVM = _mapper.Map<List<DeliveryBillGetVM>>(deliveryBills);
-            if(model.DeliveryId != null)
+            if (model.DeliveryId != null)
             {
                 deliveryBillGetVM = deliveryBillGetVM.Where(d => d.DeliveryId == model.DeliveryId).ToList();
             }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.Common.Enums;
 using Core.Common;
 using Core.Entities;
 using Core.Interfaces;

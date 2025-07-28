@@ -2,18 +2,11 @@
 using Core.Dtos.AuthDto;
 using Core.Entities;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NToastNotify;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Threading.Tasks;
 
 namespace SiteFront.Areas.Auth.Controllers
 {
@@ -28,7 +21,7 @@ namespace SiteFront.Areas.Auth.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly IToastNotification _toastNotification;
-      
+
         private readonly IMapper _mapper;
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
@@ -87,7 +80,7 @@ namespace SiteFront.Areas.Auth.Controllers
                     else
                     {
                         msg = "خطأ بالإسم أو كلمة المرور !!";
-                        ViewBag.Message = msg;                      
+                        ViewBag.Message = msg;
                         return View(model);
                     }
                 }
@@ -108,9 +101,9 @@ namespace SiteFront.Areas.Auth.Controllers
 
         public async Task<IActionResult> LogOut()
         {
-			await HttpContext.SignOutAsync("Identity.Application");
-			return RedirectToAction("Index");
-		}
+            await HttpContext.SignOutAsync("Identity.Application");
+            return RedirectToAction("Index");
+        }
 
-	}
+    }
 }

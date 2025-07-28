@@ -7,10 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SiteFront.Areas.Managment.Controllers
 {
@@ -20,8 +16,8 @@ namespace SiteFront.Areas.Managment.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IToastNotification _toastNotification;
-        private readonly IRepository<Role> _RoleRepo; 
-        private readonly IRepository<RoleClaims> _RoleClaimRepoRepo; 
+        private readonly IRepository<Role> _RoleRepo;
+        private readonly IRepository<RoleClaims> _RoleClaimRepoRepo;
 
         private readonly RoleManager<Role> _roleManager;
         public List<RolesGetDto> RolesGetmodel { get; set; }
@@ -31,8 +27,8 @@ namespace SiteFront.Areas.Managment.Controllers
         public List<RoleClaims> RoleClaims { get; set; }
 
         public RolesController(IMapper mapper,
-                               IRepository<Role> RoleRepo, 
-                               IRepository<RoleClaims> RoleClaimRepo, 
+                               IRepository<Role> RoleRepo,
+                               IRepository<RoleClaims> RoleClaimRepo,
                                IToastNotification toastNotification,
                                RoleManager<Role> RoleManager)
         {
@@ -48,7 +44,7 @@ namespace SiteFront.Areas.Managment.Controllers
         public async Task<IActionResult> Index()
         {
             var RolsDb = await _RoleRepo.GetAllAsync();
-            
+
             RolesGetmodel = _mapper.Map<List<RolesGetDto>>(RolsDb);
             var rolesModelDto = new RolesModelDto
             {
@@ -94,7 +90,7 @@ namespace SiteFront.Areas.Managment.Controllers
         //    var RoleDb = await _RoleRepo.GetByIdAsync((Guid)id);
 
         //    RolesRegisterModel = _mapper.Map<RolesRegisterDto>(RoleDb);
-          
+
         //    if (RolesRegisterModel == null)
         //    {
         //        return NotFound();
@@ -126,7 +122,7 @@ namespace SiteFront.Areas.Managment.Controllers
 
                 var RolesDBMapped = _mapper.Map(model, RolesById);
                 _RoleRepo.Update(RolesDBMapped);
-               await _RoleRepo.SaveAllAsync();
+                await _RoleRepo.SaveAllAsync();
                 _toastNotification.AddSuccessToastMessage("تم التعديل بنجاح");
             }
             else
@@ -152,7 +148,7 @@ namespace SiteFront.Areas.Managment.Controllers
 
         private bool RoleExists(Guid id)
         {
-            return _RoleRepo.GetByIdAsync(id) == null ? false : true; 
+            return _RoleRepo.GetByIdAsync(id) == null ? false : true;
         }
 
 
@@ -169,10 +165,10 @@ namespace SiteFront.Areas.Managment.Controllers
             //الصلاحيات
             var RolesClaims = _RoleClaimRepoRepo.GetAllAsync(n => n.RoleId == Id).Result.Select(n => n.ClaimValue).ToList();
 
-           
+
             var Allclaim = Permissions.GenerateAllPermissionsForModule();
-           
-            var AllPermition = Allclaim.Select(n => new ClaimViewModel { ClaimValue = n.en, ArName =n.ar }).ToList();
+
+            var AllPermition = Allclaim.Select(n => new ClaimViewModel { ClaimValue = n.en, ArName = n.ar }).ToList();
 
             foreach (var item in AllPermition)
             {
@@ -183,7 +179,7 @@ namespace SiteFront.Areas.Managment.Controllers
             }
 
             EditRolesClaimDto viemodel = _mapper.Map<EditRolesClaimDto>(Role);
-           
+
             viemodel.Claims = AllPermition;
 
             return View(viemodel);
@@ -198,7 +194,7 @@ namespace SiteFront.Areas.Managment.Controllers
             {
                 var RoleClaims = await _RoleClaimRepoRepo.GetAllAsync(n => n.RoleId == model.Id);
                 _RoleClaimRepoRepo.DeletelistRange(RoleClaims.ToList());
-                
+
                 foreach (var item in model.Claims.Where(n => n.Isselected))
                 {
                     RoleClaims roleClaims = new RoleClaims()
@@ -211,7 +207,7 @@ namespace SiteFront.Areas.Managment.Controllers
                     _RoleClaimRepoRepo.Add(roleClaims);
                 }
 
-               await _RoleClaimRepoRepo.SaveAllAsync();
+                await _RoleClaimRepoRepo.SaveAllAsync();
                 _toastNotification.AddSuccessToastMessage("تم تعديل صلاحيات المجموعه");
 
             }

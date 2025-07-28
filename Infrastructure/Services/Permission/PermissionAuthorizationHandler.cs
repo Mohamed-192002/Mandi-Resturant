@@ -1,11 +1,6 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastracture.Services.Permission
 {
@@ -29,11 +24,11 @@ namespace Infrastracture.Services.Permission
 
             //var canAccess = context.User.Claims.Any(c => c.Type == "Permissions" && c.Value == requirement.Permission && c.Issuer == "LOCAL AUTHORITY");
 
-         //   var UserRoles = _UserRoleRepo.GetAllAsync(n => n.User.Email == context.User.Identity.Name).Result.Select(n => n.RoleId).ToList();
+            //   var UserRoles = _UserRoleRepo.GetAllAsync(n => n.User.Email == context.User.Identity.Name).Result.Select(n => n.RoleId).ToList();
             var UserRoles = _UserRoleRepo.GetAllAsync(n => n.User.UserName == context.User.Identity.Name).Result.Select(n => n.RoleId).ToList();
 
             var UserClaim = await _RoleClaimsRepo.GetAllAsync(n => UserRoles.Contains(n.RoleId));
-           
+
             var canAccess = UserClaim.Any(c => c.ClaimType == "Permissions" && c.ClaimValue == requirement.Permission);
 
 

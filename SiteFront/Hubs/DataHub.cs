@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace SiteFront.Hubs
 {
-    public class DataHub:Hub
+    public class DataHub : Hub
     {
         private readonly IRepository<Hole> _holeRepo;
         private readonly IRepository<ChickenHoleMovement> _chickenHoleMovementRepo;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.ViewModels.DeliveryVM
+﻿namespace Core.ViewModels.DeliveryVM
 {
     public class DeliveryMainVM
     {

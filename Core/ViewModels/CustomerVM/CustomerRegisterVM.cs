@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Core.ViewModels.CustomerVM
 {
@@ -11,7 +6,7 @@ namespace Core.ViewModels.CustomerVM
     {
         public int? Id { get; set; }
 
-        [Required(ErrorMessage ="*")]
+        [Required(ErrorMessage = "*")]
         public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "*")]
