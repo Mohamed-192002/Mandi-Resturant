@@ -35,7 +35,7 @@ namespace SiteFront.Areas.Owner.Controllers
             _hosting = hosting;
         }
 
-      //  [Authorize("Permissions.ProductIndex")]
+        [Authorize("Permissions.ProductIndex")]
         public async Task<IActionResult> Index()
         {
             var products = await _productRepo.GetAllAsync(g => g.IsDeleted == false, true);
