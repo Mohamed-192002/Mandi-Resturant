@@ -1,0 +1,124 @@
+﻿@model HoleMainVM
+@{
+    ViewData["Title"] = "الحفــر";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>الحفــر</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button>اضافة حفرة</button>
+    </div>
+
+    <!-- Modal for Add Hole -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="holeForm">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="HoleRegisterVM.Id" />
+                    <div class="FormControll">
+                        <label asp-for="HoleRegisterVM.Name">اسم الحفرة</label>
+                        <input type="text" asp-for="HoleRegisterVM.Name" required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="HoleRegisterVM.HoleType">نوع الحفرة</label>
+                        <select asp-for="HoleRegisterVM.HoleType" required asp-items="@Html.GetEnumSelectList<HoleType>()">
+                            <option value="">اختر النوع</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تسلسل</th>
+                        <th>اسم الحفرة</th>
+                        <th>نوع الحفرة</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.HoleGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.Name</td>
+                            <td>@item.HoleType</td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذه الحفرة؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#HoleRegisterVM_Id").val('');
+            $("#HoleRegisterVM_Name").val('');
+            $("#HoleRegisterVM_HoleType").val('');
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Owner/Hole/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    $("#HoleRegisterVM_Id").val(data.id);
+                    $("#HoleRegisterVM_Name").val(data.name);
+                    $("#HoleRegisterVM_HoleType").val(data.holeType);
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('holeForm');
+        const hiddenInput = document.getElementById('HoleRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Owner/Hole/Edit';
+            } else {
+                form.action = '/Owner/Hole/Create';
+            }
+        });
+
+
+    </script>
+}

@@ -1,0 +1,31 @@
+﻿@model RolesRegisterDto
+
+<form method="post" asp-action="@(Model.Id != null ? "Edit" : "Create")">
+    <div class="form_wapper"
+         style="
+                      grid-template-columns: repeat(
+                        auto-fit,
+                        minmax(calc(95% / 3), 1fr)
+                      );
+                    ">
+        <input type="hidden" asp-for="Id" />
+        <div class="FormControll">
+            <label asp-for="Name">اسم المجموعة</label>
+            <input type="text"
+                   asp-for="Name" placeholder="الاسم"
+                   required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="Buttons">
+        <button type="submit"
+                style="background: var(--color-primary)">
+            حفظ
+        </button>
+    </div>
+</form>
+
+<partial name="_ValidationScriptsPartial" />
+
+

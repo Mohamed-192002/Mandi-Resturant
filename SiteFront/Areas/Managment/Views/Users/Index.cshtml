@@ -1,0 +1,65 @@
+﻿@model IEnumerable<UserGetDto>
+@{
+    ViewData["Title"] = "المستخدمين";
+    int index = 1;
+}
+
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>المستخدمين</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <a asp-action="Create">اضافة مستخدم</a>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th> تسلسل</th>
+                        <th>المستخدم</th>
+                        <th>الإيميل</th>
+                        <th> الهاتف</th>
+                        <th> المجموعات</th>
+                        <th>تعديل</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td> @item.Name</td>
+                            <td> @item.Email</td>
+                            <td> @item.PhoneNumber</td>
+                            <td> @string.Join(" | ", item.Roles.ToList())</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">
+                                    <i class="fa-solid fa-pen-to-square" style="color: var(--bg-button);"></i>
+                                </a>
+                                <a asp-action="DeleteConfirmed" onclick="return confirm('Are you sure you want to delete this?')" asp-route-id="@item.Id">
+                                    <i class="fa-solid fa-trash" style="color: var(--bg-delete);"></i>
+                                </a>
+                                <a asp-action="ChangePassword" asp-route-id="@item.Id">
+                                    <i class="fa-solid fa-pen-to-square" style="color: var(--bg-button);"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+

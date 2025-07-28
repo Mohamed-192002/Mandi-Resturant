@@ -1,0 +1,55 @@
+﻿@model LoginDto
+
+@{
+    ViewData["Title"] = "Resturant LogIn";
+}
+
+<div class="Login">
+    <div class="overlay"></div>
+
+    <div class="Login_content">
+        <div class="left">
+            <h3></h3>
+            <img src="~/assets/images/cashierLogin.png"
+                 alt="img-login"
+                 loading="lazy" />
+        </div>
+
+        <div class="right">
+            <div class="title">
+                <h3>تسجيل الدخول</h3>
+            </div>
+            <div class="form">
+                <form  asp-action="Index" method="post">
+                    <div class="formGroup">
+                        <label asp-for="Email">البريد الالكتروني</label>
+                        <input type="text"
+                               asp-for="Email"
+                               placeholder="البريد الالكتروني"
+                               required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="formGroup">
+                        <label asp-for="Password">كلمة السر</label>
+                        <input type="password"
+                               asp-for="Password"
+                               placeholder="*****"
+                               required />
+                        <div class="icon"></div>
+                    </div>
+                    <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-6">
+                        <label class="text-danger text-bold fs-18">
+                            @ViewBag.Message
+                        </label>
+
+                    </div>
+                    <button type="submit" class="button">تسجيل الدخول</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

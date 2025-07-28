@@ -1,0 +1,107 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/assets/css/form.css" />
+    <link rel="stylesheet" href="~/assets/css/table.css" />
+    <link rel="stylesheet" href="~/assets/css/global.css" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="loader">
+        <span></span>
+    </div>
+
+    <div class="container">
+        <div class="Sidebar">
+            <div class="overlay"></div>
+
+            <div class="Sidebar_content">
+                <div class="close_sidebar">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+
+                <div class="Logo">
+                    <img src="~/assets/images/NaseerMandi.jpeg" alt="Logo" width="100%" height="100%" />
+                </div>
+                <div class="SidebarList">
+                    <ul>
+                        <a asp-area="Owner" asp-controller="Product" asp-action="Index">
+                        <li>المنيــــو</li></a>
+
+                        <a asp-area="Owner" asp-controller="Hole" asp-action="Index">
+                        <li>الحفــر</li></a>
+
+                        <a asp-area="Owner" asp-controller="ChickenFilling" asp-action="Index">
+                        <li>تجهيز حفر الدجاج</li></a>
+
+                        <a asp-area="Owner" asp-controller="MeatFilling" asp-action="Index">
+                        <li>تجهيز حفر اللحم</li></a>
+
+                        <a asp-area="Owner" asp-controller="Delivery" asp-action="Index">
+                        <li>شركات التوصيل</li></a>
+
+                        <a asp-area="Owner" asp-controller="Driver" asp-action="Index">
+                        <li>سائقين التوصيل</li></a>
+
+                        <a asp-area="Owner" asp-controller="ExpenseType" asp-action="Index">
+                        <li>أنواع المصروفات</li></a>
+
+                        <a asp-area="Owner" asp-controller="Expense" asp-action="Index">
+                        <li>المصروفات</li></a>
+
+                        <a asp-area="Owner" asp-controller="Customer" asp-action="Index">
+                        <li>العملاء</li></a>
+
+                        <a asp-area="Owner" asp-controller="EarnReport" asp-action="Index">
+                        <li>تقرير الربح</li></a>
+
+                        <a asp-area="Owner" asp-controller="DeliveryBillReport" asp-action="Index">
+                        <li>تقرير دليفري الشركات</li></a>
+
+                        <a asp-area="Owner" asp-controller="DriverBillReport" asp-action="Index">
+                        <li>تقرير دليفري المطعم</li></a>
+
+                        <a asp-area="Owner" asp-controller="CashierSaleReport" asp-action="Index">
+                        <li>تقرير مبيعات الكاشير</li></a>
+
+                        <a asp-area="Managment" asp-controller="Roles" asp-action="Index">
+                        <li>المجموعات والصلاحيات</li></a>
+
+                        <a asp-area="Managment" asp-controller="Users" asp-action="Index">
+                        <li>المستخدمين</li></a>
+                    </ul>
+                    <div class="Logout">
+                        <a type="button" asp-area="Auth" asp-controller="Login" asp-action="LogOut">تسجيل الخروج</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div className="content_wapper">
+                <div className="wapper">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/assets/js/Owner.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/assets/js/main.js" asp-append-version="true"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial" />
+    @await Component.InvokeAsync("NToastNotify")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

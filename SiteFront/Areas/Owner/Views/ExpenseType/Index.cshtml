@@ -1,0 +1,114 @@
+﻿@model ExpenseTypeMainVM
+@{
+    ViewData["Title"] = "أنواع المصروفات";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>أنواع المصروفات</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button>اضافة نوع مصروف</button>
+    </div>
+
+    <!-- Modal for Add ExpenseType -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="expenseTypeForm">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="ExpenseTypeRegisterVM.Id" />
+                    <div class="FormControll">
+                        <label asp-for="ExpenseTypeRegisterVM.Name">اسم النوع</label>
+                        <input type="text" asp-for="ExpenseTypeRegisterVM.Name" required />
+                        @* <span asp-validation-for="ExpenseTypeRegisterVM.Name" class="text-danger"></span> *@
+                    </div>
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تسلسل</th>
+                        <th>اسم النوع</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.ExpenseTypeGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.Name</td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذا النوع؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#ExpenseTypeRegisterVM_Id").val('');
+            $("#ExpenseTypeRegisterVM_Name").val('');
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Owner/ExpenseType/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    $("#ExpenseTypeRegisterVM_Id").val(data.id);
+                    $("#ExpenseTypeRegisterVM_Name").val(data.name);
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('expenseTypeForm');
+        const hiddenInput = document.getElementById('ExpenseTypeRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Owner/ExpenseType/Edit';
+            } else {
+                form.action = '/Owner/ExpenseType/Create';
+            }
+        });
+
+
+    </script>
+}

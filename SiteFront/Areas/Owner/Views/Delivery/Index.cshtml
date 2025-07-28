@@ -1,0 +1,135 @@
+﻿@model DeliveryMainVM
+@{
+    ViewData["Title"] = "شركات التوصيل";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>شركات التوصيل</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button>اضافة شركة توصيل</button>
+    </div>
+
+    <!-- Modal for Add Delivery -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="deliveryForm" enctype="multipart/form-data">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="DeliveryRegisterVM.Id" />
+                    <div class="FormControll">
+                        <label asp-for="DeliveryRegisterVM.Name">اسم الشركة</label>
+                        <input type="text" asp-for="DeliveryRegisterVM.Name" required />
+                        @* <span asp-validation-for="DeliveryRegisterVM.Name" class="text-danger"></span> *@
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="DeliveryRegisterVM.ImageFile">الصورة</label>
+                        <input type="file"
+                               asp-for="DeliveryRegisterVM.ImageFile" />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="DeliveryRegisterVM.Color">اللون</label>
+                        <input type="color"
+                               asp-for="DeliveryRegisterVM.Color" />
+                    </div>
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تسلسل</th>
+                        <th>اسم الشركة</th>
+                        <th>الصورة</th>
+                        <th>اللون</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   
+                    @foreach (var item in Model.DeliveryGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.Name</td>
+                            <td>
+                                <img src="~/SystemImages/Deliveries/@item.ImageUrl" alt="DeliveryImage" loading="lazy" width="100px" height="100px" />
+                            </td>
+                            <td>
+                                <div style="width: 30px; height: 30px; background-color: @item.Color; border: 1px solid #000; border-radius: 4px;"></div>
+                            </td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذه الشركة؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#DeliveryRegisterVM_Id").val('');
+            $("#DeliveryRegisterVM_Name").val('');
+            $("#DeliveryRegisterVM_ImageFile").val('');
+            $("#DeliveryRegisterVM_Color").val('');
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Owner/Delivery/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    $("#DeliveryRegisterVM_Id").val(data.id);
+                    $("#DeliveryRegisterVM_Name").val(data.name);
+                    $("#DeliveryRegisterVM_Color").val(data.color);
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('deliveryForm');
+        const hiddenInput = document.getElementById('DeliveryRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Owner/Delivery/Edit';
+            } else {
+                form.action = '/Owner/Delivery/Create';
+            }
+        });
+            
+
+    </script>
+}

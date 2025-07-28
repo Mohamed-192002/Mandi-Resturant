@@ -1,0 +1,32 @@
+﻿using Core.Common;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Core.ViewModels.ChickenFillingVM
+{
+    public class ChickenFillingRegisterVM
+    {
+        public int? Id { get; set; }
+
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+        public int HoleId { get; set; }
+        public List<CommonDrop>? Holes { get; set; }
+
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+        public DateTime Date { get; set; } 
+
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+        public double Amount { get; set; }
+
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+        public TimeOnly EndTime { get; set; }
+        public Guid CreatedUser { get; set; }
+        public Guid LastEditUser { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime LastEditDate { get; set; }
+    }
+}

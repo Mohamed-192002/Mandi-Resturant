@@ -1,0 +1,99 @@
+﻿@model CashierSaleMainVM
+@{
+    ViewData["Title"] = "تقرير مبيعات الكاشير";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>تقرير مبيعات الكاشير</h3>
+        </div>
+    </header>
+
+    <div style="width: 90%; margin: 50px auto">
+        <form method="post" asp-action="Search">
+            <div class="form_wapper"
+                 style="
+                      grid-template-columns: repeat(
+                        auto-fit,
+                        minmax(calc(95% / 4), 1fr)
+                      );
+                    ">
+                <div class="FormControll">
+                    <label asp-for="UserId"> الكاشير</label>
+                    <select asp-for="UserId" asp-items="@(new SelectList(Model.Users,"Id","Name"))">
+                        <option value="">اختر الكاشير</option>
+                    </select>
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+                <div class="FormControll">
+                    <label asp-for="FromDate">بداية الفترة</label>
+                    <input type="date" asp-for="FromDate" />
+                    <span asp-validation-for="FromDate" class="text-danger"></span>
+                </div>
+                <div class="FormControll">
+                    <label asp-for="ToDate">بداية الفترة</label>
+                    <input type="date" asp-for="ToDate" />
+                    <span asp-validation-for="ToDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="Buttons" style="padding-top:20px !important">
+                <button type="submit"
+                        style="background: var(--color-primary)">
+                    تقرير
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table id="myDataTable">
+                <thead>
+                    <tr>
+                        <th> تسلسل</th>
+                        <th>المنتج</th>
+                        <th>سعر التكلفة</th>
+                        <th>سعر البيع</th>
+                        <th>ربح القطعة</th>
+                        <th>الكمية المباعة</th>
+                        <th> اجمالي سعر البيع</th>
+                        <th> اجمالي ربح المنتج</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.EarnSaleReportVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.ProductName</td>
+                            <td>@item.CostPrice</td>
+                            <td>@item.SalePrice</td>
+                            <td>@item.ProductEarn</td>
+                            <td>@item.TotalAmount</td>
+                            <td>@item.TotalSalePrice</td>
+                            <td>@item.TotalProductEarn</td>
+                        </tr>
+                    }
+                    @if (Model.EarnSaleReportVM != null && Model.EarnSaleReportVM.Count() > 0)
+                    {
+                        <tr>
+                            <td>@(Model.EarnSaleReportVM.Count() + 1)</td>
+                            <td> ______ </td>
+                            <td style="color: green;font-size: 1.25rem;">اجمالي المبيعات :</td>
+                            <td style="color: green;font-size: 1.25rem;"> @Model.TotalSale</td>
+                            <td> ______ </td>
+                            <td style="color: green;font-size: 1.25rem;"> اجمالي الربح :</td>
+                            <td style="color: green;font-size: 1.25rem;">@Model.TotalEarn</td>
+                            <td> ______ </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

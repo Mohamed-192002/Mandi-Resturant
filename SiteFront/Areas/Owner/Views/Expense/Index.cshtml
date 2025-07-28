@@ -1,0 +1,150 @@
+﻿@model ExpenseMainVM
+@{
+    ViewData["Title"] = "المصروفات";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>المصروفات</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button>اضافة مصروف</button>
+    </div>
+
+    <!-- Modal for Add Product -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="expenseForm">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="ExpenseRegisterVM.Id" />
+                    
+                    <div class="FormControll">
+                        <label asp-for="ExpenseRegisterVM.ExpenseTypeId">نوع المصروف</label>
+                        <select asp-for="ExpenseRegisterVM.ExpenseTypeId" required asp-items="@(new SelectList(Model.ExpenseRegisterVM.ExpenseTypes,"Id","Name"))">
+                            <option value="">اختر النوع</option>
+                        </select>
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ExpenseRegisterVM.Payment">القيمة</label>
+                        <input type="text" asp-for="ExpenseRegisterVM.Payment" required
+                        onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ExpenseRegisterVM.Date">التاريخ</label>
+                        <input type="date" asp-for="ExpenseRegisterVM.Date" required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ExpenseRegisterVM.Notes">ملاحظات</label>
+                        <input type="text" asp-for="ExpenseRegisterVM.Notes" />
+                    </div>
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table id="myDataTable">
+                <thead>
+                    <tr>
+                        <th>تسلسل</th>
+                        <th>نوع المصروف</th>
+                        <th>القيمة</th>
+                        <th>التاريخ</th>
+                        <th>ملاحظات</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.ExpenseGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.ExpenseTypeName</td>
+                            <td>@item.Payment</td>
+                            <td>@item.Date.ToShortDateString()</td>
+                            <td>@item.Notes</td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذا المصروف؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#ExpenseRegisterVM_Id").val('');
+            $("#ExpenseRegisterVM_ExpenseTypeId").val('');
+            $("#ExpenseRegisterVM_Payment").val('');
+            let today = new Date().toISOString().split('T')[0];
+            $("#ExpenseRegisterVM_Date").val(today);
+            $("#ExpenseRegisterVM_Notes").val('');
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Owner/Expense/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    console.log(data);
+                    $("#ExpenseRegisterVM_Id").val(data.id);
+                    var s = '<option value="">اختر النوع</option>';
+                    for (var i = 0; i < data.expenseTypes.length; i++) {
+                        s += '<option value="' + data.expenseTypes[i].typeId + '">' + data.expenseTypes[i].typeName + '</option>';
+                    }
+                    $("#ExpenseRegisterVM_ExpenseTypeId").html(s);
+                    $("#ExpenseRegisterVM_ExpenseTypeId").val(data.expenseTypeId);
+                    $("#ExpenseRegisterVM_Payment").val(data.payment);
+                    const dateValue = data.date.split('T')[0]; // Extract the date part (YYYY-MM-DD)
+                    $("#ExpenseRegisterVM_Date").val(dateValue);
+                    $("#ExpenseRegisterVM_Notes").val(data.notes);
+
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('expenseForm');
+        const hiddenInput = document.getElementById('ExpenseRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Owner/Expense/Edit';
+            } else {
+                form.action = '/Owner/Expense/Create';
+            }
+        });
+
+
+    </script>
+}

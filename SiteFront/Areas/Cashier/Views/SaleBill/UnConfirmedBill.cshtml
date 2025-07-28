@@ -1,0 +1,147 @@
+﻿@model List<SaleBillGetVM>
+@{
+    Layout = null;
+    int index = 1;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="~/assets/css/form.css" />
+    <link rel="stylesheet" href="~/assets/css/table.css" />
+    <link rel="stylesheet" href="~/assets/css/global.css" />
+    <link rel="stylesheet" href="~/assets/css/cashier.css" />
+
+    <title>فواتير الجرسون</title>
+</head>
+<body>
+    <div class="loader">
+        <span></span>
+    </div>
+
+    <div class="container">
+        <div class="content" style="width: 100%">
+            <div class="content_wapper">
+                <header>
+                    <div style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 0px 10px;
+              ">
+                        <h3>فواتير الجرسون</h3>
+                    </div>
+
+                </header>
+
+                <!-- Tables -->
+                <div class="table">
+                    <div class="container_table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>مسلسل</th>
+                                    <th>رقم الفاتورة</th>
+                                    <th>الطاولة</th>
+                                    <th>التاريخ</th>
+                                    <th>الاجمالي</th>
+                                    <th>الخصم</th>
+                                    <th>الضريبة</th>
+                                    <th>الاجمالي النهائي</th>
+                                    <th>التأكيد</th>
+                                    <th>التحصيل</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@(index++)</td>
+                                        <td>@item.Id</td>
+                                        <td>@item.TableNames</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.Total</td>
+                                        <td>@item.Discount</td>
+                                        <td>@item.Vat</td>
+                                        <td>@item.FinalTotal</td>
+                                        <td>
+                                            @if (item.Confirmed)
+                                            {
+                                                <span> تم التأكيد</span>
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" id="@item.Id" onclick="confirmBill(this)" />
+                                            }
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" id="@item.Id" onclick="deliveredMoney(this)" />
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="goBack">
+                    <a asp-action="Index" asp-controller="SaleBill" asp-area="Cashier">
+                        <button>العودة</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/assets/js/Cashier.js"></script>
+    <script type="text/javascript" src="~/assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial" />
+    @await Component.InvokeAsync("NToastNotify")
+    <script type="text/javascript">
+        function confirmBill(d) {
+            $.ajax({
+                type: 'POST',
+                url: '/Cashier/BillHall/ConfirmBill?id=' + d.id,
+                success: function () {
+                    toastr.success("تم التأكيد");
+                    setTimeout(function () {
+                        window.location.href = "/Cashier/SaleBill/UnConfirmedBill";
+                    }, 500);
+                },
+                error: function () {
+                    toastr.error("لم يتم التأكيد برجاء المحاولة لاحقا");
+                }
+            });
+        };
+
+        function deliveredMoney(d) {
+            $.ajax({
+                type: 'POST',
+                url: '/Cashier/SaleBill/DeliveredBillMoney?id=' + d.id,
+                success: function () {
+                    toastr.success("تم التحصيل");
+                    setTimeout(function () {
+                        window.location.href = "/Cashier/SaleBill/UnConfirmedBill";
+                    }, 500);
+                },
+                error: function () {
+                    toastr.error("لم يتم التحصيل برجاء المحاولة لاحقا");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

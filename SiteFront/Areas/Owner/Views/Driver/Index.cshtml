@@ -1,0 +1,124 @@
+﻿@model DriverMainVM
+@{
+    ViewData["Title"] = "سائقين التوصيل";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>سائقين التوصيل</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button>اضافة سائق توصيل</button>
+    </div>
+
+    <!-- Modal for Add Delivery -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="driverForm">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="DriverRegisterVM.Id" />
+                    <div class="FormControll">
+                        <label asp-for="DriverRegisterVM.Name">اسم السائق</label>
+                        <input type="text" asp-for="DriverRegisterVM.Name" required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="DriverRegisterVM.Phone">رقم الهاتف</label>
+                        <input type="text" asp-for="DriverRegisterVM.Phone" required
+                               onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" maxlength="11" />
+                    </div>
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تسلسل</th>
+                        <th>اسم السائق</th>
+                        <th>رقم الهاتف</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.DriverGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.Name</td>
+                            <td>@item.Phone</td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذا السائق؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#DriverRegisterVM_Id").val('');
+            $("#DriverRegisterVM_Name").val('');
+            $("#DriverRegisterVM_Phone").val('');
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Owner/Driver/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    $("#DriverRegisterVM_Id").val(data.id);
+                    $("#DriverRegisterVM_Name").val(data.name);
+                    $("#DriverRegisterVM_Phone").val(data.phone);
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('driverForm');
+        const hiddenInput = document.getElementById('DriverRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Owner/Driver/Edit';
+            } else {
+                form.action = '/Owner/Driver/Create';
+            }
+        });
+
+
+    </script>
+}
+
+

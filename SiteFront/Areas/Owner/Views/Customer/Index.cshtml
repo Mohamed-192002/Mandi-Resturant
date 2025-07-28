@@ -1,0 +1,184 @@
+﻿@model CustomerMainVM
+@{
+    ViewData["Title"] = "العملاء";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>العملاء</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button>اضافة عميل</button>
+    </div>
+
+    <!-- Modal for Add Customer -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="customerForm">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="CustomerRegisterVM.Id" />
+                    <div class="FormControll">
+                        <label asp-for="CustomerRegisterVM.Name">اسم العميل</label>
+                        <input type="text" asp-for="CustomerRegisterVM.Name" required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="CustomerRegisterVM.Phone">رقم الهاتف</label>
+                        <input type="text" asp-for="CustomerRegisterVM.Phone" required
+                               onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" maxlength="11" />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="CustomerRegisterVM.AnotherPhone">رقم هاتف اخر</label>
+                        <input type="text" asp-for="CustomerRegisterVM.AnotherPhone"
+                               onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" maxlength="11" />
+                    </div>
+                    <div class="FormControll" id="address1">
+                        <label asp-for="CustomerRegisterVM.Address">العنوان</label>
+                        <div class="input-container">
+                            <input type="text" asp-for="CustomerRegisterVM.Address" required />
+                            <button type="button" class="add-button">+</button>
+                        </div>
+                    </div>
+                    <div class="FormControll" id="address2">
+                        <label asp-for="CustomerRegisterVM.Address2">عنوان 2</label>
+                        <div class="input-container">
+                            <input type="text" asp-for="CustomerRegisterVM.Address2"/>
+                            <button type="button" class="add-button">+</button>
+                        </div>
+                    </div>
+                    <div class="FormControll" id="address3">
+                        <label asp-for="CustomerRegisterVM.Address3">عنوان 3</label>
+                        <div class="input-container">
+                            <input type="text" asp-for="CustomerRegisterVM.Address3"/>
+                            <button type="button" class="add-button">+</button>
+                        </div>
+                    </div>
+                    <div class="FormControll" id="address4">
+                        <label asp-for="CustomerRegisterVM.Address4">عنوان 4</label>
+                        <input type="text" asp-for="CustomerRegisterVM.Address4" />
+                    </div>
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ت</th>
+                        <th>اسم العميل</th>
+                        <th> الهاتف</th>
+                        <th> هاتف اخر</th>
+                        <th>العنوان</th>
+                        <th>عنوان2</th>
+                        <th>عنوان3</th>
+                        <th>عنوان4</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.CustomerGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.Name</td>
+                            <td>@item.Phone</td>
+                            <td>@item.AnotherPhone</td>
+                            <td>@item.Address</td>
+                            <td>@item.Address2</td>
+                            <td>@item.Address3</td>
+                            <td>@item.Address4</td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذا التصنيف؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#CustomerRegisterVM_Id").val('');
+            $("#CustomerRegisterVM_Name").val('');
+            $("#CustomerRegisterVM_Phone").val('');
+            $("#CustomerRegisterVM_AnotherPhone").val('');
+            $("#CustomerRegisterVM_Address").val('');
+            $("#CustomerRegisterVM_Address2").val('');
+            $("#CustomerRegisterVM_Address3").val('');
+            $("#CustomerRegisterVM_Address4").val('');
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Owner/Customer/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    $("#CustomerRegisterVM_Id").val(data.id);
+                    $("#CustomerRegisterVM_Name").val(data.name);
+                    $("#CustomerRegisterVM_Phone").val(data.phone);
+                    $("#CustomerRegisterVM_AnotherPhone").val(data.anotherPhone);
+                    $("#CustomerRegisterVM_Address").val(data.address);
+                    $("#CustomerRegisterVM_Address2").val(data.address2);
+                    $("#CustomerRegisterVM_Address3").val(data.address3);
+                    $("#CustomerRegisterVM_Address4").val(data.address4);
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('customerForm');
+        const hiddenInput = document.getElementById('CustomerRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Owner/Customer/Edit';
+            } else {
+                form.action = '/Owner/Customer/Create';
+            }
+        });
+
+        $('#address1 button').on('click',function(){
+            $("#address2").addClass('open');
+        });
+
+        $('#address2 button').on('click',function(){
+            $("#address3").addClass('open');
+        });
+
+        $('#address3 button').on('click',function(){
+            $("#address4").addClass('open');
+        });
+
+
+    </script>
+}

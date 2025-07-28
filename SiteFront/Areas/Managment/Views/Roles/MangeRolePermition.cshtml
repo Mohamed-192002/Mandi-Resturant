@@ -1,0 +1,168 @@
+﻿@model EditRolesClaimDto
+
+@{
+    ViewData["Title"] = "صلاحيات المجموعة";
+}
+@* 
+<div class="d-flex flex-column flex-column-fluid container-fluid" style="padding: 0px !important;">
+    <div class="content flex-column-fluid" id="kt_content">
+        <div class="d-flex flex-column flex-column-fluid  container-fluid ">
+            <form method="post" asp-action="MangeRolePermition">
+                <div class="card fs-5">
+                    <div class="card-body">
+                        <div class="row col-12">
+                            <input type="hidden" asp-for="Id" />
+                            <div class="col-sm-6">
+                                <label class="mb-5" asp-for="Name">اسم المجموعه</label>
+                                <input type="text" class="form-control" asp-for="Name" readonly>
+                            </div>
+                            <div class="col-sm-6">
+                                <a style="margin-top: 40px;width: 100%;" asp-action="Index"
+                                   class="btn btn-primary me-3">
+                                    الرجوع الى
+                                    الرئيسيه
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-12 fs-3">
+                    <div class="container mt-5">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">الصلاحيات</th>
+                                    <th scope="col">
+                                        <input style="margin-left: 10px;" type="checkbox"
+                                               class="form-check-input" id="selectAll">
+                                        اختر الصلاحية
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="body">
+                                 @for (int x = 0; x < Model.Claims.Count; x++)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            <label class="d-none" hidden asp-for="@Model.Claims[x].Isselected">@Model.Claims[x].ClaimValue</label>
+                                            <label asp-for="@Model.Claims[x].Isselected">@Model.Claims[x].ArName</label>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" asp-for="@Model.Claims[x].ClaimValue">
+                                            <input type="checkbox" class="permission form-check-input" asp-for="@Model.Claims[x].Isselected">
+                                            
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                        <button style="position: absolute;
+                                                          left: 30px;
+                                                          width: 19%;
+                                                          bottom: 15px;" type="submit"
+                                class="btn btn-primary">
+                            حفظ
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> *@
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>الصلاحيات</h3>
+        </div>
+    </header>
+
+    <div style="width: 90%; margin: 100px auto">
+        <form method="post" asp-action="MangeRolePermition">
+            <div class="form_wapper"
+                 style="
+                      grid-template-columns: repeat(
+                        auto-fit,
+                        minmax(calc(95% / 3), 1fr)
+                      );
+                    ">
+                <input type="hidden" asp-for="Id" />
+                <div class="FormControll">
+                    <label asp-for="Name">اسم المجموعة</label>
+                    <input type="text"
+                           asp-for="Name" placeholder="الاسم"
+                           readonly />
+                </div>
+                <div class="FormControll">
+                    <a style="margin-top: 35px;width: 70%;" asp-action="Index">
+                        الرجوع الى
+                        الرئيسيه
+                    </a>
+                </div>
+            </div>
+
+            <div class="table">
+                <div class="container_table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">الصلاحيات</th>
+                                <th scope="col">
+                                    <input style="margin-left: 10px;" type="checkbox"
+                                           class="form-check-input" id="selectAll">
+                                    اختر الصلاحية
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="body">
+                            @for (int x = 0; x < Model.Claims.Count; x++)
+                            {
+
+                                <tr>
+                                    <td>
+                                        <label class="d-none" hidden asp-for="@Model.Claims[x].Isselected">@Model.Claims[x].ClaimValue</label>
+                                        <label asp-for="@Model.Claims[x].Isselected">@Model.Claims[x].ArName</label>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" asp-for="@Model.Claims[x].ClaimValue">
+                                        <input type="checkbox" class="permission form-check-input" asp-for="@Model.Claims[x].Isselected">
+
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="Buttons">
+                <button type="submit"
+                        style="background: var(--color-primary)">
+                    حفظ
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+
+</section>
+
+
+
+@section Scripts {
+    <script>
+        $("#selectAll").on("change", function () {
+            var check = $(this).prop("checked");
+            $("#body").find("tr").each(function () {
+                $(this).find("td input[type='checkbox']").prop("checked", check);
+            });
+        });
+    </script>
+}
+

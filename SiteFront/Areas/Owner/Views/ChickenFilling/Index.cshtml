@@ -1,0 +1,151 @@
+﻿@model ChickenFillingMainVM
+@{
+    ViewData["Title"] = "تجهيز حفر الدجاج";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>تجهيز حفر الدجاج</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button>اضافة تجهيز</button>
+    </div>
+
+    <!-- Modal for Add Product -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="chickenFillingForm">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="ChickenFillingRegisterVM.Id" />
+
+                    <div class="FormControll">
+                        <label asp-for="ChickenFillingRegisterVM.HoleId">الحفر</label>
+                        <select asp-for="ChickenFillingRegisterVM.HoleId" required asp-items="@(new SelectList(Model.ChickenFillingRegisterVM.Holes,"Id","Name"))">
+                            <option value="">اختر الحفرة</option>
+                        </select>
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ChickenFillingRegisterVM.Date">التاريخ</label>
+                        <input type="date" asp-for="ChickenFillingRegisterVM.Date" required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ChickenFillingRegisterVM.Amount">العدد</label>
+                        <input type="text" asp-for="ChickenFillingRegisterVM.Amount" required
+                               onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ChickenFillingRegisterVM.EndTime">وقت الفتح</label>
+                        <input type="time" asp-for="ChickenFillingRegisterVM.EndTime" />
+                    </div>
+                    
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table id="myDataTable">
+                <thead>
+                    <tr>
+                        <th>تسلسل</th>
+                        <th>الحفرة</th>
+                        <th>العدد</th>
+                        <th>وقت الفتح</th>
+                        <th>التاريخ</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.ChickenFillingGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.HoleName</td>
+                            <td>@item.Amount</td>
+                            <td>@item.EndTime</td>
+                            <td>@item.Date.ToShortDateString()</td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذا التجهيز؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#ChickenFillingRegisterVM_Id").val('');
+            $("#ChickenFillingRegisterVM_HoleId").val('');
+            $("#ChickenFillingRegisterVM_Amount").val('');
+            $("#ChickenFillingRegisterVM_EndTime").val('');
+            let today = new Date().toISOString().split('T')[0];
+            $("#ChickenFillingRegisterVM_Date").val(today);
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Owner/ChickenFilling/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    console.log(data);
+                    $("#ChickenFillingRegisterVM_Id").val(data.id);
+                    var s = '<option value="">اختر الحفرة</option>';
+                    for (var i = 0; i < data.holes.length; i++) {
+                        s += '<option value="' + data.holes[i].holeId + '">' + data.holes[i].holeName + '</option>';
+                    }
+                    $("#ChickenFillingRegisterVM_HoleId").html(s);
+                    $("#ChickenFillingRegisterVM_HoleId").val(data.holeId);
+                    $("#ChickenFillingRegisterVM_Amount").val(data.amount);
+                    $("#ChickenFillingRegisterVM_EndTime").val(data.endTime);
+                    const dateValue = data.date.split('T')[0]; // Extract the date part (YYYY-MM-DD)
+                    $("#ChickenFillingRegisterVM_Date").val(dateValue);
+
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('chickenFillingForm');
+        const hiddenInput = document.getElementById('ChickenFillingRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Owner/ChickenFilling/Edit';
+            } else {
+                form.action = '/Owner/ChickenFilling/Create';
+            }
+        });
+
+
+    </script>
+}

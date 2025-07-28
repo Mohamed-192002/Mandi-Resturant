@@ -1,0 +1,181 @@
+﻿@model ProductMainVM
+@{
+    ViewData["Title"] = "المنيــــو";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>المنيــــو</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button>اضافة صنف</button>
+    </div>
+
+    <!-- Modal for Add Product -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="productForm" enctype="multipart/form-data">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="ProductRegisterVM.Id" />
+                    <div class="FormControll">
+                        <label asp-for="ProductRegisterVM.Name">اسم الصنف</label>
+                        <input type="text" asp-for="ProductRegisterVM.Name" required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ProductRegisterVM.CostPrice">تكلفة السعر</label>
+                        <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
+                               asp-for="ProductRegisterVM.CostPrice"
+                               required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ProductRegisterVM.SellingPrice">سعر البيع</label>
+                        <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
+                               asp-for="ProductRegisterVM.SellingPrice"
+                               required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ProductRegisterVM.Nafr">نفر 800-900غ</label>
+                        <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
+                               asp-for="ProductRegisterVM.Nafr" />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ProductRegisterVM.HalfNafr">نص نفر 400غ</label>
+                        <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
+                               asp-for="ProductRegisterVM.HalfNafr" />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ProductRegisterVM.Dagag">دجاج</label>
+                        <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
+                               asp-for="ProductRegisterVM.Dagag" />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ProductRegisterVM.HalfDagag">نص دجاج</label>
+                        <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
+                               asp-for="ProductRegisterVM.HalfDagag" />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="ProductRegisterVM.ImageFile">الصورة</label>
+                        <input type="file"
+                               asp-for="ProductRegisterVM.ImageFile" />
+                    </div>
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تسلسل</th>
+                        <th>اسم الصنف</th>
+                        <th>سعر التكلفة</th>
+                        <th>سعر البيع</th>
+                        <th>نفر 800-900غ</th>
+                        <th>نص نفر 400غ</th>
+                        <th>دجاج</th>
+                        <th>نص دجاج</th>
+                        <th>الصورة</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.ProductGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.Name</td>
+                            <td>@item.CostPrice</td>
+                            <td>@item.SellingPrice</td>
+                            <td>@item.Nafr</td>
+                            <td>@item.HalfNafr</td>
+                            <td>@item.Dagag</td>
+                            <td>@item.HalfDagag</td>
+                            <td>
+                                <img src="~/SystemImages/Products/@item.ImageUrl" alt="product_img" loading="lazy" width="100px" height="100px" />
+                            </td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذا المنتج؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#ProductRegisterVM_Id").val('');
+            $("#ProductRegisterVM_Name").val('');
+            $("#ProductRegisterVM_CostPrice").val('');
+            $("#ProductRegisterVM_SellingPrice").val('');
+            $("#ProductRegisterVM_Nafr").val('');
+            $("#ProductRegisterVM_HalfNafr").val('');
+            $("#ProductRegisterVM_Dagag").val('');
+            $("#ProductRegisterVM_HalfDagag").val('');
+            $("#ProductRegisterVM_ImageFile").val('');
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Owner/Product/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    //console.log(data);
+                    $("#ProductRegisterVM_Id").val(data.id);
+                    $("#ProductRegisterVM_Name").val(data.name);
+                    $("#ProductRegisterVM_CostPrice").val(data.costPrice);
+                    $("#ProductRegisterVM_SellingPrice").val(data.sellingPrice);
+                    $("#ProductRegisterVM_Nafr").val(data.nafr);
+                    $("#ProductRegisterVM_HalfNafr").val(data.halfNafr);
+                    $("#ProductRegisterVM_Dagag").val(data.dagag);
+                    $("#ProductRegisterVM_HalfDagag").val(data.halfDagag);
+
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('productForm');
+        const hiddenInput = document.getElementById('ProductRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Owner/Product/Edit';
+            } else {
+                form.action = '/Owner/Product/Create';
+            }
+        });
+
+
+    </script>
+}

@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/assets/css/form.css" />
+    <link rel="stylesheet" href="~/assets/css/table.css" />
+    <link rel="stylesheet" href="~/assets/css/global.css" />
+    <link rel="stylesheet" href="~/assets/css/cashier.css" />
+    <title>@ViewData["Title"]</title>
+    <link href="~/select2/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="loader">
+        <span></span>
+    </div>
+
+    @RenderBody()
+
+    <script type="text/javascript" src="~/assets/js/Cashier.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/assets/js/main.js" asp-append-version="true"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/select2/js/select2.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    @await Component.InvokeAsync("NToastNotify")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

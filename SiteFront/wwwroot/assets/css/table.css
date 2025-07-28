@@ -1,0 +1,108 @@
+.table {
+  width: 90%;
+  margin: 30px auto 20px;
+}
+
+@media (max-width: 767px) {
+  .table {
+    width: 95%;
+  }
+}
+
+.table .container_table {
+  width: 100%;
+  overflow: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  padding: 10px;
+}
+
+td,
+th {
+  border: 1px solid #eee;
+  text-align: center;
+  padding: 20px;
+}
+
+tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f6ff;
+}
+
+.table td img {
+  height: 80px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.table td .container_Buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.table td .container_Buttons button {
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.table td .container_Buttons button i {
+  color: var(--bg-button);
+}
+
+.table td .container_Buttons a i {
+  color: var(--bg-delete);
+}
+
+.table td i {
+  font-size: 25px;
+  color: var(--bg-button);
+}
+
+.goBack {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-right: 80px;
+}
+
+.goBack button {
+  padding: 7px 30px;
+  background-color: var(--bg-button);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: bold;
+  font-family: var(--font-family);
+  opacity: 0.9;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.goBack button:hover {
+  opacity: 1;
+}
+
+#myDataTable {
+    border-collapse: collapse;
+    width: 100%;
+    padding: 10px;
+}
+
+#myDataTable th, #myDataTable td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+#myDataTable thead th {
+    text-align: center;
+}

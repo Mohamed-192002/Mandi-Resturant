@@ -1,0 +1,109 @@
+﻿@model DriverBillReportVM
+@{
+    ViewData["Title"] = "تقرير دليفري المطعم";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>تقرير دليفري المطعم</h3>
+        </div>
+    </header>
+
+    <div style="width: 90%; margin: 50px auto">
+        <form method="post" asp-action="Search">
+            <div class="form_wapper"
+                 style="
+                      grid-template-columns: repeat(
+                        auto-fit,
+                        minmax(calc(95% / 4), 1fr)
+                      );
+                    ">
+                <div class="FormControll">
+                    <label asp-for="DriverId">سائق التوصيل</label>
+                    <select asp-for="DriverId" asp-items="@(new SelectList(Model.Drivers,"Id","Name"))">
+                        <option value="">اختر السائق</option>
+                    </select>
+                    <span asp-validation-for="DriverId" class="text-danger"></span>
+                </div>
+                <div class="FormControll">
+                    <label asp-for="FromDate">بداية الفترة</label>
+                    <input type="date" asp-for="FromDate" />
+                    <span asp-validation-for="FromDate" class="text-danger"></span>
+                </div>
+                <div class="FormControll">
+                    <label asp-for="ToDate">بداية الفترة</label>
+                    <input type="date" asp-for="ToDate" />
+                    <span asp-validation-for="ToDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="Buttons" style="padding-top:20px !important">
+                <button type="submit"
+                        style="background: var(--color-primary)">
+                    تقرير
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table id="myDataTable">
+                <thead>
+                    <tr>
+                        <th> تسلسل</th>
+                        <th>سائق التوصيل</th>
+                        <th>رقم الفاتورة</th>
+                        <th>اجمالي الطلب</th>
+                        <th> التاريخ</th>
+                        <th>التحصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.DeliveryBillGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            @if(item.DriverName != null)
+                            {
+                                <td>@item.DriverName</td>
+                            }
+                            else{
+                                <td>لم يحدد</td>
+                            }
+                            <td>@item.Id</td>
+                            <td>@item.FinalTotal</td>
+                            <td>@item.Date</td>
+                            @if (item.MoneyDelivered)
+                            {
+                                <td style="color: green;">مدفوعة </td>
+                            }
+                            else
+                            {
+                                <td style="color: red;">غير مدفوعة </td>
+                            }
+                        </tr>
+                    }
+                    @if (Model.DeliveryBillGetVM != null && Model.DeliveryBillGetVM.Count() > 0)
+                    {
+                        <tr>
+                            <td>@(Model.DeliveryBillGetVM.Count() + 1)</td>
+                            <td style="color: green;font-size: 1.25rem;">اجمالي المدفوع :</td>
+                            <td style="color: green;font-size: 1.25rem;"> @Model.TotalPaid</td>
+                            <td style="color: red;font-size: 1.25rem;">اجمالي الغير مدفوع :</td>
+                            <td style="color: red;font-size: 1.25rem;">@Model.TotalUnPaid</td>
+                            <td>_______</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+

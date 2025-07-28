@@ -1,0 +1,474 @@
+﻿@model SaleBillMainVM
+@{
+    ViewData["Title"] = "كاشير";
+}
+<div class="container">
+    <div class="Sidebar">
+        <div class="overlay"></div>
+        <div class="Sidebar_content" style="background-color:lightgray;">
+            <div class="close_sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <audio id="errorSound" src="~/sounds/errorsound.mp3" preload="auto" style="display:none;"></audio>
+            <div class="Logo">
+                <img src="~/assets/images/NaseerMandi.jpeg" alt="Logo" width="100%" height="100%" />
+            </div>
+            <div class="SidebarList">
+                <ul id="dagagHolesSidebar">
+                    <li style="text-align:center;">
+                        <h2 style="color:red;">حفر الدجاج</h2>
+                    </li>
+                    @foreach (var dagagHole in Model.DagagHoleDataVM)
+                    {
+                        <li style="text-align:center;border-radius: 10px;background-color: white;">
+                            <h3>@dagagHole.Name</h3>
+                                <div>
+                                    @if (dagagHole.EndTime != null)
+                                    {
+                                        <h4> الفتح  : @dagagHole.EndTime</h4>
+                                    }
+                                    else
+                                    {
+                                        <h4> الفتح : ____</h4>
+                                    }
+                                    <h4 style="color:red;">العدد : @dagagHole.Amount</h4>
+                                </div>
+                        </li>
+                    }
+                    <li style="text-align:center;border-radius: 10px;background-color: black;color:white;">
+                        <h3>المجموع</h3>
+                        <div>
+                            <h4>العدد : @Model.DagagHoleDataVM.Sum(d => d.Amount)</h4>
+                        </div>
+                    </li>
+                </ul>
+                <ul id="meatHolesSidebar">
+                    <li style="text-align:center;">
+                        <h2 style="color:red;">حفر اللحم</h2>
+                    </li>
+                    @foreach (var meatHole in Model.MeatHoleDataVM)
+                    {
+                        <li style="text-align:center;border-radius: 10px;background-color: white;">
+                            <h3>@meatHole.Name</h3>
+                            <div>
+                                @if (meatHole.EndTime != null)
+                                {
+                                    <h4> الفتح : @meatHole.EndTime</h4>
+                                }
+                                else
+                                {
+                                    <h4> الفتح : ____</h4>
+                                }
+                                <h4 style="color:red;">عدد النفر : @meatHole.NafrAmount</h4>
+                                <h4 style="color:red;">عدد نص النفر : @meatHole.HalfNafrAmount</h4>
+                            </div>
+                        </li>
+                    }
+                    <li style="text-align:center;border-radius: 10px;background-color: black;color:white;">
+                        <h3>المجموع</h3>
+                        <div>
+                            <h4>عدد النفر : @Model.MeatHoleDataVM.Sum(d => d.NafrAmount)</h4>
+                            <h4>عدد نص النفر : @Model.MeatHoleDataVM.Sum(d => d.HalfNafrAmount)</h4>
+                        </div>
+                    </li>
+                </ul>
+                <div class="Logout">
+                    <a asp-area="Auth" asp-controller="Login" asp-action="LogOut">تسجيل الخروج</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content_wapper">
+            <header style="background: transparent">
+                <div class="header_content">
+                    <div style="display: flex;align-items: center;flex-wrap: wrap;gap: 10px;">
+                        <i class="fa-solid fa-bars-staggered menu-slider"></i>
+                        <button class="button" onclick="printDaySales()"> طباعة فواتير اليوم</button>
+                        @* <button class="button" id="reactionary">مرتجع المبيعات</button> *@
+                        <a asp-action="AllDayBill" asp-controller="SaleBill">
+                            <button class="button">
+                                 فواتير اليوم
+                            </button>
+                        </a>
+
+                    </div>
+                    <i class="fa-solid fa-list icon"></i>
+                </div>
+
+                <!-- the reactionary -->
+                <div id="modal" class="add-reactionary">
+                    <div class="modal-content">
+                        <div class="close_modal">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                        <button id="new-reactionary">اضافة</button>
+                        <!-- Add new -->
+                        <div class="reactionary">
+                            <div class="form-reactionary">
+                                <form>
+                                    <select asp-items="@(new SelectList(Model.SaleBills,"Id","Name"))" class="billId">
+                                        <option value="">اختار فاتورة</option>
+                                    </select>
+                                    <select asp-items="@(new SelectList(Model.Products,"Id","Name"))" class="productId">
+                                        <option value="">اختار الصنف</option>
+                                    </select>
+                                    <input type="hidden" class="categoryId" />
+                                    <input type="text" class="price" placeholder="السعر" readonly />
+                                    <input type="text" class="amount" placeholder="الكمية" value="1" />
+                                    <input type="text" class="discount" placeholder="الخصم" value="0" />
+                                    <input type="text" class="total" placeholder="السعر الكلي" readonly />
+                                    <button type="button">اضافة</button>
+                                </form>
+                            </div>
+                            <div class="reactionary_wapper">
+                                @foreach (var saleBill in Model.SaleBillRefundVM)
+                                {
+                                    <div class="reactionary-button">
+                                        <input type="hidden" value="@saleBill.Id" class="saleBillId" />
+                                        <input type="hidden" value="@saleBill.BillType" class="refundBillType" />
+                                        <button>  فاتورة @saleBill.Id</button>
+                                        <i class="fa-solid fa-print print"></i>
+                                    </div>
+
+                                    <div class="reactionary-decs">
+                                        <div class="item">
+                                            <span style="width:150px;height:auto;text-align:center;display: block;"> الصنف</span>
+                                            <span style="width:70px;height:auto;text-align:center; display: block;"> السعر</span>
+                                            <span style="width:70px;height:auto;text-align:center; display: block;"> الكمية</span>
+                                            <span style="width:70px;height:auto;text-align:center; display: block;"> الخصم</span>
+                                            <span style="width:70px;height:auto;text-align:center; display: block;"> السعر الكلي</span>
+                                            <span style="width:auto;height:auto;text-align:center; display: block;"> حذف</span>
+                                        </div>
+                                        @foreach (var itemDetails in saleBill.BillDetailRegisterVM)
+                                        {
+                                            <div class="item">
+                                                <input type="hidden" value="@itemDetails.ProductId" class="productId" />
+                                                <span class="productName" style="width:150px;height:auto;text-align:center;display: block;"> @itemDetails.PName</span>
+                                                <span class="price" style="width:70px;height:auto;text-align:center;display: block;"> @itemDetails.Price</span>
+                                                <input type="text" class="amount" value="@itemDetails.Amount" style="width:70px;height:30px;text-align:center" />
+                                                <input type="text" class="discount" value="@itemDetails.Discount" style="width:70px;height:30px;text-align:center" />
+                                                <span class="total" style="width:70px;height:auto;text-align:center;display: block;"> @itemDetails.TotalPrice</span>
+                                                <span style="width:auto;height:auto;text-align:center; display: block;">
+                                                    <button class="delete-btn">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drawer for header Cashier -->
+                <div id="Drawer">
+                    <div class="Drawer_wapper">
+                        <div class="Drawer_content">
+                            <div class="close">
+                                <i class="fa-solid fa-xmark"></i>
+                            </div>
+                            <div>
+                                <ul class="menu_list">
+                                    <a asp-action="DeliveryBill" asp-controller="SaleBill">
+                                    <li>طلبات دليفري الشركات</li>
+                                    </a>
+                                    <a asp-action="ResturantDelivery" asp-controller="SaleBill">
+                                    <li>طلبات دليفري المطعم</li>
+                                    </a>
+                                    <a asp-action="CustomerRecieve" asp-controller="SaleBill">
+                                    <li>طلبات الحجز المسبق</li>
+                                    </a>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="wapper">
+                <!-- Checkout -->
+                <div class="Checkout">
+                    <div class="Checkout_content">
+                        <div class="title">
+                            <h3>تفاصيل الفاتورة</h3>
+                            @* <i class="fa-solid fa-trash icon"></i> *@
+                        </div>
+                        <!-- list Checkout -->
+                        <div class="List">
+                            <div class="item">
+                                <button onclick="selectBillType(this)">حجز مسبق</button>
+                                <input type="radio" name="billType" value="4" checked onclick="selectBillType(this)" style="margin-right:35px;" />
+                            </div>
+                            <div class="item">
+                                <button onclick="selectBillType(this)">سفري</button>
+                                <input type="radio" name="billType" value="1" checked onclick="selectBillType(this)" style="margin-right:35px;" />
+                            </div>
+                            <div class="item">
+                                <button onclick="selectBillType(this)">دليفري شركات</button>
+                                <input type="radio" name="billType" value="2" onclick="selectBillType(this)" style="margin-right:35px;" />
+                            </div>
+                            <div class="item">
+                                <button onclick="selectBillType(this)">دليفري مطعم</button>
+                                <input type="radio" name="billType" value="3" onclick="selectBillType(this)" style="margin-right:35px;" />
+                            </div>
+                        </div>
+
+                        <!-- for delivery -->
+                        <div class="choose-Delivery">
+                            <button type="button" class="addCustomer">اضافة العميل</button>
+                            <div class="company-delivery">
+                                <select id="deliveryId">
+                                    <option value="">اختر شركة التوصيل</option>
+                                    @foreach (var item in Model.Deliveries)
+                                    {
+                                        <option value="@item.Id"
+                                                data-logo="@item.ImageUrl"
+                                                data-color="@item.Color">
+                                            @item.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- for Tables -->
+                        <div class="add-Tables">
+                            <button type="button" class="chooseTable">إختيار الحفر</button>
+                            <ul id="selectedHoles">
+                            </ul>
+                        </div>
+
+                        <!-- <hr /> -->
+                        <!-- product Checkout -->
+                        <div class="product" id="productList">
+                        </div>
+
+                        <div class="total">
+                            <div class="total_wapper">
+                                <p>اجمالي الطلب</p>
+                                <div class="total_item">
+                                    <p>الخصم</p>
+                                    <input type="text" value="0" style="width:70px;height:30px;text-align:center" />
+                                </div>
+                                <div class="total_item">
+                                    <p>ضريبة القيمة المضافة</p>
+                                    <input type="text" value="0" style="width:70px;height:30px;text-align:center" />%
+                                </div>
+
+                                <div class="total_item">
+                                    <p>الصافي</p>
+                                    <span id="finalTotal">0</span>
+                                </div>
+                                <div class="total_item" id="customerName">
+                                    <p>العميل</p>
+                                    <span></span>
+                                    <input type="hidden"/>
+                                </div>
+                                @* <div class="total_item" id="customerReceive">
+                                    <p>استلام العميل</p>
+                                    <input type="checkbox" style="width:20px;height:20px;"/>
+                                </div> *@
+                                <div class="total_item" id="orderDeliveredTime">
+                                    <p>وقت الاستلام</p>
+                                    <input type="time" style="width:120px;height:30px;text-align:center" />
+                                    @* value="@DateTime.Now.ToString("HH:mm")" *@
+                                </div> 
+                                <div class="total_item open" id="gift">
+                                    <p>تعيين كهدية</p>
+                                    <input type="checkbox" style="width:20px;height:20px;" />
+                                </div>
+                                <div class="total_item">
+                                    <p>ملاحظات</p>
+                                    <textarea id="notes"></textarea>
+                                </div>
+                            </div>
+                            <button type="button" onclick="CreateBill()" id="btn_save">انشاء الطلب</button>
+                            @* <button type="button" onclick="CreateTempBill()"> حفظ كمؤقت</button> *@
+                        </div>
+                        <!-- End Product -->
+                    </div>
+
+                    <!-- Form Add Coustomer-->
+                    <div id="modal" data-modal="add-coustomer">
+                        <div class="modal-content">
+                            <div class="close_modal">
+                                <i class="fa-solid fa-xmark"></i>
+                            </div>
+                            <button style="width:80px;height:30px;" onclick="pasteClipboardContent()">Paste</button>
+                            <form method="post" id="customerForm">
+                                <div class="form_wapper">
+                                    <div class="FormControll">
+                                        <label asp-for="CustomerRegisterVM.Phone">رقم الهاتف</label>
+                                        <input type="text"
+                                               onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode))) return false;"
+                                               asp-for="CustomerRegisterVM.Phone"
+                                               maxlength="11"
+                                               onchange="GetCustomerData(),validatePhone();"
+                                               onkeyup="validatePhone();"
+                                               required />
+                                        <span id="phoneVal" class="text-danger" style="display:none;">
+                                            <i id="phoneLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
+                                        </span>
+                                    </div>
+                                    <div class="FormControll">
+                                        <label asp-for="CustomerRegisterVM.Name">اسم العميل</label>
+                                        <input type="text" asp-for="CustomerRegisterVM.Name" onkeyup="validateName();" onchange="validateName();" required />
+                                        <span id="nameVal" class="text-danger" style="display:none;">
+                                            <i id="nameLamp" class="fas fa-lightbulb" style="font-size:25px;"></i> 
+                                        </span>
+                                    </div>
+                                    <div class="FormControll">
+                                        <label asp-for="CustomerRegisterVM.AnotherPhone">رقم الهاتف اخر</label>
+                                        <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
+                                               asp-for="CustomerRegisterVM.AnotherPhone" maxlength="11" />
+                                    </div>
+                                    <div class="FormControll" id="address1">
+                                        <label asp-for="CustomerRegisterVM.Address">العنوان</label>
+                                        <div class="input-container">
+                                            <input type="text" asp-for="CustomerRegisterVM.Address" onkeyup="validateAddress();" onchange="validateAddress();" required />
+                                            <input type="checkbox" style="width:14px;height:14px;padding:0;" checked />
+                                            <button type="button" class="add-button">+</button>
+                                        </div>
+                                        <span id="addressVal" class="text-danger" style="display:none;">
+                                            <i id="addressLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
+                                        </span>
+                                    </div>
+                                    <div class="FormControll" id="address2">
+                                        <label asp-for="CustomerRegisterVM.Address2">عنوان 2</label>
+                                        <div class="input-container">
+                                            <input type="text" asp-for="CustomerRegisterVM.Address2" />
+                                            <input type="checkbox" style="width:14px;height:14px;" />
+                                            <button type="button" class="add-button">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="FormControll" id="address3">
+                                        <label asp-for="CustomerRegisterVM.Address3">عنوان 3</label>
+                                        <div class="input-container">
+                                            <input type="text" asp-for="CustomerRegisterVM.Address3" />
+                                            <input type="checkbox" style="width:14px;height:14px;" />
+                                            <button type="button" class="add-button">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="FormControll" id="address4">
+                                        <label asp-for="CustomerRegisterVM.Address4">عنوان 4</label>
+                                        <div class="input-container">
+                                            <input type="text" asp-for="CustomerRegisterVM.Address4"/>
+                                            <input type="checkbox" style="width:14px;height:14px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="Buttons">
+                                    <button type="button" onclick="addNewCustomer()">اضافة</button>
+                                    <button type="button" id="closeModel">الغاء</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="modal" class="tableModel" data-modal="add-table">
+                    <div class="modal-content">
+                        <div class="close_modal">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                        <div class="wapper">
+                            <!-- List Merge Tables -->
+                            <div class="Tables">
+                                <div class="Tables_content">
+                                    <!-- List -->
+                                    <div class="ListTables">
+                                        <div class="Tables_Table">
+                                            <div class="table_title">
+                                                <h2>حفر دجاج</h2>
+                                            </div>
+                                            <div class="table_item" id="dagagHolesData">
+                                                @foreach (var dagagHole in Model.DagagHoleDataVM)
+                                                {
+                                                    <div class="table_item_table">
+                                                        <img src="~/assets/images/hole2.jpg"
+                                                             alt="table"
+                                                             loading="lazy" />
+                                                        <div>
+                                                            <h3>@dagagHole.Name</h3>
+                                                            @if(dagagHole.EndTime != null)
+                                                            {
+                                                                <h5> الفتح  : @dagagHole.EndTime</h5>
+                                                            }
+                                                            else
+                                                            {
+                                                                <h5> الفتح : ____</h5>
+                                                            }
+                                                            <h5>العدد : @dagagHole.Amount</h5>
+                                                            <input type="checkbox" data-id="@dagagHole.Id" data-name="@dagagHole.Name" />
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ListTables">
+                                        <div class="Tables_Table">
+                                            <div class="table_title">
+                                                <h2>حفر لحم</h2>
+                                            </div>
+                                            <div class="table_item" id="meatHolesData">
+                                                @foreach (var meatHole in Model.MeatHoleDataVM)
+                                                {
+                                                    <div class="table_item_table">
+                                                        <img src="~/assets/images/hole2.jpg"
+                                                             alt="table"
+                                                             loading="lazy" />
+                                                        <div>
+                                                            <h3>@meatHole.Name</h3>
+                                                            @if(meatHole.EndTime != null)
+                                                            {
+                                                                <h5> الفتح : @meatHole.EndTime</h5>
+                                                            }
+                                                            else
+                                                            {
+                                                                <h5> الفتح : ____</h5>
+                                                            }
+                                                            <h5>عدد النفر : @meatHole.NafrAmount</h5>
+                                                            <h5>عدد نص النفر : @meatHole.HalfNafrAmount</h5>
+                                                            <input type="checkbox" data-id="@meatHole.Id" data-name="@meatHole.Name" />
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end List -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="Buttons" style="padding-top:20px !important">
+                            <button type="submit" onclick="addSelectedHoles()">اضافة</button>
+                            <button type="button">الغاء</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Checkout -->
+                <!-- List Items -->
+                <section>
+                    <div class="List-Items" id="allProducts">
+                        <partial name="_PartialProducts" model="Model.ProductGetVM" />
+                    </div>
+
+                    <!-- End List Items -->
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/views/salebill.js" asp-append-version="true"></script>
+}
+
+

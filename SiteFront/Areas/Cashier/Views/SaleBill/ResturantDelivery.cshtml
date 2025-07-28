@@ -1,0 +1,288 @@
+﻿@model ResturantDeliveryMainVM
+@{
+    Layout = null;
+    int index = 1;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/form.css" />
+    <link rel="stylesheet" href="~/assets/css/table.css" />
+    <link rel="stylesheet" href="~/assets/css/global.css" />
+    <link rel="stylesheet" href="~/assets/css/cashier.css" />
+
+    <title>طلبات دليفري المطعم</title>
+</head>
+<body>
+    <div class="loader">
+        <span></span>
+    </div>
+
+    <div class="container">
+        <div class="content" style="width: 100%">
+            <div class="content_wapper">
+                <header>
+                    <div style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 0px 10px;
+              ">
+                        <h3>طلبات دليفري المطعم</h3>
+                        <audio id="errorSound" src="~/sounds/errorsound.mp3" preload="auto" style="display:none;"></audio>
+                    </div>
+
+                </header>
+
+                <!-- Tables -->
+                <div class="table">
+                    <div class="container_table">
+                        <table id="myDataTable">
+                            <thead>
+                                <tr>
+                                    <th>ت</th>
+                                    <th> السائق</th>
+                                    <th>العميل</th>
+                                    <th>العنوان</th>
+                                    <th>الهاتف</th>
+                                    <th> الرقم</th>
+                                    <th> الاجمالي</th>
+                                    <th>التفاصيل</th>
+                                    <th>الوقت</th>
+                                    @* <th>التحصيل</th> *@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.DeliveryBillGetVM)
+                                {
+                                    TimeOnly currentTime = TimeOnly.FromDateTime(DateTime.Now);
+                                    string rowColor = ""; // Default: no style if DriverId is set
+
+                                    if (item.DriverId == 0) // Apply styles only if DriverId is 0 (not assigned)
+                                    {
+                                        if (item.OrderDeliveredTime.HasValue)
+                                        {
+                                            TimeSpan difference = item.OrderDeliveredTime.Value.ToTimeSpan() - currentTime.ToTimeSpan();
+                                            double minutesDifference = difference.TotalMinutes;
+
+                                            if (minutesDifference < 0)
+                                            {
+                                                rowColor = "background-color: red; color: white;"; // Past time → Overdue (Red)
+                                            }
+                                            else if (minutesDifference < 30)
+                                            {
+                                                rowColor = "background-color: red; color: white;"; // Less than 30 min → Urgent (Red)
+                                            }
+                                            else if (minutesDifference >= 30 && minutesDifference <= 40)
+                                            {
+                                                rowColor = "background-color: yellow;"; // Between 30-40 min → Warning (Yellow)
+                                            }
+                                            else if (minutesDifference > 40)
+                                            {
+                                                rowColor = "background-color: green;"; // Between 30-40 min → Warning (Yellow)
+                                            }
+                                        }
+                                        else
+                                        {
+                                            rowColor = "background-color: green;"; // Null time → Safe (Green)
+                                        }
+                                    }
+
+                                    <tr style="@rowColor">
+                                        <td>@(index++)</td>
+                                        @if (item.DriverId != 0)
+                                        {
+                                            <td>
+                                                <select asp-for="@item.DriverId" asp-items="@(new SelectList(Model.Drivers,"Id","Name"))" onchange="sendToDriver(this)" data-saleBillId="@item.Id"
+                                                        style="background-color: #fff;border: 1px solid #ddd;border-radius: 4px;font: inherit;padding: 14px;width:80%">
+                                                    <option value="">اختر السائق</option>
+                                                </select>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <select asp-items="@(new SelectList(Model.Drivers,"Id","Name"))" onchange="sendToDriver(this)" data-saleBillId="@item.Id"
+                                                        style="background-color: #fff;border: 1px solid #ddd;border-radius: 4px;font: inherit;padding: 14px;width:80%;color:red;">
+                                                    <option value="">اختر السائق</option>
+                                                </select>
+                                            </td>
+                                        }
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.CustomerAddress</td>
+                                        <td>@item.CustomerPhone</td>
+                                        <td>@item.Id</td>
+                                        <td>@item.FinalTotal</td>
+                                        <td>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>الصنف</th>
+                                                        <th>السعر</th>
+                                                        <th>الكمية</th>
+                                                        <th>السعر الكلي</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var detail in item.BillDetailRegisterVM)
+                                                    {
+                                                        <tr>
+                                                            <td>@detail.PName</td>
+                                                            <td>@detail.Price</td>
+                                                            <td>@detail.Amount</td>
+                                                            <td>@detail.TotalPrice</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        @if (item.OrderDeliveredTime != null)
+                                        {
+                                            <td>@item.OrderDeliveredTime</td>
+                                        }
+                                        else
+                                        {
+                                            <td> _____</td>
+                                        }
+                                        @* <td>
+                                            <input type="checkbox" id="@item.Id" onclick="changeDelivered(this)" />
+                                        </td> *@
+                                    </tr>
+                                }
+
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="goBack">
+                    <a asp-action="Index" asp-controller="SaleBill" asp-area="Cashier">
+                        <button>العودة</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/assets/js/Cashier.js"></script>
+    <script type="text/javascript" src="~/assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myDataTable').DataTable({
+                dom: 'Bfrtip', // Adds the buttons to the table
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Export to Excel',
+                        className: 'btn btn-success', // Optional styling
+                        title: 'Table Export', // Excel file title
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Export to PDF',
+                        className: 'btn btn-danger', // Optional styling
+                        title: 'Table Export', // PDF file title
+                        orientation: 'landscape', // Use 'portrait' or 'landscape'
+                        pageSize: 'A4' // Paper size
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print Table',
+                        className: 'btn btn-primary', // Optional styling
+                        title: 'Printed Table'
+                    }
+                ],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json" // Arabic localization
+                },
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true
+            });
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+    @await Component.InvokeAsync("NToastNotify")
+    <script type="text/javascript">
+        function changeDelivered(d) {
+            $.ajax({
+                type: 'POST',
+                url: '/Cashier/SaleBill/ChangeBillDelivered?id=' + d.id,
+                success: function () {
+                    toastr.success("تم التحصيل");
+                    setTimeout(function () {
+                        window.location.href = "/Cashier/SaleBill/ResturantDelivery";
+                    }, 500);
+                },
+                error: function () {
+                    toastr.error("لم يتم التحصيل برجاء المحاولة لاحقا");
+                }
+            });
+        };
+
+        //Alert Sound
+        function playErrorSound() {
+            const audio = document.getElementById("errorSound");
+            if (audio) {
+                audio.play();
+            }
+        }
+
+        function sendToDriver(selectElement) {
+            var $select = $(selectElement);
+            var driverId = $select.val();
+            var saleBillId = $select.data("salebillid");
+            //console.log(driverId, saleBillId);
+            //return;
+            if (driverId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Cashier/SaleBill/HandleBillDriver?driverId=' + driverId + '&saleBillId=' + saleBillId,
+                    success: function () {
+                        toastr.success("تم ارسال البيانات إلي السائق");
+                        setTimeout(function () {
+                            window.location.href = "/Cashier/SaleBill/ResturantDelivery";
+                        }, 500);
+                    },
+                    error: function (xhr) {
+                        playErrorSound();
+                        if (xhr.responseJSON?.error === "PRINT_ERROR") {
+                            toastr.info("حدث خطأ في الطباعة حاول لاخقا");
+                        }
+                        else if (xhr.responseJSON?.error === "MESSAGE_ERROR") {
+                            toastr.error("حدث خطأ أثناء إرسال الرسالة حاول مجددا");
+                        }
+
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+﻿@model List<ProductGetVM>
+
+@foreach (var item in Model)
+{
+    <div class="Card" onclick="addProduct(this)" data-id="@item.Id" data-price="@item.SellingPrice" data-name="@item.Name">
+        <div class="Card_content">
+            <div class="image">
+                @if(item.ImageUrl != null){
+                    <img src="~/SystemImages/Products/@item.ImageUrl" alt="img" />
+                }
+                else{
+                    <img src="~/assets/images/NaseerMandi.jpeg" alt="img" />
+                }
+            </div>
+            <div class="info">
+                <h3>@item.Name</h3>
+                <div class="price">
+                    <h4>السعر</h4>
+                    <h4> @item.SellingPrice دينار</h4>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+}

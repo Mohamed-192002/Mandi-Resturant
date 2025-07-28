@@ -1,0 +1,221 @@
+﻿@model List<DeliveryBillGetVM>
+@{
+    Layout = null;
+    int index = 1;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/form.css" />
+    <link rel="stylesheet" href="~/assets/css/table.css" />
+    <link rel="stylesheet" href="~/assets/css/global.css" />
+    <link rel="stylesheet" href="~/assets/css/cashier.css" />
+
+    <title>طلبات الحجز المسبق</title>
+</head>
+<body>
+    <div class="loader">
+        <span></span>
+    </div>
+
+    <div class="container">
+        <div class="content" style="width: 100%">
+            <div class="content_wapper">
+                <header>
+                    <div style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 0px 10px;
+              ">
+                        <h3>طلبات الحجز المسبق</h3>
+                    </div>
+
+                </header>
+
+                <!-- Tables -->
+                <div class="table">
+                    <div class="container_table">
+                        <table id="myDataTable">
+                            <thead>
+                                <tr>
+                                    <th>ت</th>
+                                    <th>العميل</th>
+                                    <th>العنوان</th>
+                                    <th>الهاتف</th>
+                                    <th>رقم الفاتورة</th>
+                                    <th> الاجمالي</th>
+                                    <th>التفاصيل</th>
+                                    <th>الطباعة</th>
+                                    <th>تحويل للتوصيل</th>
+                                    <th>إلغاء</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@(index++)</td>
+                                        <td> @item.CustomerName</td>
+                                        <td> @item.CustomerAddress</td>
+                                        <td> @item.CustomerPhone</td>
+                                        <td>@item.Id</td>
+                                        <td>@item.FinalTotal</td>
+                                        <td>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>الصنف</th>
+                                                        <th>السعر</th>
+                                                        <th>الكمية</th>
+                                                        <th>السعر الكلي</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var detail in item.BillDetailRegisterVM)
+                                                    {
+                                                        <tr>
+                                                            <td>@detail.PName</td>
+                                                            <td>@detail.Price</td>
+                                                            <td>@detail.Amount</td>
+                                                            <td>@detail.TotalPrice</td>
+                                                        </tr>
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @* <input type="checkbox" id="@item.Id" onclick="changeDelivered(this)" /> *@
+                                            <a onclick="printAndDelivered(this)" id="@item.Id" style="background-color:blue;
+                                                                                                        border-radius: 5px;
+                                                                                                        padding: 7px 30px;
+                                                                                                        color: #fff;cursor:pointer;">
+                                                 طباعة
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a asp-action="ReturnToDriver" asp-route-id="@item.Id" style="background-color: black;
+                                                                                                        border-radius: 5px;
+                                                                                                        padding: 7px 30px;
+                                                                                                        color: #fff;">
+                                                 تحويل للتوصيل
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a asp-action="CancelRerservation" asp-route-id="@item.Id" onclick="return confirm('هل أنت متأكد من إلغاء هذا الحجز؟')" style="background-color: red;
+                                                                                                        border-radius: 5px;
+                                                                                                        padding: 7px 30px;
+                                                                                                        color: #fff;">
+                                                 إلغاء
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="goBack">
+                    <a asp-action="Index" asp-controller="SaleBill" asp-area="Cashier">
+                        <button>العودة</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/assets/js/Cashier.js"></script>
+    <script type="text/javascript" src="~/assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myDataTable').DataTable({
+                dom: 'Bfrtip', // Adds the buttons to the table
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Export to Excel',
+                        className: 'btn btn-success', // Optional styling
+                        title: 'Table Export', // Excel file title
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Export to PDF',
+                        className: 'btn btn-danger', // Optional styling
+                        title: 'Table Export', // PDF file title
+                        orientation: 'landscape', // Use 'portrait' or 'landscape'
+                        pageSize: 'A4' // Paper size
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print Table',
+                        className: 'btn btn-primary', // Optional styling
+                        title: 'Printed Table'
+                    }
+                ],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json" // Arabic localization
+                },
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true
+            });
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+    @await Component.InvokeAsync("NToastNotify")
+    <script type="text/javascript">
+        function printAndDelivered(d) {
+            $.ajax({
+                type: 'POST',
+                url: '/Cashier/SaleBill/PrintAndDelivered?id=' + d.id,
+                success: function () {
+                    toastr.success("تم التحصيل والطباعة");
+                    setTimeout(function () {
+                        window.location.href = "/Cashier/SaleBill/CustomerRecieve";
+                    }, 1000);
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON?.error === "PRINT_ERROR") {
+                        toastr.error(" حدث خطأ في الطباعة");
+                    } else if (xhr.responseJSON?.error === "TRANSACTION_ERROR") {
+                        toastr.error("حدث خطأ في التحصيل برجاء المحاولة لاحقا");
+                    }
+                    else{
+                        toastr.error("حدث خطأ برجاء المحاولة لاحقا");
+                    }
+                    setTimeout(function () {
+                        window.location.href = "/Cashier/SaleBill/CustomerRecieve";
+                    }, 500);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

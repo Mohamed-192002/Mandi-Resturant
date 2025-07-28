@@ -1,0 +1,68 @@
+﻿@model RolesModelDto
+
+@{
+    ViewData["Title"] = "المجموعات والصلاحيات";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>المجموعات</h3>
+        </div>
+    </header>
+
+    <div style="width: 90%; margin: 100px auto" id="_PartialRoles">
+        <partial name="_PartialRoles" model="Model.RolesRegisterDto" />
+    </div>
+
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th> تسلسل</th>
+                        <th>اسم المجموعة</th>
+                        <th>تعديل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RolesGetDtos)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td> @item.Name</td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button type="button" id="@item.Id" onclick="loadData(this)">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a asp-action="DeleteConfirmed" onclick="return confirm('هل أنت متأكد من حذف هذه المجموعة؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                    <a asp-action="MangeRolePermition" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square" style="color: var(--bg-button);"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    <script>
+
+        function loadData(e) {
+            $("#_PartialRoles").load("/Managment/Roles/GetData?id=" + e.id);
+        }
+
+    </script>
+}

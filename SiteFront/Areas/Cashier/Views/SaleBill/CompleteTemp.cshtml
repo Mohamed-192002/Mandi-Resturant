@@ -1,0 +1,171 @@
+﻿@model CompleteTempMainVM
+@{
+    ViewData["Title"] = "كاشير";
+}
+<div class="container">
+    <div class="Sidebar">
+        <div class="overlay"></div>
+        <div class="Sidebar_content">
+            <div class="close_sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+
+            <div class="Logo">
+                <img src="~/assets/images/alwakeellogo.png" alt="Logo" width="100%" height="100%" />
+            </div>
+            <div class="SidebarList">
+               @*  <ul>
+                    <a onclick="getAllProducts()" href="javascript:void(0);">
+                    <li>جميع العناصر</li> </a>
+                    @foreach (var category in Model.CategoryGetVM)
+                    {
+                        <a onclick="getCategoryProducts(this)" href="javascript:void(0);" id=@category.Id>
+                        <li> @category.Name</li>
+                        <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    }
+
+                </ul> *@
+                <div class="Logout">
+                    <a asp-area="Auth" asp-controller="Login" asp-action="LogOut">تسجيل الخروج</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content_wapper">
+            <header style="background: transparent">
+                <div class="header_content">
+                    <div style="display: flex;align-items: center;flex-wrap: wrap;gap: 10px;">
+                        <i class="fa-solid fa-bars-staggered menu-slider"></i>
+                    </div>
+                    <i class="fa-solid fa-list icon"></i>
+                </div>
+
+                <!-- Drawer for header Cashier -->
+                <div id="Drawer">
+                    <div class="Drawer_wapper">
+                        <div class="Drawer_content">
+                            <div class="close">
+                                <i class="fa-solid fa-xmark"></i>
+                            </div>
+                            <div>
+                                <ul class="menu_list">
+                                    @* <a href="/cashier/d">
+                                    <li>درج الخزينة</li>
+                                    </a> *@
+                                    <a asp-action="DeliveryBill" asp-controller="SaleBill">
+                                    <li>الدليفري</li>
+                                    </a>
+                                    <a asp-action="TemporaryBill" asp-controller="SaleBill">
+                                    <li>الفواتير المؤجلة</li>
+                                    </a>
+                                    @* <a asp-action="UnConfirmedBill" asp-controller="SaleBill">
+                                    <li>الاشعارات</li>
+                                    </a> *@
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="wapper">
+                <!-- Checkout -->
+                <div class="Checkout">
+                    <div class="Checkout_content">
+                        <div class="title">
+                            <h3>تفاصيل الفاتورة</h3>
+                            @* <i class="fa-solid fa-trash icon"></i> *@
+                        </div>
+                        <!-- list Checkout -->
+                        <div class="List">
+                            <div class="item">
+                                <button>سفري</button>
+                            </div>
+                        </div>
+
+                        <!-- <hr /> -->
+                        <!-- product Checkout -->
+                        <div class="product" id="productList">
+                            @foreach (var item in Model.BillDetailRegisterVM)
+                            {
+                                <div class="product_item">
+                                    <input type="hidden" class="product-id" value="@item.ProductId" />
+                                    <div class="item" style="width: min-content;">
+                                        <h4>السعر</h4>
+                                        <input type="text" value="@item.Price" style="width:70px;height:30px;text-align:center" id="price" readonly />
+                                    </div>
+                                    <div class="item" style="width: min-content;">
+                                        <h4>الخصم</h4>
+                                        <input type="text" value="@item.Discount" style="width:70px;height:30px;text-align:center" id="discount" oninput="updateTotal(this)" />
+                                    </div>
+                                    <div class="item" style="width: min-content;">
+                                        <h4>الكمية</h4>
+                                        <input type="text" value="@item.Amount" style="width:70px;height:30px;text-align:center" id="quantity" oninput="updateTotal(this)" />
+                                    </div>
+                                    <div class="item" style="width: min-content;">
+                                        <h4>الاجمالي</h4>
+                                        <p>@item.TotalPrice</p>
+                                    </div>
+                                    <div class="item_name" style="width: min-content;">
+                                        <h4>@item.PName</h4>
+                                        <button onclick="removeProduct(this)">
+                                            <i class="fa-solid fa-trash item_icon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="total">
+                            <div class="total_wapper">
+                                <input type="hidden" value="@Model.SaleBillId" id="saleBillId" />
+                                <p>اجمالي الطلب</p>
+                                <div class="total_item">
+                                    <p>الخصم</p>
+                                    <input type="text" value="@Model.Discount" style="width:70px;height:30px;text-align:center" />
+                                </div>
+                                <div class="total_item">
+                                    <p>ضريبة القيمة المضافة</p>
+                                    <input type="text" value="@Model.Vat" style="width:70px;height:30px;text-align:center" />%
+                                </div>
+
+                                <div class="total_item">
+                                    <p>الصافي</p>
+                                    <span id="finalTotal">@Model.FinalTotal</span>
+                                </div>
+                                <div class="total_item">
+                                    <p>ملاحظات</p>
+                                    <textarea id="notes">@Model.Notes</textarea>
+                                </div>
+                            </div>
+                            <button type="button" onclick="EditTempBill()">حفظ الفاتورة</button>
+                            <a asp-action="TemporaryBill" style="background-color:red;
+                                                                        border-radius: 8px;
+                                                                        color: var(--text-white);
+                                                                        padding: 8px;font-family: var(--font-family);
+                                                                        font-size: 18px;
+                                                                        text-align:center;">
+                                                                        إلغاء
+                            </a>
+                        </div>
+                        <!-- End Product -->
+                    </div>
+
+                </div>
+                <!-- List Items -->
+                <section>
+                   @*  <div class="List-Items" id="allProducts">
+                        <partial name="_PartialProducts" model="Model.ProductGetVM" />
+                    </div> *@
+
+                    <!-- End List Items -->
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/views/salebill.js" asp-append-version="true"></script>
+}
