@@ -229,7 +229,27 @@ function addSelectedHoles() {
         Modal_Table.classList.remove("open");
     });
 };
+//function addSelectedHoles() {
+//    const $selectedHoleList = $('#selectedHoles');
+//    $selectedHoleList.empty();
 
+//    $.ajax({
+//        url: '/Cashier/SaleBill/GetCurrentHoles',
+//        method: 'GET',
+//        dataType: 'json',
+//        success: function (holes) {
+//            holes.forEach(function (hole) {
+//                const listItem = `<li id="${hole.id}">${hole.name}</li>`;
+//                $selectedHoleList.append(listItem);
+//            });
+
+//            Modal_Table.classList.remove("open");
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error fetching selected holes:', error);
+//        }
+//    });
+//}
 function validatePhone() {
     const phone = document.getElementById("CustomerRegisterVM_Phone").value.trim();
     const phoneLamp = document.getElementById("phoneLamp");
@@ -523,6 +543,8 @@ function playErrorSound() {
 //Save Bill
 async function CreateBill() {
     var selectedType = $('input[name="billType"]:checked').val();
+    var orderNumber = $("#orderNumber").val();
+
     if (selectedType == 1) {
         //Customer
         var customerId = $("#customerName span").attr('id');
@@ -566,8 +588,11 @@ async function CreateBill() {
             finalTotal: parseFloat(netTotal),
             gift: gift,
             notes: note,
+            orderNumber: orderNumber,
             customerAddress: customerAddress
         };
+        console.log(orderNumber);
+        console.log(billSafaryRegisterVM);
 
         if (billSafaryRegisterVM.billDetailRegisterVM.length == 0) {
             return toastr.error("يجب إدخال علي الاقل صنف واحد في الفاتورة");
@@ -669,8 +694,11 @@ async function CreateBill() {
             finalTotal: parseFloat(netTotal),
             orderDeliveredTime: time,
             notes: note,
+            orderNumber: orderNumber,
             customerAddress: customerAddress
         };
+        console.log(orderNumber);
+        console.log(billDeliveryRegisterVM);
 
         if (billDeliveryRegisterVM.billDetailRegisterVM.length == 0) {
             return toastr.error("يجب إدخال علي الاقل صنف واحد في الفاتورة");
@@ -816,8 +844,11 @@ async function CreateBill() {
             finalTotal: parseFloat(netTotal),
             orderDeliveredTime: time,
             notes: note,
+            orderNumber: orderNumber,
             customerAddress: customerAddress
         };
+        console.log(orderNumber);
+        console.log(billDeliveryRegisterVM);
 
         if (billDeliveryRegisterVM.billDetailRegisterVM.length == 0) {
             return toastr.error("يجب إدخال علي الاقل صنف واحد في الفاتورة");
@@ -962,8 +993,11 @@ async function CreateBill() {
             finalTotal: parseFloat(netTotal),
             orderDeliveredTime: time,
             notes: note,
+            orderNumber: orderNumber,
             customerAddress: customerAddress
         };
+        console.log(orderNumber);
+        console.log(billDeliveryRegisterVM);
 
         if (billDeliveryRegisterVM.billDetailRegisterVM.length == 0) {
             return toastr.error("يجب إدخال علي الاقل صنف واحد في الفاتورة");
@@ -1371,6 +1405,8 @@ async function pasteClipboardContent() {
 //Save Temp Bill
 function CreateTempBill() {
     var selectedType = $('input[name="billType"]:checked').val();
+    var orderNumber = $("#orderNumber").val();
+
 
     if (selectedType == 2) {
         const productsData = [];
@@ -1407,6 +1443,7 @@ function CreateTempBill() {
             discount: parseFloat(discount),
             vat: parseFloat(vat),
             finalTotal: parseFloat(netTotal),
+            orderNumber: orderNumber,
             notes: note
         };
 
@@ -1441,7 +1478,7 @@ function CreateTempBill() {
 
 //Edit TempBill
 function EditTempBill() {
-
+    var orderNumber = $("#orderNumber").val();
     const productsData = [];
     $("#productList .product_item").each(function () {
         const $product = $(this);
@@ -1478,6 +1515,7 @@ function EditTempBill() {
         vat: parseFloat(vat),
         finalTotal: parseFloat(netTotal),
         notes: note,
+        orderNumber: orderNumber,
         id: saleBillId
     };
 

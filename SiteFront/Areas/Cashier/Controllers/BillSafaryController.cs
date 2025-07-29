@@ -74,7 +74,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Notes = model.Notes,
                     Gift = model.Gift,
                     CustomerId = model.CustomerId,
-                    CustomerAddress = model.CustomerAddress
+                    CustomerAddress = model.CustomerAddress,
+                    OrderNumber=model.OrderNumber
                 };
                 _saleBillRepo.Add(saleBillDb);
                 await _saleBillRepo.SaveAllAsync();

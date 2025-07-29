@@ -89,7 +89,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                     OrderDeliveredTime = model.OrderDeliveredTime != "" ? TimeOnly.Parse(model.OrderDeliveredTime) : null,
                     Notes = model.Notes,
                     MoneyDelivered = false,
-                    CustomerAddress = model.CustomerAddress
+                    CustomerAddress = model.CustomerAddress,
+                    OrderNumber = model.OrderNumber
                 };
                 _saleBillRepo.Add(saleBillDb);
                 await _saleBillRepo.SaveAllAsync();

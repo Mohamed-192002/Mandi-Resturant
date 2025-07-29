@@ -34,5 +34,6 @@ namespace Core.Entities
         public bool Gift { get; set; } = false;
         public TimeOnly? OrderDeliveredTime { get; set; }
         public string? CustomerAddress { get; set; }
+        public string? OrderNumber { get; set; }
     }
 }

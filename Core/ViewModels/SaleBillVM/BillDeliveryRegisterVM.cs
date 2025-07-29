@@ -13,5 +13,7 @@
         public string? Notes { get; set; }
         public bool CustomerReceive { get; set; }
         public string? CustomerAddress { get; set; }
+        public string? OrderNumber { get; set; }
+
     }
 }

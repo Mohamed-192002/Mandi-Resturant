@@ -16,5 +16,7 @@ namespace Core.ViewModels.SaleBillVM
         public string? Notes { get; set; }
         public bool Gift { get; set; }
         public string? CustomerAddress { get; set; }
+        public string? OrderNumber { get; set; }
+
     }
 }

@@ -55,6 +55,7 @@
                             <thead>
                                 <tr>
                                     <th>ت</th>
+                                    <th>رقم الطلب</th>
                                     <th>العميل</th>
                                     <th>العنوان</th>
                                     <th>رقم الفاتورة</th>
@@ -69,6 +70,7 @@
                                 {
                                     <tr>
                                         <td>@(index++)</td>
+                                        <td> @item.OrderNumber</td>
                                         <td> @item.CustomerName</td>
                                         <td> @item.CustomerAddress</td>
                                         <td>@item.Id</td>

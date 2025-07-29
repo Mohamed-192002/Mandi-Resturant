@@ -10,6 +10,7 @@ namespace Core.ViewModels.DeliveryBillVM
         public string? DeliveryName { get; set; }
         public int DriverId { get; set; }
         public string? DriverName { get; set; }
+        public string? OrderNumber { get; set; }
         public string? CustomerName { get; set; }
         public string? CustomerAddress { get; set; }
         public string? CustomerPhone { get; set; }

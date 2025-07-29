@@ -2,6 +2,36 @@
 @{
     ViewData["Title"] = "كاشير";
 }
+<style>
+    .order-input-container {
+        /* margin: 15px 0;
+        display: flex;
+        flex-direction: column;
+        max-width: 300px; */
+        text-align: center;
+    }
+
+        .order-input-container label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            /* color: #333; */
+            margin-left: 20px;
+        }
+
+        .order-input-container input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+            .order-input-container input:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                outline: none;
+            }
+</style>
 <div class="container">
     <div class="Sidebar">
         <div class="overlay"></div>
@@ -235,11 +265,17 @@
                         </div>
 
                         <!-- for Tables -->
-                        <div class="add-Tables">
+                        @* <div class="add-Tables">
                             <button type="button" class="chooseTable">إختيار الحفر</button>
                             <ul id="selectedHoles">
                             </ul>
+                        </div> *@
+
+                        <div class="order-input-container">
+                            <label for="orderNumber">رقم الطلب : </label>
+                            <input type="text" id="orderNumber" name="orderNumber" placeholder="ادخل رقم الطلب" />
                         </div>
+
 
                         <!-- <hr /> -->
                         <!-- product Checkout -->
