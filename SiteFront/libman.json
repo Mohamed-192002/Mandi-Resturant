@@ -14,6 +14,14 @@
       "provider": "cdnjs",
       "library": "select2@4.1.0-rc.0",
       "destination": "wwwroot/select2/"
+    },
+    {
+      "library": "flatpickr@4.6.13",
+      "destination": "wwwroot/lib/flatpickr/",
+      "files": [
+        "dist/flatpickr.min.css",
+        "dist/flatpickr.min.js"
+      ]
     }
   ]
 }

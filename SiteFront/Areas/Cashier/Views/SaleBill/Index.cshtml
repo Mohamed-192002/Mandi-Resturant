@@ -309,9 +309,11 @@
                                 </div> *@
                                 <div class="total_item" id="orderDeliveredTime">
                                     <p>وقت الاستلام</p>
-                                    <input type="time" style="width:120px;height:30px;text-align:center" />
+                                    @* <input type="time" style="width:120px;height:30px;text-align:center" /> *@
+                                    <input id="timePicker" type="text" style="width:120px;height:30px;text-align:center" />
                                     @* value="@DateTime.Now.ToString("HH:mm")" *@
                                 </div> 
+
                                 <div class="total_item open" id="gift">
                                     <p>تعيين كهدية</p>
                                     <input type="checkbox" style="width:20px;height:20px;" />
@@ -501,10 +503,21 @@
         </div>
     </div>
 </div>
-
+<link href="~/lib/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
 @section Scripts {
     <script src="~/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/views/salebill.js" asp-append-version="true"></script>
+    <script src="~/lib/flatpickr/dist/flatpickr.min.js"></script>
+    <script>
+
+        flatpickr("#timePicker", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "h:i K",
+            time_24hr: false,
+             minuteIncrement: 1
+        });
+    </script>
 }
 
 
