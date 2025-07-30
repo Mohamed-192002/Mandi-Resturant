@@ -1,0 +1,56 @@
+﻿@using Core.Entities
+@model DeviceRegistrationModelDto
+@{
+    ViewData["Title"] = "الهواتف";
+    int index = 1;
+}
+
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>الهواتف</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div style="width: 90%; margin: 100px auto">
+        <partial name="_PartialDeviceRegistration" model="Model.DeviceRegistrationRegisterDto" />
+    </div>
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th> تسلسل</th>
+                        <th>المستخدم</th>
+                        <th>الكود</th>
+                        <th> الجهاز</th>
+                        <th>تعديل</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.DeviceRegistrationGetDtos)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td> @item.User.Name</td>
+                            <td> @item.AccessCode</td>
+                            <td> @item.DeviceId</td>
+                            <td>
+                                <a asp-action="DeleteDeviceRegistration" onclick="return confirm('Are you sure you want to delete this?')" asp-route-id="@item.Id">
+                                    <i class="fa-solid fa-trash" style="color: var(--bg-delete);"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+

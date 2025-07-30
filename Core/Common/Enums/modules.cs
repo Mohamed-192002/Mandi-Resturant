@@ -11,6 +11,9 @@
             {
                 //Users
                 { "UsersIndex", " المستخدمين " },
+                { "GetDeviceRegistrations", " الهواتف " },
+                { "DeleteDeviceRegistration", " حذف هاتف " },
+                { "AddDeviceRegistration", " اضافه هاتف " },
                 { "UsersCreate", " اضافه مستخدم " },
                 { "UsersEdit", " تعديل بيانات مستخدم " },
                 { "UsersDelete", " حذف مستخدم " },

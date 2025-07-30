@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Common;
 using Core.Dtos;
 using Core.Dtos.UserDto;
 using Core.Entities;
@@ -26,6 +27,8 @@ namespace SiteFront.Areas.Managment.Controllers
         private readonly IRepository<User> _UserRepo;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IRepository<UserRole> _UserRoleRepo;
+        private readonly IRepository<DeviceRegistration> _deviceRegistrationRepo;
+
         public List<string> RolesSelect { get; set; } = new List<string>();
         public List<Role> roles { get; set; }
         public List<AuthenticationScheme> ExternalLogins { get; private set; }
@@ -37,7 +40,8 @@ namespace SiteFront.Areas.Managment.Controllers
             ILogger<RegisterModel> logger,
             IMapper mapper,
             IRepository<UserRole> UserRoleRepo,
-            IToastNotification toastNotification)
+            IToastNotification toastNotification,
+            IRepository<DeviceRegistration> deviceRegistrationRepo)
         {
             _UserRepo = UserRepo;
             _mapper = mapper;
@@ -47,10 +51,94 @@ namespace SiteFront.Areas.Managment.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-
-
+            _deviceRegistrationRepo = deviceRegistrationRepo;
         }
 
+        #region DeviceRegistration
+        [Authorize("Permissions.GetDeviceRegistrations")]
+        [HttpGet]
+        public async Task<IActionResult> GetDeviceRegistrations()
+        {
+            var devices = await _deviceRegistrationRepo.GetAllAsync(d => !d.IsDeleted);
+            var users = await _userManager.Users
+                .Where(u => !u.IsDeleted && u.UserRole.Any(x => x.Role.Name == "Cashier"))
+                .ToListAsync();
+
+            var deviceRegistrationModelDto = new DeviceRegistrationModelDto
+            {
+                DeviceRegistrationGetDtos = devices,
+                DeviceRegistrationRegisterDto = new DeviceRegistrationRegisterDto()
+                {
+                    Users = _mapper.Map<List<CommonUserDrop>>(users),
+                }
+            };
+            return View(deviceRegistrationModelDto);
+        }
+        [Authorize("Permissions.DeleteDeviceRegistration")]
+        public async Task<IActionResult> DeleteDeviceRegistration(int id)
+        {
+            try
+            {
+                var device = await _deviceRegistrationRepo.GetByIdAsync(id);
+                device.IsDeleted = true;
+                _deviceRegistrationRepo.Update(device);
+                await _deviceRegistrationRepo.SaveAllAsync();
+                _toastNotification.AddSuccessToastMessage("تم الحذف بنجاح");
+            }
+            catch (Exception)
+            {
+                _toastNotification.AddErrorToastMessage("لا يمكن حذف هذا الهاتف");
+            }
+            return RedirectToAction(nameof(GetDeviceRegistrations));
+        }
+        [Authorize("Permissions.AddDeviceRegistration")]
+        [HttpPost]
+        public async Task<IActionResult> RegisterDevice(DeviceRegistrationRegisterDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var device = new DeviceRegistration
+                {
+                    UserId = model.UserId,
+                    AccessCode = model.AccessCode,
+                    IsDeleted = false
+                };
+                _deviceRegistrationRepo.Add(device);
+                await _deviceRegistrationRepo.SaveAllAsync();
+                _toastNotification.AddSuccessToastMessage("تم تسجيل الجهاز بنجاح");
+                return RedirectToAction(nameof(GetDeviceRegistrations));
+            }
+            else
+            {
+                _toastNotification.AddErrorToastMessage("تأكد من صحة البيانات");
+                var devices = await _deviceRegistrationRepo.GetAllAsync(d => !d.IsDeleted);
+                var users = await _userManager.Users
+                    .Where(u => !u.IsDeleted && u.UserRole.Any(x => x.Role.Name == "Cashier"))
+                    .ToListAsync();
+
+                var deviceRegistrationModelDto = new DeviceRegistrationModelDto
+                {
+                    DeviceRegistrationGetDtos = devices,
+                    DeviceRegistrationRegisterDto = new DeviceRegistrationRegisterDto()
+                    {
+                        Users = _mapper.Map<List<CommonUserDrop>>(users),
+                    }
+                };
+                // إعادة تحميل البيانات اللازمة لتعبئة الموديل
+                var fullModel = new DeviceRegistrationModelDto
+                {
+                    DeviceRegistrationRegisterDto = model,
+                    DeviceRegistrationGetDtos = devices // تأكد من تضمين الـ User
+                };
+
+                // املأ قائمة المستخدمين من جديد
+                fullModel.DeviceRegistrationRegisterDto.Users = _mapper.Map<List<CommonUserDrop>>(users);
+
+                return View("GetDeviceRegistrations", fullModel);
+            }
+        }
+
+        #endregion
         [Authorize("Permissions.UsersIndex")]
         [HttpGet]
         public async Task<IActionResult> Index()

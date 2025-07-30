@@ -91,7 +91,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Notes = model.Notes,
                     MoneyDelivered = false,
                     CustomerAddress = model.CustomerAddress,
-                    OrderNumber=model.OrderNumber
+                    OrderNumber = model.OrderNumber
                 };
                 _saleBillRepo.Add(saleBillDb);
                 await _saleBillRepo.SaveAllAsync();

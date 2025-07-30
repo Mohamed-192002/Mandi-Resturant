@@ -31,6 +31,7 @@ namespace Infrastructure.Helper
             CreateMap<User, UserGetDto>();
             CreateMap<User, UserEditDto>().ReverseMap();
             CreateMap<User, UserRegisterDto>().ReverseMap();
+            CreateMap<User, CommonUserDrop>().ReverseMap();
 
             //Claims 
             CreateMap<Role, EditRolesClaimDto>();
