@@ -9,6 +9,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Diagnostics;
 
 namespace SiteFront.Areas.Cashier.Controllers
@@ -26,6 +27,7 @@ namespace SiteFront.Areas.Cashier.Controllers
         private readonly IRepository<Product> _productRepo;
         private readonly IRepository<Hole> _holeRepo;
         private readonly IRepository<ChickenHoleMovement> _chickenHoleMovementRepo;
+        private readonly IRepository<PrinterRegistration> _printerRegistration;
         private readonly IRepository<MeatHoleMovement> _meatHoleMovementRepo;
         private readonly IRepository<ChickenFilling> _chickenFillingRepo;
         private readonly IRepository<MeatFilling> _meatFillingRepo;
@@ -45,6 +47,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             IRepository<MeatHoleMovement> meatHoleMovementRepo,
             IRepository<ChickenFilling> chickenFillingRepo,
             IRepository<MeatFilling> meatFillingRepo,
+            IRepository<PrinterRegistration> printerRegistration,
             IWebHostEnvironment webHostEnvironment,
             IConfiguration configuration,
             UserManager<User> userManager,
@@ -58,6 +61,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             _productRepo = productRepo;
             _holeRepo = holeRepo;
             _chickenHoleMovementRepo = chickenHoleMovementRepo;
+            _printerRegistration = printerRegistration;
             _meatHoleMovementRepo = meatHoleMovementRepo;
             _chickenFillingRepo = chickenFillingRepo;
             _meatFillingRepo = meatFillingRepo;
@@ -149,7 +153,15 @@ namespace SiteFront.Areas.Cashier.Controllers
                 try
                 {
                     var filePathBill = GenerateReceipt(billHallPrintVM);
-                    var printerName = _configuration["CashierPrinterName"];
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    if (user == null)
+                        throw new Exception("User not found.");
+                    // Get the printer names from configuration
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    if (print == null)
+                        throw new Exception("Printer not registered for user.");
+                    //var printerName = _configuration["CashierPrinterName"];
+                    var printerName = print.Name;
                     var printerName2 = _configuration["DeliveryPrinterName"];
                     await PrintPdfAsync(filePathBill, printerName);
                     await PrintPdfAsync(filePathBill, printerName2);
@@ -264,7 +276,15 @@ namespace SiteFront.Areas.Cashier.Controllers
                 try
                 {
                     var filePathBill = GenerateReceipt(billHallPrintVM);
-                    var printerName = _configuration["CashierPrinterName"];
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    if (user == null)
+                        throw new Exception("User not found.");
+                    // Get the printer names from configuration
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    if (print == null)
+                        throw new Exception("Printer not registered for user.");
+                    //var printerName = _configuration["CashierPrinterName"];
+                    var printerName = print.Name;
                     var printerName2 = _configuration["DeliveryPrinterName"];
                     await PrintPdfAsync(filePathBill, printerName);
                     await PrintPdfAsync(filePathBill, printerName2);
@@ -804,7 +824,15 @@ namespace SiteFront.Areas.Cashier.Controllers
                 try
                 {
                     var filePathBill = GenerateReceipt(billHallPrintVM);
-                    var printerName = _configuration["CashierPrinterName"];
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    if (user == null)
+                        throw new Exception("User not found.");
+                    // Get the printer names from configuration
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    if (print == null)
+                        throw new Exception("Printer not registered for user.");
+                    //var printerName = _configuration["CashierPrinterName"];
+                    var printerName = print.Name;
                     await PrintPdfAsync(filePathBill, printerName);
                 }
                 catch (Exception ex)

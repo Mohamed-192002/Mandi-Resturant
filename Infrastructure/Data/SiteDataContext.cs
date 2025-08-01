@@ -28,6 +28,7 @@ namespace Infrastructure.Data
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<PhoneNumberRecord> PhoneNumberRecords { get; set; }
         public DbSet<DeviceRegistration> DeviceRegistrations { get; set; }
+        public DbSet<PrinterRegistration> PrinterRegistrations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

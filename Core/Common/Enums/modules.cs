@@ -11,14 +11,17 @@
             {
                 //Users
                 { "UsersIndex", " المستخدمين " },
-                { "GetDeviceRegistrations", " الهواتف " },
-                { "DeleteDeviceRegistration", " حذف هاتف " },
-                { "AddDeviceRegistration", " اضافه هاتف " },
                 { "UsersCreate", " اضافه مستخدم " },
                 { "UsersEdit", " تعديل بيانات مستخدم " },
                 { "UsersDelete", " حذف مستخدم " },
                 { "UsersEditPassword", " تعديل الباسورد " },
-                
+                // Devicea
+                 { "GetDeviceRegistrations", " الهواتف " },
+                { "DeleteDeviceRegistration", " حذف هاتف " },
+                { "AddDeviceRegistration", " اضافه هاتف " },
+                 { "GetPrintersRegistrations", " الطابعات " },
+                { "DeletePrinterRegistration", " حذف طابعه " },
+                { "AddPrinterRegistration", " اضافه طابعه " },
                 //Roles
                 { "RolesIndex", " المجموعات و الصلاحيات " },
                 { "RolesCreate", " اضافه مجموعه " },

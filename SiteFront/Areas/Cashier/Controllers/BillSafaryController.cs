@@ -28,6 +28,7 @@ namespace SiteFront.Areas.Cashier.Controllers
         private readonly IConfiguration _configuration;
         private readonly UserManager<User> _userManager;
         private readonly IRepository<User> _userRepo;
+        private readonly IRepository<PrinterRegistration> _printerRegistration;
 
         public BillSafaryController(IMapper mapper,
             IRepository<SaleBill> saleBillRepo,
@@ -39,7 +40,8 @@ namespace SiteFront.Areas.Cashier.Controllers
             IWebHostEnvironment webHostEnvironment,
             IConfiguration configuration,
             UserManager<User> userManager,
-            IRepository<User> userRepo)
+            IRepository<User> userRepo,
+            IRepository<PrinterRegistration> printerRegistration)
         {
             _mapper = mapper;
             _saleBillRepo = saleBillRepo;
@@ -52,6 +54,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             _configuration = configuration;
             _userManager = userManager;
             _userRepo = userRepo;
+            _printerRegistration = printerRegistration;
         }
 
         [HttpPost("SaveSaleSafary")]
@@ -111,7 +114,15 @@ namespace SiteFront.Areas.Cashier.Controllers
                 try
                 {
                     var filePathBill = GenerateReceipt(billHallPrintVM);
-                    var printerName = _configuration["CashierPrinterName"];
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    if (user == null)
+                        throw new Exception("User not found.");
+                    // Get the printer names from configuration
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    if (print == null)
+                        throw new Exception("Printer not registered for user.");
+                    //var printerName = _configuration["CashierPrinterName"];
+                    var printerName = print.Name;
                     var printerName2 = _configuration["SafaryPrinterName"];
                     await PrintPdfAsync(filePathBill, printerName);
                     await PrintPdfAsync(filePathBill, printerName2);
@@ -391,7 +402,15 @@ namespace SiteFront.Areas.Cashier.Controllers
                 try
                 {
                     var filePathBill = GenerateReceipt(billHallPrintVM);
-                    var printerName = _configuration["CashierPrinterName"];
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    if (user == null)
+                        throw new Exception("User not found.");
+                    // Get the printer names from configuration
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    if (print == null)
+                        throw new Exception("Printer not registered for user.");
+                    //var printerName = _configuration["CashierPrinterName"];
+                    var printerName = print.Name;
                     await PrintPdfAsync(filePathBill, printerName);
                 }
                 catch (Exception ex)
@@ -575,7 +594,15 @@ namespace SiteFront.Areas.Cashier.Controllers
                     TotalPrice = billDetailRegisterVM.Sum(b => b.TotalPrice),
                 };
                 var filePathBill = GenerateAllDayReceipt(billHallPrintVM);
-                var printerName = _configuration["CashierPrinterName"];
+                var user = await _userManager.GetUserAsync(HttpContext.User);
+                if (user == null)
+                    throw new Exception("User not found.");
+                // Get the printer names from configuration
+                var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                if (print == null)
+                    throw new Exception("Printer not registered for user.");
+                //var printerName = _configuration["CashierPrinterName"];
+                var printerName = print.Name;
                 await PrintPdfAsync(filePathBill, printerName);
                 return Ok();
             }

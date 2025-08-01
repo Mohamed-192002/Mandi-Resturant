@@ -24,8 +24,9 @@ namespace SiteFront.Areas.Managment.Controllers
         private readonly ILogger<RegisterModel> _logger;
         private readonly IRepository<UserRole> _UserRoleRepo;
         private readonly IRepository<DeviceRegistration> _deviceRegistrationRepo;
+        private readonly IRepository<PrinterRegistration> _printerRegistrationRepo;
 
-        public DevicesController(IMapper mapper, IToastNotification toastNotification, SignInManager<User> signInManager, UserManager<User> userManager, RoleManager<Role> roleManager, IRepository<User> userRepo, ILogger<RegisterModel> logger, IRepository<UserRole> userRoleRepo, IRepository<DeviceRegistration> deviceRegistrationRepo)
+        public DevicesController(IMapper mapper, IToastNotification toastNotification, SignInManager<User> signInManager, UserManager<User> userManager, RoleManager<Role> roleManager, IRepository<User> userRepo, ILogger<RegisterModel> logger, IRepository<UserRole> userRoleRepo, IRepository<DeviceRegistration> deviceRegistrationRepo, IRepository<PrinterRegistration> printerRegistrationRepo)
         {
             _mapper = mapper;
             _toastNotification = toastNotification;
@@ -36,6 +37,7 @@ namespace SiteFront.Areas.Managment.Controllers
             _logger = logger;
             _UserRoleRepo = userRoleRepo;
             _deviceRegistrationRepo = deviceRegistrationRepo;
+            _printerRegistrationRepo = printerRegistrationRepo;
         }
         public IActionResult Index()
         {
@@ -125,6 +127,99 @@ namespace SiteFront.Areas.Managment.Controllers
             }
         }
 
+        #endregion
+
+        #region Printers Registration
+        [Authorize("Permissions.GetPrintersRegistrations")]
+        [HttpGet]
+        public async Task<IActionResult> GetPrintersRegistrations()
+        {
+            var printers = await _printerRegistrationRepo.GetAllAsync(d => !d.IsDeleted);
+            var users = await _userManager.Users
+                .Where(u => !u.IsDeleted && u.UserRole.Any(x => x.Role.Name == "Cashier"))
+                .ToListAsync();
+            var printerRegistrationModelDto = new PrinterRegistrationModelDto
+            {
+                PrinterRegistrationGetDtos = printers,
+                PrinterRegistrationRegisterDto = new PrinterRegistrationRegisterDto()
+                {
+                    Users = _mapper.Map<List<CommonUserDrop>>(users),
+                }
+            };
+            return View(printerRegistrationModelDto);
+        }
+        [Authorize("Permissions.DeletePrinterRegistration")]
+        [HttpPost]
+        public async Task<IActionResult> DeletePrinterRegistration(int id)
+        {
+            try
+            {
+                var printer = await _printerRegistrationRepo.GetByIdAsync(id);
+                printer.IsDeleted = true;
+                _printerRegistrationRepo.Update(printer);
+                await _printerRegistrationRepo.SaveAllAsync();
+                _toastNotification.AddSuccessToastMessage("تم الحذف بنجاح");
+            }
+            catch (Exception)
+            {
+                _toastNotification.AddErrorToastMessage("لا يمكن حذف هذا الطابعة");
+            }
+            return RedirectToAction(nameof(GetPrintersRegistrations));
+        }
+        [Authorize("Permissions.AddPrinterRegistration")]
+        [HttpPost]
+        public async Task<IActionResult> RegisterPrinter(PrinterRegistrationRegisterDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingPrinter = await _printerRegistrationRepo.SingleOrDefaultAsync(p => p.UserId == model.UserId && !p.IsDeleted);
+                if (existingPrinter != null)
+                {
+                    existingPrinter.Name = model.Name;
+                    _printerRegistrationRepo.Update(existingPrinter);
+                    await _printerRegistrationRepo.SaveAllAsync();
+                    _toastNotification.AddSuccessToastMessage("تم تحديث الطابعة بنجاح");
+                }
+                else
+                {
+                    var printer = new PrinterRegistration
+                    {
+                        UserId = model.UserId,
+                        Name = model.Name,
+                        IsDeleted = false
+                    };
+                    _printerRegistrationRepo.Add(printer);
+                    await _printerRegistrationRepo.SaveAllAsync();
+                    _toastNotification.AddSuccessToastMessage("تم تسجيل الطابعة بنجاح");
+                }
+                return RedirectToAction(nameof(GetPrintersRegistrations));
+            }
+            else
+            {
+                _toastNotification.AddErrorToastMessage("تأكد من صحة البيانات");
+                var printers = await _printerRegistrationRepo.GetAllAsync(d => !d.IsDeleted);
+                var users = await _userManager.Users
+                    .Where(u => !u.IsDeleted && u.UserRole.Any(x => x.Role.Name == "Cashier"))
+                    .ToListAsync();
+                var printerRegistrationModelDto = new PrinterRegistrationModelDto
+                {
+                    PrinterRegistrationGetDtos = printers,
+                    PrinterRegistrationRegisterDto = new PrinterRegistrationRegisterDto()
+                    {
+                        Users = _mapper.Map<List<CommonUserDrop>>(users),
+                    }
+                };
+                // إعادة تحميل البيانات اللازمة لتعبئة الموديل
+                var fullModel = new PrinterRegistrationModelDto
+                {
+                    PrinterRegistrationRegisterDto = model,
+                    PrinterRegistrationGetDtos = printers // تأكد من تضمين الـ User
+                };
+                // املأ قائمة المستخدمين من جديد
+                fullModel.PrinterRegistrationRegisterDto.Users = _mapper.Map<List<CommonUserDrop>>(users);
+                return View("GetPrintersRegistrations", fullModel);
+            }
+        }
         #endregion
     }
 }
