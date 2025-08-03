@@ -3,6 +3,18 @@
     Layout = null;
     int index = 1;
 }
+<style>
+    .customer-group {
+        background-color: #ffe5e5;
+        color: #b30000;
+        font-weight: bold;
+        border: 2px solid #ff9999;
+        text-align: center;
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 6px;
+    }
+</style>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,6 +69,7 @@
                                     <th>ت</th>
                                     <th>شركة التوصيل</th>
                                     <th>العميل</th>
+                                    <th>رقم الطلب</th>
                                     <th>العنوان</th>
                                     <th>رقم الفاتورة</th>
                                     <th> الاجمالي</th>
@@ -78,6 +91,7 @@
                                         {
                                             <td> @item.DeliveryName</td>
                                         }
+                                        <td>@item.OrderNumber</td>
                                         @if (!string.IsNullOrEmpty(item.CustomerAddress))
                                         {
                                             <td> @item.CustomerAddress</td>
@@ -86,7 +100,7 @@
                                         {
                                             <td> الشركة</td>
                                         }
-                                        
+
                                         <td>@item.Id</td>
                                         <td>@item.FinalTotal</td>
                                         <td>
@@ -114,11 +128,11 @@
                                             </table>
                                         </td>
                                         <td>
-                                            <input type="checkbox" id="@item.Id" onclick="changeDelivered(this)"/>
+                                            <input type="checkbox" id="@item.Id" onclick="changeDelivered(this)" />
                                         </td>
                                     </tr>
                                 }
-                               
+
                             </tbody>
                         </table>
                     </div>
@@ -141,6 +155,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.3.1/js/dataTables.rowGroup.min.js"></script>
+
     <script>
         $(document).ready(function () {
             $('#myDataTable').DataTable({
@@ -173,7 +189,18 @@
                 paging: true,
                 searching: true,
                 ordering: true,
-                info: true
+                info: true,
+                rowGroup: {
+                    dataSrc: 2,
+                    startRender: function (rows, group) {
+                        return $('<tr/>')
+                            .append('<td colspan="10" class="customer-group">👤 العميل :  ' + group + '</td>');
+                    }
+                },
+                columnDefs: [
+                { targets: 2 } // إخفاء عمود اسم العميل من الجدول لأنه يظهر كجروب
+                ],
+                 order: [[2, 'asc']],
             });
         });
     </script>

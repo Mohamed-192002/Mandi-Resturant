@@ -635,6 +635,9 @@ async function CreateBill() {
 
     }
     else if (selectedType == 2) {
+        if (orderNumber.length == 0) {
+            return toastr.error("ادخل رقم الطلب");
+        }
         //Customer
         var customerId = $("#customerName span").attr('id');
         if (customerId == undefined) {
@@ -853,6 +856,7 @@ async function CreateBill() {
         if (billDeliveryRegisterVM.billDetailRegisterVM.length == 0) {
             return toastr.error("يجب إدخال علي الاقل صنف واحد في الفاتورة");
         }
+        
         if (billDeliveryRegisterVM.orderDeliveredTime == "" && listItems.length === 0) {
             return toastr.error("يجب إدخال وقت الاستلام أو اختيار الحفر");
         }
@@ -1220,7 +1224,8 @@ $(".form-reactionary form button").on("click", function () {
     var $discount = parseFloat($form.find(".discount").val());
     var $total = parseFloat($form.find(".total").val());
 
-    if ($billId && $productId && $productName && $categoryId && $price && $amount && $total) {
+    // console.log('$billId : ' + $billId, ' , $productId : ' + $productId, ' , $productName : ' + $productName, ' , $price : ' + $price, ' , $amount : ' + $amount, ' , $discount :' + $discount, ' , $total : ' + $total);
+    if ($billId && $productId && $productName && $price && $amount && $total) {
         // Find the bill that matches the billId
         $(".reactionary_wapper .reactionary-button").each(function () {
             var currentBillId = $(this).find(".saleBillId").val();
@@ -1274,7 +1279,7 @@ $(".form-reactionary form button").on("click", function () {
 });
 
 //Update Bill
-$(".fa-print").on("click", function () {
+$(".fa-print").on("click", async function () {
     const $reactionaryButton = $(this).closest(".reactionary-button");
     const saleBillId = $reactionaryButton.find(".saleBillId").val();
     const refundBillType = $reactionaryButton.find(".refundBillType").val();
@@ -1300,76 +1305,36 @@ $(".fa-print").on("click", function () {
             discount,
             totalPrice,
         };
-    }).get(); // Use .get() to convert jQuery object to a plain array
+    }).get();
 
-    // Prepare the data model
     const SaleBillRefundVM = {
         id: saleBillId,
         billDetailRegisterVM: items,
     };
-    console.log(SaleBillRefundVM);
-    //return;
-    if (refundBillType == "Hall") {
-        $.ajax({
-            url: '/Cashier/BillHall/UpdateSaleHall',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(SaleBillRefundVM),
-            success: function (response) {
-                toastr.success("تم تعديل الفاتورة بنجاح");
-                setTimeout(function () {
-                    window.location.href = "/Cashier/SaleBill/Index";
-                }, 1000);
-            },
-            error: function (xhr, status, error) {
-                toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
-                setTimeout(function () {
-                    window.location.href = "/Cashier/SaleBill/Index";
-                }, 1000);
-            }
-        });
-    }
-    else if (refundBillType == "Safary") {
-        $.ajax({
-            url: '/Cashier/BillSafary/UpdateSaleSafary',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(SaleBillRefundVM),
-            success: function (response) {
-                toastr.success("تم تعديل الفاتورة بنجاح");
-                setTimeout(function () {
-                    window.location.href = "/Cashier/SaleBill/Index";
-                }, 1000);
-            },
-            error: function (xhr, status, error) {
-                toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
-                setTimeout(function () {
-                    window.location.href = "/Cashier/SaleBill/Index";
-                }, 1000);
-            }
-        });
-    }
-    else if (refundBillType == "Delivery") {
-        $.ajax({
-            url: '/Cashier/BillDelivery/UpdateSaleDelivery',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(SaleBillRefundVM),
-            success: function (response) {
-                toastr.success("تم تعديل الفاتورة بنجاح");
-                setTimeout(function () {
-                    window.location.href = "/Cashier/SaleBill/Index";
-                }, 1000);
-            },
-            error: function (xhr, status, error) {
-                toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
-                setTimeout(function () {
-                    window.location.href = "/Cashier/SaleBill/Index";
-                }, 1000);
-            }
-        });
+
+    const result = await checkHolesAmount(items);
+    if (!result) {
+        return;
     }
 
+    $.ajax({
+        url: '/Cashier/BillSafary/UpdateSaleSafary',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(SaleBillRefundVM),
+        success: function (response) {
+            toastr.success("تم تعديل الفاتورة بنجاح");
+            setTimeout(function () {
+                window.location.href = "/Cashier/SaleBill/Index";
+            }, 1000);
+        },
+        error: function (xhr, status, error) {
+            toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
+            setTimeout(function () {
+                window.location.href = "/Cashier/SaleBill/Index";
+            }, 1000);
+        }
+    });
 });
 
 async function pasteClipboardContent() {

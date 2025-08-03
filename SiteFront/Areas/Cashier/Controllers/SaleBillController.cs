@@ -97,7 +97,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             var holeGetVM = _mapper.Map<List<HoleGetVM>>(holes);
             var deliveries = await _deliveryRepo.GetAllAsync(c => !c.IsDeleted, true);
             var saleBillRefundVM = _saleBillRepo.GetAllAsync().Result
-                .Where(s => s.Date.Date == DateTime.Now.Date)
+                .Where(s => s.Date.Date == DateTime.Now.Date&&s.BillType!=BillType.Safary)
                 .Select(s => new SaleBillRefundVM
                 {
                     Id = s.Id,
@@ -303,6 +303,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 DeliveryName = b.DeliveryId != null ? _deliveryRepo.GetByIdAsync((int)b.DeliveryId).Result.Name : null,
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
+                OrderNumber= b.OrderNumber,
                 BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == b.Id).Result.Select(c => new BillDetailRegisterVM
                 {
                     PName = _productRepo.GetByIdAsync(c.ProductId).Result.Name,

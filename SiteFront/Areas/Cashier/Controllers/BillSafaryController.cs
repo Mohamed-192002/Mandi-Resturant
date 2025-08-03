@@ -8,7 +8,9 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using System.Diagnostics;
+using Document = iTextSharp.text.Document;
 
 namespace SiteFront.Areas.Cashier.Controllers
 {
@@ -362,6 +364,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                 var saleBillById = await _saleBillRepo.GetByIdAsync(model.Id);
                 if (saleBillById == null)
                     return NotFound();
+
+                // TODO Handel as save
                 saleBillById.Total = model.BillDetailRegisterVM.Sum(b => b.TotalPrice);
                 saleBillById.LastEditDate = DateTime.Now;
                 saleBillById.LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
@@ -373,6 +377,94 @@ namespace SiteFront.Areas.Cashier.Controllers
                 var oldSaleDetail = await _saleBillDetailRepo.GetAllAsync(s => s.SaleBillId == model.Id);
                 if (oldSaleDetail != null)
                 {
+                    foreach (var item in oldSaleDetail)
+                    {
+                        var productById = await _productRepo.GetByIdAsync(item.ProductId);
+                        var dagagHoles = await _holeRepo.GetAllAsync(c => !c.IsDeleted && c.HoleType == HoleType.دجاج, true);
+                        var meatHoles = await _holeRepo.GetAllAsync(c => !c.IsDeleted && c.HoleType == HoleType.لحم, true);
+                        if (productById.Dagag != null || productById.HalfDagag != null)
+                        {
+                            double dagag = productById.Dagag ?? 0.0;
+                            double halfDagag = productById.HalfDagag ?? 0.0;
+                            var dagagValue = (dagag + halfDagag * 0.5) * item.Amount;
+                            foreach (var dagagHole in dagagHoles)
+                            {
+                                //ChickenHoleMovement
+                                var chickenHoleMovement = new ChickenHoleMovement
+                                {
+                                    HoleId = dagagHole.Id,
+                                    Date = DateTime.Now,
+                                    AmountIn = dagagValue,
+                                    AmountOut = 0,
+                                    HoleMovementType = HoleMovementType.Fill,
+                                    HoleMovementTypeId = model.Id,
+                                    CreatedDate = DateTime.Now,
+                                    LastEditDate = DateTime.Now,
+                                    CreatedUser = _userManager.GetUserAsync(HttpContext.User).Result.Id,
+                                    LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id
+                                };
+                                _chickenHoleMovementRepo.Add(chickenHoleMovement);
+                                await _chickenHoleMovementRepo.SaveAllAsync();
+                                break;
+
+                            }
+                        }
+                        if (productById.Nafr != null)
+                        {
+                            var nafrValue = (double)productById.Nafr * item.Amount;
+                            foreach (var meatHole in meatHoles)
+                            {
+                                //MeatHoleMovement
+                                var meatHoleMovement = new MeatHoleMovement
+                                {
+                                    HoleId = meatHole.Id,
+                                    Date = DateTime.Now,
+                                    NafrAmountIn = nafrValue,
+                                    NafrAmountOut = 0,
+                                    HalfNafrAmountIn = 0,
+                                    HalfNafrAmountOut = 0,
+                                    HoleMovementType = HoleMovementType.Fill,
+                                    HoleMovementTypeId = model.Id,
+                                    CreatedDate = DateTime.Now,
+                                    LastEditDate = DateTime.Now,
+                                    CreatedUser = _userManager.GetUserAsync(HttpContext.User).Result.Id,
+                                    LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id
+                                };
+                                _meatHoleMovementRepo.Add(meatHoleMovement);
+                                await _meatHoleMovementRepo.SaveAllAsync();
+                                break;
+
+                            }
+                        }
+                        if (productById.HalfNafr != null)
+                        {
+                            var halfNafrValue = (double)productById.HalfNafr * item.Amount;
+                            foreach (var meatHole in meatHoles)
+                            {
+                                //MeatHoleMovement
+                                var meatHoleMovement = new MeatHoleMovement
+                                {
+                                    HoleId = meatHole.Id,
+                                    Date = DateTime.Now,
+                                    NafrAmountIn = 0,
+                                    NafrAmountOut = 0,
+                                    HalfNafrAmountIn = halfNafrValue,
+                                    HalfNafrAmountOut = 0,
+                                    HoleMovementType = HoleMovementType.Fill,
+                                    HoleMovementTypeId = model.Id,
+                                    CreatedDate = DateTime.Now,
+                                    LastEditDate = DateTime.Now,
+                                    CreatedUser = _userManager.GetUserAsync(HttpContext.User).Result.Id,
+                                    LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id
+                                };
+                                _meatHoleMovementRepo.Add(meatHoleMovement);
+                                await _meatHoleMovementRepo.SaveAllAsync();
+                                break;
+
+                            }
+
+                        }
+                    }
                     _saleBillDetailRepo.DeletelistRange(oldSaleDetail.ToList());
                 }
                 foreach (var saleDetail in model.BillDetailRegisterVM)
@@ -385,6 +477,10 @@ namespace SiteFront.Areas.Cashier.Controllers
                     saleDetailDb.LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
                     _saleBillDetailRepo.Add(saleDetailDb);
                     await _saleBillDetailRepo.SaveAllAsync();
+                    //Handle Holes
+                    await handleDagag(saleDetail.ProductId, saleDetail.Amount, saleBillById.Id);
+                    await HandleMeatNafr(saleDetail.ProductId, saleDetail.Amount, saleBillById.Id);
+                    await HandleMeatHalfNafr(saleDetail.ProductId, saleDetail.Amount, saleBillById.Id);
                 }
 
                 //For Print AllBill
