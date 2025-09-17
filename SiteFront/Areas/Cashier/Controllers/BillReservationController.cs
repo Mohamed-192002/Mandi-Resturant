@@ -621,7 +621,11 @@ namespace SiteFront.Areas.Cashier.Controllers
         {
             // Define the custom page size (80 mm wide)
             float pageWidth = 80f * 2.8346f; // 80mm to points (1mm = 2.8346 points)
-            float pageHeight = 297f * 2.8346f;
+           int rowCount = model.BillDetailRegisterVM.Count;
+            float rowHeight = 20f;            // متوسط ارتفاع لكل صف
+            float headerHeight = 150f;        // اللوجو + البيانات
+            float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
+            float pageHeight = headerHeight + (rowCount * rowHeight) + footerHeight;
             Document document = new Document(new Rectangle(pageWidth, pageHeight), 2, 2, 0, 0); // Margins (left, right, top, bottom)
 
             // Set up a memory stream to create the PDF
@@ -644,8 +648,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                 // Set up Arabic font
                 string arialFontPath = Path.Combine(_webHostEnvironment.WebRootPath, "assets", "fonts", "ARIAL.TTF"); // Path to your Arabic font
                 BaseFont bfArialUnicode = BaseFont.CreateFont(arialFontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                Font arabicFont = new Font(bfArialUnicode, 17, Font.BOLD, BaseColor.BLACK);
-                Font arabicFont22 = new Font(bfArialUnicode, 10, Font.BOLD, BaseColor.BLACK);
+                Font arabicFont = new Font(bfArialUnicode, 12, Font.BOLD, BaseColor.BLACK);   // كان 14
+                Font arabicFont22 = new Font(bfArialUnicode, 8, Font.BOLD, BaseColor.BLACK); // كان 10
 
                 var al = new ArabicLigaturizer();
                 float cellHeight = 30f;
