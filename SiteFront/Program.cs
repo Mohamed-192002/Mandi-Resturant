@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using SiteFront.Hubs;
 using SiteFront.Services;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,10 @@ builder.Services.AddSignalR();
 builder.Services.AddHttpClient<WhatsAppService>();
 // Register the background service
 builder.Services.AddHostedService<EndTimeCheckerService>();
-
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(IPAddress.Any, 5000);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

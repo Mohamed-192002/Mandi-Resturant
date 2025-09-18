@@ -149,7 +149,7 @@ namespace SiteFront.Areas.Managment.Controllers
             return View(printerRegistrationModelDto);
         }
         [Authorize("Permissions.DeletePrinterRegistration")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> DeletePrinterRegistration(int id)
         {
             try
