@@ -716,13 +716,12 @@ namespace SiteFront.Areas.Cashier.Controllers
 
         private string GenerateAllDayReceipt(BillHallPrintVM model)
         {
-            // Define the custom page size (80 mm wide)
-            float pageWidth = 80f * 2.8346f; // 80mm to points (1mm = 2.8346 points)
-                                             //float pageHeight = 297f * 2.8346f;
+            float pageWidth = 80f * 2.8346f;
+          //float pageHeight = 297f * 2.8346f;
             int rowCount = model.BillDetailRegisterVM.Count;
-            float rowHeight = 20f;            // متوسط ارتفاع لكل صف
-            float headerHeight = 150f;        // اللوجو + البيانات
-            float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
+            float rowHeight = 20f;
+            float headerHeight = 150f;
+            float footerHeight = 100f;
             float pageHeight = headerHeight + (rowCount * rowHeight) + footerHeight;
             Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
 
