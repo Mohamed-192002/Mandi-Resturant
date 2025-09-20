@@ -177,6 +177,7 @@ function removeProduct(btn) {
 
 // Function to select the bill type
 function selectBillType(button) {
+    debugger
     var radio = $(button).siblings('input[type="radio"]');
     radio.prop('checked', true);
     var selectedType = $('input[name="billType"]:checked').val();
@@ -187,6 +188,7 @@ function selectBillType(button) {
         //$("#customerName").removeClass('open');
         $("#orderDeliveredTime").removeClass('open');
         $("#gift").addClass('open');
+        $(".choose-Delivery .addCustomer").show();
     }
     else if (selectedType == 2) {
         $(".add-Tables").addClass('open');
@@ -195,6 +197,7 @@ function selectBillType(button) {
         //$("#customerName").addClass('open');
         $("#gift").removeClass('open');
         $("#orderDeliveredTime").addClass('open');
+        $(".choose-Delivery .addCustomer").hide();
     }
     else if (selectedType == 3) {
         $(".add-Tables").addClass('open');
@@ -203,6 +206,8 @@ function selectBillType(button) {
         $("#gift").removeClass('open');
         //$("#customerName").addClass('open');
         $("#orderDeliveredTime").addClass('open');
+        $(".choose-Delivery .addCustomer").show();
+
     }
     else if (selectedType == 4) {
         $(".add-Tables").addClass('open');
@@ -211,6 +216,8 @@ function selectBillType(button) {
         $("#gift").removeClass('open');
         //$("#customerName").addClass('open');
         $("#orderDeliveredTime").addClass('open');
+        $(".choose-Delivery .addCustomer").show();
+
     }
 
 };

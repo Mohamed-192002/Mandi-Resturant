@@ -66,7 +66,8 @@ namespace SiteFront.Areas.Owner.Controllers
                     var upload = Path.Combine(_hosting.WebRootPath, "SystemImages/Deliveries/");
                     if (!Directory.Exists(upload))
                         Directory.CreateDirectory(upload);
-                    var fileName = Guid.NewGuid().ToString() + '.' + model.DeliveryRegisterVM.ImageFile.FileName.Split('.')[1].ToString();
+                    var extension = Path.GetExtension(model.DeliveryRegisterVM.ImageFile.FileName); // .png
+                    var fileName = Guid.NewGuid().ToString() + extension;
                     deliveryDb.ImageUrl = fileName;
                     var fullName = Path.Combine(upload, fileName);
                     model.DeliveryRegisterVM.ImageFile.CopyTo(new FileStream(fullName, FileMode.Create));
@@ -114,7 +115,8 @@ namespace SiteFront.Areas.Owner.Controllers
                     var upload = Path.Combine(_hosting.WebRootPath, "SystemImages/Deliveries/");
                     if (!Directory.Exists(upload))
                         Directory.CreateDirectory(upload);
-                    var fileName = Guid.NewGuid().ToString() + '.' + model.DeliveryRegisterVM.ImageFile.FileName.Split('.')[1].ToString();
+                    var extension = Path.GetExtension(model.DeliveryRegisterVM.ImageFile.FileName); // .png
+                    var fileName = Guid.NewGuid().ToString() + extension;
                     model.DeliveryRegisterVM.ImageUrl = fileName;
                     var fullName = Path.Combine(upload, fileName);
                     model.DeliveryRegisterVM.ImageFile.CopyTo(new FileStream(fullName, FileMode.Create));
