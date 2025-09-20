@@ -181,32 +181,38 @@ function selectBillType(button) {
     var radio = $(button).siblings('input[type="radio"]');
     radio.prop('checked', true);
     var selectedType = $('input[name="billType"]:checked').val();
+    debugger
     if (selectedType == 1) {
         $(".add-Tables").removeClass('open');
         //$(".choose-Delivery").addClass('open');
         $(".company-delivery").removeClass('open');
-        //$("#customerName").removeClass('open');
+        $("#customerName").show();
         $("#orderDeliveredTime").removeClass('open');
         $("#gift").addClass('open');
         $(".choose-Delivery .addCustomer").show();
+        $(".order-input-container").hide();
     }
     else if (selectedType == 2) {
         $(".add-Tables").addClass('open');
         //$(".choose-Delivery").addClass('open');
         $(".company-delivery").addClass('open');
-        //$("#customerName").addClass('open');
+        $("#customerName").hide();
         $("#gift").removeClass('open');
-        $("#orderDeliveredTime").addClass('open');
+        $("#orderDeliveredTime").removeClass('open');
         $(".choose-Delivery .addCustomer").hide();
+        $(".order-input-container").show();
+
     }
     else if (selectedType == 3) {
         $(".add-Tables").addClass('open');
         //$(".choose-Delivery").addClass('open');
         $(".company-delivery").removeClass('open');
         $("#gift").removeClass('open');
-        //$("#customerName").addClass('open');
+        $("#customerName").show();
         $("#orderDeliveredTime").addClass('open');
         $(".choose-Delivery .addCustomer").show();
+        $(".order-input-container").show();
+
 
     }
     else if (selectedType == 4) {
@@ -214,9 +220,11 @@ function selectBillType(button) {
         //$(".choose-Delivery").addClass('open');
         $(".company-delivery").removeClass('open');
         $("#gift").removeClass('open');
-        //$("#customerName").addClass('open');
+        $("#customerName").show();
         $("#orderDeliveredTime").addClass('open');
         $(".choose-Delivery .addCustomer").show();
+        $(".order-input-container").show();
+
 
     }
 
@@ -713,12 +721,12 @@ async function CreateBill() {
         if (billDeliveryRegisterVM.billDetailRegisterVM.length == 0) {
             return toastr.error("يجب إدخال علي الاقل صنف واحد في الفاتورة");
         }
-        if (billDeliveryRegisterVM.orderDeliveredTime == "" && listItems.length === 0) {
-            return toastr.error("يجب إدخال وقت الاستلام أو اختيار الحفر");
-        }
+        //if (billDeliveryRegisterVM.orderDeliveredTime == "" && listItems.length === 0) {
+        //    return toastr.error("يجب إدخال وقت الاستلام أو اختيار الحفر");
+        //}
         //console.log(billDeliveryRegisterVM, billDeliveryRegisterVM.time);
         //return;
-
+        debugger
         if (listItems.length != 0) {
             //CheckHoleAmount
             const checkDeliveryHoleAmountVM = {
@@ -759,17 +767,17 @@ async function CreateBill() {
                 }
             });
         }
-        else if (billDeliveryRegisterVM.orderDeliveredTime != "") {
+        //else if (billDeliveryRegisterVM.orderDeliveredTime != "") {
             //CheckHoleAmount
             const checkDeliveryHoleAmountVM = {
                 billDetailRegisterVM: productsData,
                 orderDeliveredTime: time,
             };
             console.log(typeof (checkDeliveryHoleAmountVM.orderDeliveredTime));
-            const result = await checkDeliveryHolesAmountByTime(checkDeliveryHoleAmountVM);
-            if (!result) {
-                return;
-            }
+            //const result = await checkDeliveryHolesAmountByTime(checkDeliveryHoleAmountVM);
+            //if (!result) {
+            //    return;
+            //}
             var button = $("#btn_save");
             button.prop("disabled", true);
             //Send Data To Save
@@ -799,7 +807,7 @@ async function CreateBill() {
                     }, 1000);
                 }
             });
-        }
+        //}
     }
     else if (selectedType == 3) {
         //Customer

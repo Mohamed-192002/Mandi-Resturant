@@ -198,7 +198,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Discount = model.Discount,
                     Vat = model.Vat,
                     FinalTotal = model.FinalTotal,
-                    OrderDeliveredTime = TimeOnly.Parse(model.OrderDeliveredTime),
+                    OrderDeliveredTime = string.IsNullOrEmpty(model.OrderDeliveredTime)? null: TimeOnly.Parse(model.OrderDeliveredTime),
                     Notes = model.Notes,
                     MoneyDelivered = false,
                     CustomerAddress = model.CustomerAddress,
@@ -210,25 +210,41 @@ namespace SiteFront.Areas.Cashier.Controllers
                 var today = DateTime.Today;
                 //All Holes
                 var dagagHoleDataVM = _holeRepo.GetAllAsync(c => !c.IsDeleted && c.HoleType == HoleType.دجاج, true).Result
-                 .Select(h => new DagagHoleDataVM
-                 {
-                     Id = h.Id,
-                     Name = h.Name,
-                     HoleType = h.HoleType,
-                     EndTime = _chickenFillingRepo.GetAllAsync(c => c.HoleId == h.Id && c.Date.Date == today.Date).Result.LastOrDefault()?.EndTime ?? null,
-                     Amount = _chickenHoleMovementRepo.GetAllAsync(c => c.HoleId == h.Id && c.Date.Date == today.Date).Result.Sum(c => c.AmountIn - c.AmountOut)
-                 }).Where(d => d.EndTime < TimeOnly.Parse(model.OrderDeliveredTime)).ToList();
+                         .Select(h => new DagagHoleDataVM
+                         {
+                             Id = h.Id,
+                             Name = h.Name,
+                             HoleType = h.HoleType,
+                             EndTime = _chickenFillingRepo.GetAllAsync(c => c.HoleId == h.Id && c.Date.Date == today.Date).Result
+                                           .LastOrDefault()?.EndTime,
+                             Amount = _chickenHoleMovementRepo.GetAllAsync(c => c.HoleId == h.Id && c.Date.Date == today.Date).Result
+                                           .Sum(c => c.AmountIn - c.AmountOut)
+                         })
+                        .Where(d => d.EndTime.HasValue
+                                     && !string.IsNullOrWhiteSpace(model.OrderDeliveredTime)
+                                     && d.EndTime.Value < TimeOnly.Parse(model.OrderDeliveredTime))
+
+                         .ToList();
+
 
                 var meatHoleDataVM = _holeRepo.GetAllAsync(c => !c.IsDeleted && c.HoleType == HoleType.لحم, true).Result
-                    .Select(h => new MeatHoleDataVM
-                    {
-                        Id = h.Id,
-                        Name = h.Name,
-                        HoleType = h.HoleType,
-                        EndTime = _meatFillingRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result.LastOrDefault()?.EndTime ?? null,
-                        NafrAmount = (int)_meatHoleMovementRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result.Sum(c => c.NafrAmountIn - c.NafrAmountOut),
-                        HalfNafrAmount = (int)_meatHoleMovementRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result.Sum(c => c.HalfNafrAmountIn - c.HalfNafrAmountOut),
-                    }).Where(d => d.EndTime < TimeOnly.Parse(model.OrderDeliveredTime)).ToList();
+                   .Select(h => new MeatHoleDataVM
+                   {
+                       Id = h.Id,
+                       Name = h.Name,
+                       HoleType = h.HoleType,
+                       EndTime = _meatFillingRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result
+                                      .LastOrDefault()?.EndTime,
+                       NafrAmount = (int)_meatHoleMovementRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result
+                                      .Sum(c => c.NafrAmountIn - c.NafrAmountOut),
+                       HalfNafrAmount = (int)_meatHoleMovementRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result
+                                      .Sum(c => c.HalfNafrAmountIn - c.HalfNafrAmountOut),
+                   })
+                   .Where(d => d.EndTime.HasValue
+                                 && !string.IsNullOrWhiteSpace(model.OrderDeliveredTime)
+                                 && d.EndTime.Value < TimeOnly.Parse(model.OrderDeliveredTime))
+
+                   .ToList();
 
                 //BillDetail
                 foreach (var saleDetail in model.BillDetailRegisterVM)
