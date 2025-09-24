@@ -77,6 +77,7 @@
                                     <th> الاجمالي</th>
                                     <th>التفاصيل</th>
                                     <th>الوقت</th>
+                                    <th>الحذف</th>
                                     @* <th>التحصيل</th> *@
                                 </tr>
                             </thead>
@@ -172,6 +173,19 @@
                                         {
                                             <td> _____</td>
                                         }
+                                        <td style="text-align:center;">
+                                            <button onclick="deleteBill(@item.Id)"
+                                                    title="حذف الطلب"
+                                                    style="background-color: transparent;
+                       border: none;
+                       cursor: pointer;
+                       color: red;
+                       font-size: 18px;">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+
+
                                         @* <td>
                                             <input type="checkbox" id="@item.Id" onclick="changeDelivered(this)" />
                                         </td> *@
@@ -252,7 +266,26 @@
             });
         });
     </script>
+    <script>
+                function deleteBill(id) {
+            if (confirm("هل أنت متأكد من حذف هذا الطلب؟")) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Cashier/SaleBill/DeleteBill?id=' + id,
+                    success: function () {
+                        toastr.success("تم الحذف بنجاح");
+                        setTimeout(function () {
+                            window.location.href = "/Cashier/SaleBill/ResturantDelivery";
+                        }, 500);
+                    },
+                    error: function () {
+                        toastr.error("لم يتم الحذف برجاء المحاولة لاحقا");
+                    }
+                });
+            }
+        }
 
+    </script>
     <partial name="_ValidationScriptsPartial" />
     @await Component.InvokeAsync("NToastNotify")
     <script type="text/javascript">

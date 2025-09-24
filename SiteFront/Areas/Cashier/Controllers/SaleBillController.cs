@@ -15,6 +15,7 @@ using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using SiteFront.Services;
 using System.Diagnostics;
@@ -97,7 +98,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             var holeGetVM = _mapper.Map<List<HoleGetVM>>(holes);
             var deliveries = await _deliveryRepo.GetAllAsync(c => !c.IsDeleted, true);
             var saleBillRefundVM = _saleBillRepo.GetAllAsync().Result
-                .Where(s => s.Date.Date == DateTime.Now.Date&&s.BillType!=BillType.Safary)
+                .Where(s => s.Date.Date == DateTime.Now.Date && s.BillType != BillType.Safary)
                 .Select(s => new SaleBillRefundVM
                 {
                     Id = s.Id,
@@ -303,7 +304,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 DeliveryName = b.DeliveryId != null ? _deliveryRepo.GetByIdAsync((int)b.DeliveryId).Result.Name : null,
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
-                OrderNumber= b.OrderNumber,
+                OrderNumber = b.OrderNumber,
                 BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == b.Id).Result.Select(c => new BillDetailRegisterVM
                 {
                     PName = _productRepo.GetByIdAsync(c.ProductId).Result.Name,
@@ -313,6 +314,25 @@ namespace SiteFront.Areas.Cashier.Controllers
                 }).ToList()
             }).ToList();
             return View(deliveryBillGetVM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteBillAsync(int id)
+        {
+            var bill = await _saleBillRepo.GetByIdAsync(id);
+            if (bill == null)
+                return NotFound();
+
+            _saleBillRepo.Delete(bill);
+            foreach (var chickenHoleMovement in await _chickenHoleMovementRepo.GetAllAsync(c => c.HoleMovementTypeId == id && c.HoleMovementType == HoleMovementType.Sale))
+            {
+                _chickenHoleMovementRepo.Delete(chickenHoleMovement);
+            }
+            foreach (var meatHoleMovement in await _meatHoleMovementRepo.GetAllAsync(c => c.HoleMovementTypeId == id && c.HoleMovementType == HoleMovementType.Sale))
+            {
+                _meatHoleMovementRepo.Delete(meatHoleMovement);
+            }
+            await _saleBillDetailRepo.SaveAllAsync();
+            return Ok();
         }
 
         //Resturant Delivery
