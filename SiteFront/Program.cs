@@ -48,19 +48,19 @@ builder.Services.AddSignalR();
 builder.Services.AddHttpClient<WhatsAppService>();
 // Register the background service
 builder.Services.AddHostedService<EndTimeCheckerService>();
-//builder.WebHost.ConfigureKestrel(options =>
-//{
-//    options.Listen(IPAddress.Any, 5000);
-//});
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(IPAddress.Any, 5000);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    builder.WebHost.ConfigureKestrel(options =>
-    {
-        options.Listen(IPAddress.Any, 5000);
-    });
+    //builder.WebHost.ConfigureKestrel(options =>
+    //{
+    //    options.Listen(IPAddress.Any, 5000);
+    //});
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
