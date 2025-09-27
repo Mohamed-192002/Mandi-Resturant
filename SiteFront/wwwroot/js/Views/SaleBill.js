@@ -171,6 +171,17 @@ $(document).ready(function () {
     setupDiscountVatListeners();
 });
 
+// Function to get delivery price
+function getDeliveryPrice() {
+    var deliveryItem = document.querySelector('.delivery-item');
+    if (deliveryItem) {
+        var deliveryPriceText = deliveryItem.querySelector('.delivery-area-price').textContent;
+        var deliveryPrice = parseFloat(deliveryPriceText.replace(/[^\d.]/g, ''));
+        return isNaN(deliveryPrice) ? 0 : deliveryPrice;
+    }
+    return 0;
+}
+
 // Event handler for recalculation
 function updateTotal(input) {
     var productItem = $(input).closest('.product_item');
@@ -603,6 +614,7 @@ async function CreateBill() {
         const gift = $total.find("#gift input").prop("checked");
         const note = $total.find("#notes").val();
         const customerAddress = $("#customerName input[type='hidden']").val();
+        const deliveryPrice = getDeliveryPrice();
 
         const billSafaryRegisterVM = {
             billDetailRegisterVM: productsData,
@@ -610,6 +622,7 @@ async function CreateBill() {
             discount: parseFloat(discount),
             vat: parseFloat(vat),
             finalTotal: parseFloat(netTotal),
+            deliveryPrice: deliveryPrice,
             gift: gift,
             notes: note,
             orderNumber: orderNumber,
@@ -710,6 +723,7 @@ async function CreateBill() {
         const time = $total.find("#orderDeliveredTime input").val();
         const note = $total.find("#notes").val();
         const customerAddress = $("#customerName input[type='hidden']").val();
+        const deliveryPrice = getDeliveryPrice();
 
         const billDeliveryRegisterVM = {
             billDetailRegisterVM: productsData,
@@ -719,6 +733,7 @@ async function CreateBill() {
             discount: parseFloat(discount),
             vat: parseFloat(vat),
             finalTotal: parseFloat(netTotal),
+            deliveryPrice: deliveryPrice,
             orderDeliveredTime: time,
             notes: note,
             orderNumber: orderNumber,
@@ -1010,6 +1025,7 @@ async function CreateBill() {
         //const customerReceive = $total.find("#customerReceive input").prop("checked");
         const note = $total.find("#notes").val();
         const customerAddress = $("#customerName input[type='hidden']").val();
+        const deliveryPrice = getDeliveryPrice();
 
         const billDeliveryRegisterVM = {
             billDetailRegisterVM: productsData,
@@ -1019,6 +1035,7 @@ async function CreateBill() {
             discount: parseFloat(discount),
             vat: parseFloat(vat),
             finalTotal: parseFloat(netTotal),
+            deliveryPrice: deliveryPrice,
             orderDeliveredTime: time,
             notes: note,
             orderNumber: orderNumber,

@@ -75,6 +75,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Total = model.BillDetailRegisterVM.Sum(s => s.TotalPrice),
                     Discount = model.Discount,
                     Vat = model.Vat,
+                    DeliveryPrice = model.DeliveryPrice,
                     FinalTotal = model.FinalTotal,
                     Notes = model.Notes,
                     Gift = model.Gift,

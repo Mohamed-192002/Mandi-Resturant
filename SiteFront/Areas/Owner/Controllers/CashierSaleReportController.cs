@@ -109,7 +109,8 @@ namespace SiteFront.Areas.Owner.Controllers
             foreach (var userId in userIds)
             {
                 var user = await _userRepo.SingleOrDefaultAsync(u => !u.IsDeleted && u.Id == userId, true);
-                users.Add(user);
+                if (user != null)
+                    users.Add(user);
             }
             var cashierSaleMainVM = new CashierSaleMainVM
             {

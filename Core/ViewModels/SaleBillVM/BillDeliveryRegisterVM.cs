@@ -9,6 +9,7 @@
         public double Discount { get; set; }
         public double Vat { get; set; }
         public double FinalTotal { get; set; }
+        public double DeliveryPrice { get; set; }
         public string? OrderDeliveredTime { get; set; }
         public string? Notes { get; set; }
         public bool CustomerReceive { get; set; }

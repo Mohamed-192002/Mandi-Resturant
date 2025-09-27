@@ -25,6 +25,7 @@ namespace Core.Entities
         public double Discount { get; set; }
         public double Vat { get; set; }
         public double FinalTotal { get; set; }
+        public double DeliveryPrice { get; set; }
 
         public bool MoneyDelivered { get; set; } = true;
         public Guid? UserDelivered { get; set; }
