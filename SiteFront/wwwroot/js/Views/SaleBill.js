@@ -132,6 +132,15 @@ function calculateBillTotal() {
         totalWithoutDiscount += productTotal;
     });
 
+    // Add delivery price if exists
+    var deliveryPrice = 0;
+    var deliveryItem = document.querySelector('.delivery-item');
+    if (deliveryItem) {
+        var deliveryPriceText = deliveryItem.querySelector('.delivery-area-price').textContent;
+        deliveryPrice = parseFloat(deliveryPriceText.replace(/[^\d.]/g, ''));
+        deliveryPrice = isNaN(deliveryPrice) ? 0 : deliveryPrice;
+    }
+
     // Get the discount and VAT from inputs
     var discount = parseFloat($(".total_item input").eq(0).val()); // Discount input
     var vatRate = parseFloat($(".total_item input").eq(1).val()); // VAT input
@@ -145,7 +154,7 @@ function calculateBillTotal() {
     totalAfterDiscount = totalAfterDiscount < 0 ? 0 : totalAfterDiscount;
 
     var vatAmount = (totalAfterDiscount * vatRate) / 100;
-    var netTotal = totalAfterDiscount + vatAmount;
+    var netTotal = totalAfterDiscount + vatAmount + deliveryPrice;
 
     $("#finalTotal").text(netTotal.toFixed(2));
 }

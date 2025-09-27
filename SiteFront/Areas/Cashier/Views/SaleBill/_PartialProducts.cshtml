@@ -2,7 +2,12 @@
 
 @foreach (var item in Model)
 {
-    <div class="Card" onclick="addProduct(this)" data-id="@item.Id" data-price="@item.SellingPrice" data-name="@item.Name">
+    <div class="Card" onclick="addProduct(this)" 
+         data-id="@item.Id" 
+         data-price="@item.SellingPrice" 
+         data-name="@item.Name"
+         data-meat="@(item.Nafr + item.HalfNafr)"
+         data-chicken="@(item.Dagag + item.HalfDagag)">
         <div class="Card_content">
             <div class="image">
                 @if(item.ImageUrl != null){

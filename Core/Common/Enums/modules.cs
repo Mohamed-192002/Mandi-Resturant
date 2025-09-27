@@ -22,6 +22,11 @@
                  { "GetPrintersRegistrations", " الطابعات " },
                 { "DeletePrinterRegistration", " حذف طابعه " },
                 { "AddPrinterRegistration", " اضافه طابعه " },
+                // DriverPrice
+                 { "DriverPriceIndex", " التوصيل " },
+                { "DriverPriceCreate", "اضافه توصيل" },
+                { "DriverPriceEdit", "تعديل توصيل" },
+                 { "DriverPriceDelete", "حذف توصيل" },
                 //Roles
                 { "RolesIndex", " المجموعات و الصلاحيات " },
                 { "RolesCreate", " اضافه مجموعه " },

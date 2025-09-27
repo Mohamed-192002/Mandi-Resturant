@@ -31,6 +31,190 @@
                 box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
                 outline: none;
             }
+
+    /* Product Filter Styles */
+    .product-filter {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    }
+
+    .filter-btn {
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        padding: 12px 20px;
+        position: relative;
+        overflow: hidden;
+        min-width: 80px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .filter-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .filter-btn:hover::before {
+        left: 100%;
+    }
+
+    .filter-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .filter-btn.active {
+            /* color: rgba(0,0,0,0.25) !important; */
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .filter-btn[data-filter="all"] {
+        border-color: #007bff;
+        color: #007bff;
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    }
+
+    .filter-btn[data-filter="all"]:not(.active) {
+        background: transparent;
+    }
+
+    .filter-btn[data-filter="meat"] {
+        border-color: #dc3545;
+        color: #dc3545;
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+
+    .filter-btn[data-filter="meat"]:not(.active) {
+        background: transparent;
+    }
+
+    .filter-btn[data-filter="chicken"] {
+        border-color: #28a745;
+        color: #28a745;
+        background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    }
+
+    .filter-btn[data-filter="chicken"]:not(.active) {
+        background: transparent;
+    }
+
+    .filter-btn[data-filter="mixed"] {
+        border-color: #ffc107;
+        color: #ffc107;
+        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    }
+
+    .filter-btn[data-filter="mixed"]:not(.active) {
+        background: transparent;
+    }
+
+    .filter-btn.active[data-filter="all"] {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    }
+
+    .filter-btn.active[data-filter="meat"] {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+
+    .filter-btn.active[data-filter="chicken"] {
+        background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    }
+
+    .filter-btn.active[data-filter="mixed"] {
+        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    }
+
+    /* Delivery Button Styles */
+    .delivery-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(111, 66, 193, 0.4);
+    }
+
+    .delivery-btn:active {
+        transform: translateY(0);
+    }
+
+    /* Delivery Modal Styles */
+    .delivery-modal {
+        backdrop-filter: blur(5px);
+    }
+
+    .delivery-area-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .delivery-area-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(111, 66, 193, 0.1), transparent);
+        transition: left 0.5s;
+    }
+
+    .delivery-area-card:hover::before {
+        left: 100%;
+    }
+
+    .delivery-area-card:hover {
+        transform: translateY(-5px);
+        border-color: #6f42c1;
+        box-shadow: 0 8px 25px rgba(111, 66, 193, 0.2);
+    }
+
+    .delivery-area-card:active {
+        transform: translateY(-2px);
+    }
+
+    .delivery-area-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .delivery-area-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: #6f42c1;
+        background: linear-gradient(135deg, #6f42c1, #5a32a3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .delivery-area-card:hover .delivery-area-name {
+        color: #6f42c1;
+    }
+
+    #deliverySearch:focus {
+        border-color: #6f42c1;
+        box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+    }
 </style>
 <div class="container">
     <div class="Sidebar">
@@ -490,9 +674,67 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Delivery Areas Modal -->
+                <div id="deliveryModal" class="delivery-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
+                    <div class="delivery-modal-content" style="background: white; border-radius: 15px; padding: 25px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px;">
+                            <h3 style="margin: 0; color: #333; font-size: 24px;">
+                                <i class="fa-solid fa-truck" style="margin-left: 10px; color: #6f42c1;"></i>
+                                مناطق التوصيل
+                            </h3>
+                            <button id="closeDeliveryModal" style="background: none; border: none; font-size: 24px; color: #999; cursor: pointer; padding: 5px;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Search Box -->
+                        <div style="margin-bottom: 20px;">
+                            <input type="text" id="deliverySearch" placeholder="البحث في المناطق..." 
+                                   style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s;"
+                                   onkeyup="filterDeliveryAreas()">
+                        </div>
+                        
+                        <!-- Delivery Areas Grid -->
+                        <div id="deliveryAreasGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                            <!-- Areas will be loaded here -->
+                        </div>
+                    </div>
+                </div>
                 <!-- End Checkout -->
                 <!-- List Items -->
                 <section>
+                    <!-- Product Filter -->
+                    <div class="product-filter" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+
+                            <!-- أزرار الفلتر -->
+                            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                                <h4 style="margin: 0; color: #333;">فلتر المنتجات:</h4>
+                                <button class="filter-btn active" data-filter="all" style="padding: 8px 16px; border: 2px solid #007bff; background: transparent; color: #007bff; border-radius: 5px; cursor: pointer; transition: all 0.3s;">
+                                    الكل
+                                </button>
+                                <button class="filter-btn" data-filter="meat" style="padding: 8px 16px; border: 2px solid #dc3545; background: transparent; color: #dc3545; border-radius: 5px; cursor: pointer; transition: all 0.3s;">
+                                    لحم
+                                </button>
+                                <button class="filter-btn" data-filter="chicken" style="padding: 8px 16px; border: 2px solid #28a745; background: transparent; color: #28a745; border-radius: 5px; cursor: pointer; transition: all 0.3s;">
+                                    دجاج
+                                </button>
+                                <button class="filter-btn" data-filter="mixed" style="padding: 8px 16px; border: 2px solid #ffc107; background: transparent; color: #ffc107; border-radius: 5px; cursor: pointer; transition: all 0.3s;">
+                                    مشكل
+                                </button>
+                            </div>
+
+                            <!-- زر التوصيل -->
+                            <button id="deliveryBtn" class="delivery-btn" style="padding: 10px 20px; background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3); transition: all 0.3s ease;">
+                                <i class="fa-solid fa-truck" style="margin-left: 8px;"></i>
+                                التوصيل
+                            </button>
+
+                        </div>
+                    </div>
+
+                    
                     <div class="List-Items" id="allProducts">
                         <partial name="_PartialProducts" model="Model.ProductGetVM" />
                     </div>
@@ -517,6 +759,198 @@
             time_24hr: false,
              minuteIncrement: 1
         });
+
+        // Product Filter Functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const allProducts = document.querySelectorAll('#allProducts .Card');
+        
+        // Store original products data
+        const originalProducts = Array.from(allProducts).map(card => ({
+            element: card,
+            hasMeat: parseInt(card.dataset.meat) > 0,
+            hasChicken: parseInt(card.dataset.chicken) > 0
+        }));
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Filter products
+                const filterType = this.dataset.filter;
+                filterProducts(filterType);
+            });
+        });
+
+        function filterProducts(filterType) {
+            allProducts.forEach(card => {
+                const hasMeat = parseInt(card.dataset.meat) > 0;
+                const hasChicken = parseInt(card.dataset.chicken) > 0;
+                let shouldShow = false;
+
+                switch(filterType) {
+                    case 'all':
+                        shouldShow = true;
+                        break;
+                    case 'meat':
+                        shouldShow = hasMeat && !hasChicken;
+                        break;
+                    case 'chicken':
+                        shouldShow = hasChicken && !hasMeat;
+                        break;
+                    case 'mixed':
+                        shouldShow = hasMeat && hasChicken;
+                        break;
+                }
+
+                if (shouldShow) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Delivery Modal Functionality
+        let deliveryAreas = [];
+        let selectedDeliveryPrice = 0;
+        let selectedDeliveryArea = '';
+
+        // Load delivery areas from server
+        async function loadDeliveryAreas() {
+            try {
+                const response = await fetch('/Managment/DriverPrice/GetAllAreas');
+                if (response.ok) {
+                    deliveryAreas = await response.json();
+                    renderDeliveryAreas(deliveryAreas);
+                } else {
+                    console.error('Failed to load delivery areas');
+                    // Fallback data for testing
+                    deliveryAreas = [
+                        { id: 1, region: 'الكرادة', deliveryPrice: 5000 },
+                        { id: 2, region: 'الجادرية', deliveryPrice: 3000 },
+                        { id: 3, region: 'المنصور', deliveryPrice: 4000 },
+                        { id: 4, region: 'البياع', deliveryPrice: 6000 },
+                        { id: 5, region: 'الزعفرانية', deliveryPrice: 8000 }
+                    ];
+                    renderDeliveryAreas(deliveryAreas);
+                }
+            } catch (error) {
+                console.error('Error loading delivery areas:', error);
+                // Fallback data for testing
+                deliveryAreas = [
+                    { id: 1, region: 'الكرادة', deliveryPrice: 5000 },
+                    { id: 2, region: 'الجادرية', deliveryPrice: 3000 },
+                    { id: 3, region: 'المنصور', deliveryPrice: 4000 },
+                    { id: 4, region: 'البياع', deliveryPrice: 6000 },
+                    { id: 5, region: 'الزعفرانية', deliveryPrice: 8000 }
+                ];
+                renderDeliveryAreas(deliveryAreas);
+            }
+        }
+
+        function renderDeliveryAreas(areas) {
+            const grid = document.getElementById('deliveryAreasGrid');
+            grid.innerHTML = '';
+            
+            areas.forEach(area => {
+                const card = document.createElement('div');
+                card.className = 'delivery-area-card';
+                card.innerHTML = `
+                    <div class="delivery-area-name">${area.region}</div>
+                    <div class="delivery-area-price">${area.deliveryPrice} دينار</div>
+                `;
+                card.onclick = () => selectDeliveryArea(area);
+                grid.appendChild(card);
+            });
+        }
+
+        function filterDeliveryAreas() {
+            const searchTerm = document.getElementById('deliverySearch').value.toLowerCase();
+            const filteredAreas = deliveryAreas.filter(area => 
+                area.region.toLowerCase().includes(searchTerm)
+            );
+            renderDeliveryAreas(filteredAreas);
+        }
+
+        function selectDeliveryArea(area) {
+            selectedDeliveryPrice = area.deliveryPrice;
+            selectedDeliveryArea = area.region;
+            
+            // Close modal
+            document.getElementById('deliveryModal').style.display = 'none';
+            
+            // Add delivery to bill
+            addDeliveryToBill(area);
+        }
+
+        function addDeliveryToBill(area) {
+            // Check if delivery already exists in bill
+            const existingDelivery = document.querySelector('.delivery-item');
+            if (existingDelivery) {
+                existingDelivery.remove();
+            }
+
+            // Add delivery item to product list
+            const productList = document.getElementById('productList');
+            const deliveryItem = document.createElement('div');
+            deliveryItem.className = 'delivery-item';
+            deliveryItem.innerHTML = `
+                <div class="item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; border-radius: 8px; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-solid fa-truck" style="margin-left: 10px;"></i>
+                        <span>توصيل - ${area.region}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span>${area.deliveryPrice} دينار</span>
+                        <button onclick="removeDelivery()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            productList.appendChild(deliveryItem);
+            
+            // Update total
+            updateTotal();
+        }
+
+        function removeDelivery() {
+            const deliveryItem = document.querySelector('.delivery-item');
+            if (deliveryItem) {
+                deliveryItem.remove();
+                selectedDeliveryPrice = 0;
+                selectedDeliveryArea = '';
+                updateTotal();
+            }
+        }
+
+        // Event listeners
+        document.getElementById('deliveryBtn').addEventListener('click', function() {
+            document.getElementById('deliveryModal').style.display = 'flex';
+            loadDeliveryAreas();
+        });
+
+        document.getElementById('closeDeliveryModal').addEventListener('click', function() {
+            document.getElementById('deliveryModal').style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('deliveryModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // Update total function to include delivery
+        function updateTotal() {
+            calculateBillTotal();
+        }
     </script>
 }
 

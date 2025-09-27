@@ -29,6 +29,7 @@ namespace Infrastructure.Data
         public DbSet<PhoneNumberRecord> PhoneNumberRecords { get; set; }
         public DbSet<DeviceRegistration> DeviceRegistrations { get; set; }
         public DbSet<PrinterRegistration> PrinterRegistrations { get; set; }
+        public DbSet<DriverPrice> DriverPrices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

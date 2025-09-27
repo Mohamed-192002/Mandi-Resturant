@@ -9,6 +9,7 @@ using Core.ViewModels.CustomerVM;
 using Core.ViewModels.DeliveryBillVM;
 using Core.ViewModels.DeliveryVM;
 using Core.ViewModels.DriverVM;
+using Core.ViewModels.DriverPriceVM;
 using Core.ViewModels.ExpenseTypeVM;
 using Core.ViewModels.ExpenseVM;
 using Core.ViewModels.HoleVM;
@@ -82,6 +83,10 @@ namespace Infrastructure.Helper
             CreateMap<Driver, DriverRegisterVM>().ReverseMap();
             CreateMap<Driver, DriverGetVM>();
             CreateMap<Driver, CommonDrop>();
+
+            //DriverPrice
+            CreateMap<DriverPrice, DriverPriceRegisterVM>().ReverseMap();
+            CreateMap<DriverPrice, DriverPriceGetVM>();
 
         }
     }

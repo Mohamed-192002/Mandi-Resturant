@@ -1,0 +1,122 @@
+@using Core.ViewModels.DriverPriceVM
+@model DriverPriceMainVM
+@{
+    ViewData["Title"] = "أسعار التوصيل";
+    int index = 1;
+}
+
+<section>
+    <header>
+        <div style="display: flex; align-items: center; padding: 0px 10px">
+            <i class="fa-solid fa-bars-staggered menu-slider"></i>
+            <h3>أسعار التوصيل</h3>
+        </div>
+    </header>
+
+    <!-- Search -->
+    <div class="search">
+        <input type="search" name="search" placeholder="بحث" />
+        <button id="btn_add">اضافة سعر توصيل</button>
+    </div>
+
+    <!-- Modal for Add Driver Price -->
+    <div id="modal">
+        <div class="modal-content">
+            <div class="close_modal">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <form method="post" id="driverPriceForm">
+                <div class="form_wapper">
+                    <input type="hidden" asp-for="DriverPriceRegisterVM.Id" />
+                    <div class="FormControll">
+                        <label asp-for="DriverPriceRegisterVM.Region">المنطقة</label>
+                        <input type="text" asp-for="DriverPriceRegisterVM.Region" required />
+                    </div>
+                    <div class="FormControll">
+                        <label asp-for="DriverPriceRegisterVM.DeliveryPrice">سعر التوصيل</label>
+                        <input type="number" asp-for="DriverPriceRegisterVM.DeliveryPrice" step="0.01" min="0.01" required />
+                    </div>
+                </div>
+                <div class="Buttons">
+                    <button type="submit">حفظ</button>
+                    <button type="button">الغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="table">
+        <div class="container_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تسلسل</th>
+                        <th>المنطقة</th>
+                        <th>سعر التوصيل</th>
+                        <th>الحدث</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.DriverPriceGetVM)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@item.Region</td>
+                            <td>@item.DeliveryPrice.ToString("0")</td>
+                            <td>
+                                <div class="container_Buttons">
+                                    <button class="edit-button" data-id="@item.Id">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <a type="button" asp-action="Delete" onclick="return confirm('هل أنت متأكد من حذف هذا السعر؟')" asp-route-id="@item.Id">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        btn_add.addEventListener("click", (e) => {
+            $("#DriverPriceRegisterVM_Id").val('');
+            $("#DriverPriceRegisterVM_Region").val('');
+            $("#DriverPriceRegisterVM_DeliveryPrice").val('');
+        });
+        $('.edit-button').on('click', function () {
+            $.ajax({
+                url: '/Managment/DriverPrice/GetData?id=' + $(this).data('id'),
+                success: function (data) {
+                    $("#DriverPriceRegisterVM_Id").val(data.id);
+                    $("#DriverPriceRegisterVM_Region").val(data.region);
+                    $("#DriverPriceRegisterVM_DeliveryPrice").val(data.deliveryPrice);
+                    modal.classList.add("open");
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+        const form = document.getElementById('driverPriceForm');
+        const hiddenInput = document.getElementById('DriverPriceRegisterVM_Id');
+
+        form.addEventListener('submit', function (event) {
+            if (hiddenInput.value) {
+                form.action = '/Managment/DriverPrice/Edit';
+            } else {
+                form.action = '/Managment/DriverPrice/Create';
+            }
+        });
+
+
+    </script>
+}
