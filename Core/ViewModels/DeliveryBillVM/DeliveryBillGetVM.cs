@@ -15,6 +15,7 @@ namespace Core.ViewModels.DeliveryBillVM
         public string? CustomerAddress { get; set; }
         public string? CustomerPhone { get; set; }
         public DateTime Date { get; set; }
+        public double DeliveryPrice { get; set; }
         public double FinalTotal { get; set; }
         public bool MoneyDelivered { get; set; }
         public List<BillDetailRegisterVM>? BillDetailRegisterVM { get; set; }

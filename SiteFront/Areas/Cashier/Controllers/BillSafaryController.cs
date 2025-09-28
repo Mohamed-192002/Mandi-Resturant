@@ -538,7 +538,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             if (model.Discount != 0) extraContentHeight += 20f;
             if (model.DeliveryPrice != 0) extraContentHeight += 20f;
             if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
-            extraContentHeight += 5f; // للسعر الكلي والفواصل
+            //extraContentHeight += 5f; // للسعر الكلي والفواصل
             
             float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
             Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)

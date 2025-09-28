@@ -276,6 +276,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 Date = b.Date,
                 FinalTotal = b.FinalTotal,
                 OrderNumber = b.OrderNumber,
+                DeliveryPrice=b.DeliveryPrice,
                 DeliveryName = b.DeliveryId != null ? _deliveryRepo.GetByIdAsync((int)b.DeliveryId).Result.Name : null,
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
@@ -304,6 +305,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 DeliveryName = b.DeliveryId != null ? _deliveryRepo.GetByIdAsync((int)b.DeliveryId).Result.Name : null,
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
+                DeliveryPrice = b.DeliveryPrice,
                 OrderNumber = b.OrderNumber,
                 BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == b.Id).Result.Select(c => new BillDetailRegisterVM
                 {
@@ -349,6 +351,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 DriverId = (int)(b.DriverId != null ? b.DriverId : 0),
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
+                DeliveryPrice= b.DeliveryPrice,
                 CustomerPhone = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Phone : null,
                 BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == b.Id).Result.Select(c => new BillDetailRegisterVM
                 {
@@ -477,6 +480,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 FinalTotal = b.FinalTotal,
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
+                DeliveryPrice= b.DeliveryPrice,
                 CustomerPhone = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Phone : null,
                 BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == b.Id).Result.Select(c => new BillDetailRegisterVM
                 {
@@ -686,14 +690,14 @@ namespace SiteFront.Areas.Cashier.Controllers
             float rowHeight = 20f;            // متوسط ارتفاع لكل صف
             float headerHeight = 150f;        // اللوجو + البيانات
             float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
-            
+
             // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
             float extraContentHeight = 0f;
             if (model.Discount != 0) extraContentHeight += 20f;
             if (model.DeliveryPrice != 0) extraContentHeight += 20f;
             if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
-            extraContentHeight += 5f; // للسعر الكلي والفواصل
-            
+            //extraContentHeight += 5f; // للسعر الكلي والفواصل
+
             float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
             Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
 

@@ -173,6 +173,7 @@ $(document).ready(function () {
 
 // Function to get delivery price
 function getDeliveryPrice() {
+    debugger;
     var deliveryItem = document.querySelector('.delivery-item');
     if (deliveryItem) {
         var deliveryPriceText = deliveryItem.querySelector('.delivery-area-price').textContent;
@@ -577,6 +578,7 @@ function playErrorSound() {
 
 //Save Bill
 async function CreateBill() {
+    debugger
     var selectedType = $('input[name="billType"]:checked').val();
     var orderNumber = $("#orderNumber").val();
 
@@ -614,6 +616,7 @@ async function CreateBill() {
         const gift = $total.find("#gift input").prop("checked");
         const note = $total.find("#notes").val();
         const customerAddress = $("#customerName input[type='hidden']").val();
+        debugger;
         const deliveryPrice = getDeliveryPrice();
 
         const billSafaryRegisterVM = {
@@ -723,6 +726,7 @@ async function CreateBill() {
         const time = $total.find("#orderDeliveredTime input").val();
         const note = $total.find("#notes").val();
         const customerAddress = $("#customerName input[type='hidden']").val();
+        debugger;
         const deliveryPrice = getDeliveryPrice();
 
         const billDeliveryRegisterVM = {
@@ -792,45 +796,46 @@ async function CreateBill() {
             });
         }
         //else if (billDeliveryRegisterVM.orderDeliveredTime != "") {
-            //CheckHoleAmount
-            const checkDeliveryHoleAmountVM = {
-                billDetailRegisterVM: productsData,
-                orderDeliveredTime: time,
-            };
-            console.log(typeof (checkDeliveryHoleAmountVM.orderDeliveredTime));
-            //const result = await checkDeliveryHolesAmountByTime(checkDeliveryHoleAmountVM);
-            //if (!result) {
-            //    return;
-            //}
-            var button = $("#btn_save");
-            button.prop("disabled", true);
-            //Send Data To Save
-            $.ajax({
-                url: '/Cashier/BillDelivery/SaveSaleDeliveryByTime',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(billDeliveryRegisterVM),
-                success: function (response) {
-                    toastr.success("تم حفظ الفاتورة بنجاح");
+        //CheckHoleAmount
 
-                    //Update Data Real Time
-                    connection.invoke("SendData");
-                    setTimeout(function () {
-                        window.location.href = "/Cashier/SaleBill/Index";
-                    }, 1000);
-                },
-                error: function (xhr) {
-                    playErrorSound();
-                    if (xhr.responseJSON?.error === "PRINT_ERROR") {
-                        toastr.info("تم الحفظ ولكن حدث خطأ في الطباعة");
-                    } else if (xhr.responseJSON?.error === "TRANSACTION_ERROR") {
-                        toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
-                    }
-                    setTimeout(function () {
-                        window.location.href = "/Cashier/SaleBill/Index";
-                    }, 1000);
+        const checkDeliveryHoleAmountVM = {
+            billDetailRegisterVM: productsData,
+            orderDeliveredTime: time,
+        };
+        console.log(typeof (checkDeliveryHoleAmountVM.orderDeliveredTime));
+        //const result = await checkDeliveryHolesAmountByTime(checkDeliveryHoleAmountVM);
+        //if (!result) {
+        //    return;
+        //}
+        var button = $("#btn_save");
+        button.prop("disabled", true);
+        //Send Data To Save
+        $.ajax({
+            url: '/Cashier/BillDelivery/SaveSaleDeliveryByTime',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(billDeliveryRegisterVM),
+            success: function (response) {
+                toastr.success("تم حفظ الفاتورة بنجاح");
+
+                //Update Data Real Time
+                connection.invoke("SendData");
+                setTimeout(function () {
+                    window.location.href = "/Cashier/SaleBill/Index";
+                }, 1000);
+            },
+            error: function (xhr) {
+                playErrorSound();
+                if (xhr.responseJSON?.error === "PRINT_ERROR") {
+                    toastr.info("تم الحفظ ولكن حدث خطأ في الطباعة");
+                } else if (xhr.responseJSON?.error === "TRANSACTION_ERROR") {
+                    toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
                 }
-            });
+                setTimeout(function () {
+                    window.location.href = "/Cashier/SaleBill/Index";
+                }, 1000);
+            }
+        });
         //}
     }
     else if (selectedType == 3) {
@@ -875,7 +880,7 @@ async function CreateBill() {
         //const customerReceive = $total.find("#customerReceive input").prop("checked");
         const note = $total.find("#notes").val();
         const customerAddress = $("#customerName input[type='hidden']").val();
-
+        const deliveryPrice = getDeliveryPrice();
         const billDeliveryRegisterVM = {
             billDetailRegisterVM: productsData,
             deliveryId: deliveryId,
@@ -886,6 +891,7 @@ async function CreateBill() {
             finalTotal: parseFloat(netTotal),
             orderDeliveredTime: time,
             notes: note,
+            deliveryPrice: deliveryPrice,
             orderNumber: orderNumber,
             customerAddress: customerAddress
         };
@@ -895,7 +901,7 @@ async function CreateBill() {
         if (billDeliveryRegisterVM.billDetailRegisterVM.length == 0) {
             return toastr.error("يجب إدخال علي الاقل صنف واحد في الفاتورة");
         }
-        
+
         if (billDeliveryRegisterVM.orderDeliveredTime == "" && listItems.length === 0) {
             return toastr.error("يجب إدخال وقت الاستلام أو اختيار الحفر");
         }
@@ -1025,6 +1031,7 @@ async function CreateBill() {
         //const customerReceive = $total.find("#customerReceive input").prop("checked");
         const note = $total.find("#notes").val();
         const customerAddress = $("#customerName input[type='hidden']").val();
+        debugger;
         const deliveryPrice = getDeliveryPrice();
 
         const billDeliveryRegisterVM = {
