@@ -111,6 +111,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     TotalPrice = model.FinalTotal,
                     Discount = model.Discount,
                     Vat = model.Vat,
+                    DeliveryPrice = model.DeliveryPrice,
                     Notes = model.Notes,
                     CashierName = _userRepo.GetByIdAsync(saleBillDb.CreatedUser).Result.Name
                 };
@@ -531,8 +532,16 @@ namespace SiteFront.Areas.Cashier.Controllers
             float rowHeight = 20f;            // متوسط ارتفاع لكل صف
             float headerHeight = 150f;        // اللوجو + البيانات
             float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
-            float pageHeight = headerHeight + (rowCount * rowHeight) + footerHeight;
-            Document document = new Document(new Rectangle(pageWidth, pageHeight), 2, 2, 0, 0); // Margins (left, right, top, bottom)
+            
+            // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
+            float extraContentHeight = 0f;
+            if (model.Discount != 0) extraContentHeight += 20f;
+            if (model.DeliveryPrice != 0) extraContentHeight += 20f;
+            if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
+            extraContentHeight += 5f; // للسعر الكلي والفواصل
+            
+            float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
+            Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
 
             // Set up a memory stream to create the PDF
             using (MemoryStream workStream = new MemoryStream())
@@ -605,6 +614,10 @@ namespace SiteFront.Areas.Cashier.Controllers
                 if (model.Discount != 0)
                 {
                     document.Add(new Paragraph(al.Process($" الخصم : {model.Discount}"), arabicFont) { Alignment = Element.ALIGN_CENTER });
+                }
+                if (model.DeliveryPrice != 0)
+                {
+                    document.Add(new Paragraph(al.Process($" التوصيل : {model.DeliveryPrice}"), arabicFont) { Alignment = Element.ALIGN_CENTER });
                 }
                 document.Add(new Paragraph(al.Process($"السعر الكلي : {model.TotalPrice}"), arabicFont) { Alignment = Element.ALIGN_CENTER });
                 document.Add(new Paragraph(al.Process("ــــــــــــــــــــــــــــ"), arabicFont) { Alignment = Element.ALIGN_CENTER });
@@ -723,7 +736,15 @@ namespace SiteFront.Areas.Cashier.Controllers
             float rowHeight = 20f;
             float headerHeight = 150f;
             float footerHeight = 100f;
-            float pageHeight = headerHeight + (rowCount * rowHeight) + footerHeight;
+            
+            // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
+            float extraContentHeight = 0f;
+            if (model.Discount != 0) extraContentHeight += 20f;
+            if (model.DeliveryPrice != 0) extraContentHeight += 20f;
+            if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
+            extraContentHeight += 30f; // للسعر الكلي والفواصل
+            
+            float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
             Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
 
             // Set up a memory stream to create the PDF

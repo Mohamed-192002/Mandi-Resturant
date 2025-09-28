@@ -421,6 +421,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                         TotalPrice = saleBillById.FinalTotal,
                         Discount = saleBillById.Discount,
                         Vat = saleBillById.Vat,
+                        DeliveryPrice = saleBillById.DeliveryPrice,
                         Notes = saleBillById.Notes,
                         OrderDeliveredTime = saleBillById.OrderDeliveredTime,
                         CashierName = _userRepo.GetByIdAsync(saleBillById.CreatedUser).Result.Name,
@@ -513,6 +514,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                             TotalPrice = SaleBillById.FinalTotal,
                             Discount = SaleBillById.Discount,
                             Vat = SaleBillById.Vat,
+                            DeliveryPrice = SaleBillById.DeliveryPrice,
                             Notes = SaleBillById.Notes,
                             OrderDeliveredTime = SaleBillById.OrderDeliveredTime,
                             CashierName = _userRepo.GetByIdAsync(SaleBillById.CreatedUser).Result.Name,
@@ -684,8 +686,16 @@ namespace SiteFront.Areas.Cashier.Controllers
             float rowHeight = 20f;            // متوسط ارتفاع لكل صف
             float headerHeight = 150f;        // اللوجو + البيانات
             float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
-            float pageHeight = headerHeight + (rowCount * rowHeight) + footerHeight;
-            Document document = new Document(new Rectangle(pageWidth, pageHeight), 2, 2, 0, 0); // Margins (left, right, top, bottom)
+            
+            // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
+            float extraContentHeight = 0f;
+            if (model.Discount != 0) extraContentHeight += 20f;
+            if (model.DeliveryPrice != 0) extraContentHeight += 20f;
+            if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
+            extraContentHeight += 5f; // للسعر الكلي والفواصل
+            
+            float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
+            Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
 
             // Set up a memory stream to create the PDF
             using (MemoryStream workStream = new MemoryStream())
@@ -774,6 +784,10 @@ namespace SiteFront.Areas.Cashier.Controllers
                 if (model.Discount != 0)
                 {
                     document.Add(new Paragraph(al.Process($" الخصم : {model.Discount}"), arabicFont) { Alignment = Element.ALIGN_CENTER });
+                }
+                if (model.DeliveryPrice != 0)
+                {
+                    document.Add(new Paragraph(al.Process($" التوصيل : {model.DeliveryPrice}"), arabicFont) { Alignment = Element.ALIGN_CENTER });
                 }
                 document.Add(new Paragraph(al.Process($"السعر الكلي : {model.TotalPrice}"), arabicFont) { Alignment = Element.ALIGN_CENTER });
                 document.Add(new Paragraph(al.Process("ــــــــــــــــــــــــــــ"), arabicFont) { Alignment = Element.ALIGN_CENTER });

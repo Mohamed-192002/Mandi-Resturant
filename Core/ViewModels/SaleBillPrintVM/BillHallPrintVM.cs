@@ -15,6 +15,7 @@ namespace Core.ViewModels.SaleBillPrintVM
         public List<BillDetailRegisterVM> BillDetailRegisterVM { get; set; } = new List<BillDetailRegisterVM>();
         public double Discount { get; set; }
         public double Vat { get; set; }
+        public double DeliveryPrice { get; set; }
         public double TotalPrice { get; set; }
         public string? Notes { get; set; }
         public TimeOnly? OrderDeliveredTime { get; set; }
