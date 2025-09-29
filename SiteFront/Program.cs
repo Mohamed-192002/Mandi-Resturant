@@ -48,10 +48,10 @@ builder.Services.AddSignalR();
 builder.Services.AddHttpClient<WhatsAppService>();
 // Register the background service
 builder.Services.AddHostedService<EndTimeCheckerService>();
-//builder.WebHost.ConfigureKestrel(options =>
-//{
-//    options.Listen(IPAddress.Any, 5000);
-//});
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(IPAddress.Any, 5000);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
