@@ -156,7 +156,7 @@ section {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 15px 5px 25px 5px;
+  padding: 0 5px 25px 5px;
   background: rgba(255, 255, 255, 1);
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-radius: 12px;
@@ -195,7 +195,7 @@ section {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  padding-bottom: 15px;
+/*  padding-bottom: 15px;*/
   border-bottom: 1px solid var(--bg-hr);
 }
 
@@ -233,8 +233,8 @@ section {
 .Checkout .Checkout_content .product {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-height: 355px;
+/*  gap: 10px;*/
+  max-height: 180px;
   overflow-y: auto;
 }
 
@@ -283,7 +283,7 @@ section {
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+/*  gap: 10px;*/
 }
 
 .Checkout .Checkout_content .total .total_wapper p {
@@ -301,7 +301,7 @@ section {
 }
 
 .Checkout .Checkout_content .total button {
-  padding: 8px;
+/*  padding: 8px;*/
   border: none;
   border-radius: 8px;
   background-color: var(--color-primary);
