@@ -232,7 +232,7 @@ function selectBillType(button) {
         $("#customerName").show();
         $("#orderDeliveredTime").addClass('open');
         $(".choose-Delivery .addCustomer").show();
-        $(".order-input-container").show();
+        $(".order-input-container").hide();
 
 
     }
