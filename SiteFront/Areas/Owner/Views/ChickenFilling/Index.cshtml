@@ -45,7 +45,7 @@
                     </div>
                     <div class="FormControll">
                         <label asp-for="ChickenFillingRegisterVM.EndTime">وقت الفتح</label>
-                        <input type="time" asp-for="ChickenFillingRegisterVM.EndTime" />
+                        <input type="time" asp-for="ChickenFillingRegisterVM.EndTime" onclick="return false;" style="cursor:pointer;" />
                     </div>
                     
                 </div>
@@ -54,6 +54,38 @@
                     <button type="button">الغاء</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Pickup Time Modal for Chicken Filling -->
+    <div id="chickenPickupTimeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2147483647; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 12px; padding: 20px; width: 90%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); position: relative; z-index: 2147483647;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <h3 style="margin:0;font-size:22px;">تحديد وقت الفتح</h3>
+                <button id="closeChickenPickupTimeModal" style="background:none;border:none;font-size:22px;cursor:pointer;color:#666;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div style="display:flex; gap: 12px; align-items:center; justify-content:center; margin: 18px 0;">
+                <select id="chickenPickupHour" style="padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;"></select>
+                <span style="font-size:18px;">الساعات</span>
+                <span style="font-size:18px;">:</span>
+                <select id="chickenPickupMinute" style="padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;">
+                    <option value="00">00</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                </select>
+                <span style="font-size:18px;">الدقائق</span>
+                <select id="chickenPickupPeriod" style="padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;">
+                    <option value="AM">صباحا</option>
+                    <option value="PM">مساءا</option>
+                </select>
+            </div>
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button id="confirmChickenPickupTime" style="background:#6f42c1;color:#fff;border:none;border-radius:8px;padding:10px 16px;cursor:pointer;font-size:16px;">تأكيد</button>
+                <button id="cancelChickenPickupTime" style="background:#e0e0e0;color:#333;border:none;border-radius:8px;padding:10px 16px;cursor:pointer;font-size:16px;">إلغاء</button>
+            </div>
         </div>
     </div>
 
@@ -97,10 +129,81 @@
             </table>
         </div>
     </div>
-</section>
+ </section>
 
 @section Scripts {
     <script>
+        // Chicken Filling time modal wiring
+        (function() {
+            const timeInput = document.getElementById('ChickenFillingRegisterVM_EndTime');
+            const label = document.querySelector('label[for="ChickenFillingRegisterVM_EndTime"]');
+            if (!timeInput || !label) return;
+
+            const modal = document.getElementById('chickenPickupTimeModal');
+            const closeBtn = document.getElementById('closeChickenPickupTimeModal');
+            const cancelBtn = document.getElementById('cancelChickenPickupTime');
+            const confirmBtn = document.getElementById('confirmChickenPickupTime');
+            const hourSelect = document.getElementById('chickenPickupHour');
+            const minuteSelect = document.getElementById('chickenPickupMinute');
+            const periodSelect = document.getElementById('chickenPickupPeriod');
+
+            // Populate 1-12 hours once
+            if (hourSelect && hourSelect.options.length === 0) {
+                for (let h = 1; h <= 12; h++) {
+                    const opt = document.createElement('option');
+                    opt.value = h.toString().padStart(2, '0');
+                    opt.textContent = h.toString();
+                    hourSelect.appendChild(opt);
+                }
+            }
+
+            function openModalWithCurrent() {
+                // Parse current input value (HH:mm 24h) into 12h
+                const val = (timeInput.value || '').trim();
+                const match = val.match(/^(\d{2}):(\d{2})$/);
+                if (match) {
+                    let h24 = parseInt(match[1], 10);
+                    const m = match[2];
+                    const isPM = h24 >= 12;
+                    let h12 = h24 % 12; if (h12 === 0) h12 = 12;
+                    hourSelect.value = h12.toString().padStart(2, '0');
+                    minuteSelect.value = m;
+                    periodSelect.value = isPM ? 'PM' : 'AM';
+                } else {
+                    const now = new Date();
+                    let hour = now.getHours();
+                    const minutes = now.getMinutes();
+                    const isPM = hour >= 12;
+                    hour = hour % 12; if (hour === 0) hour = 12;
+                    const quarters = [0, 15, 30, 45];
+                    const nearest = quarters.reduce((prev, curr) => Math.abs(curr - minutes) < Math.abs(prev - minutes) ? curr : prev, 0);
+                    hourSelect.value = hour.toString().padStart(2, '0');
+                    minuteSelect.value = nearest.toString().padStart(2, '0');
+                    periodSelect.value = isPM ? 'PM' : 'AM';
+                }
+                modal.style.display = 'flex';
+            }
+
+            function closeModal() { modal.style.display = 'none'; }
+
+            function applyTime() {
+                const h12 = parseInt(hourSelect.value, 10);
+                const m = minuteSelect.value;
+                const period = periodSelect.value; // AM/PM
+                let h24 = h12 % 12;
+                if (period === 'PM') h24 += 12;
+                if (period === 'AM' && h12 === 12) h24 = 0;
+                timeInput.value = `${h24.toString().padStart(2,'0')}:${m}`;
+                closeModal();
+            }
+
+            timeInput.addEventListener('click', (e) => { e.preventDefault(); openModalWithCurrent(); });
+            label.addEventListener('click', openModalWithCurrent);
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            confirmBtn.addEventListener('click', applyTime);
+            modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+        })();
         btn_add.addEventListener("click", (e) => {
             $("#ChickenFillingRegisterVM_Id").val('');
             $("#ChickenFillingRegisterVM_HoleId").val('');
