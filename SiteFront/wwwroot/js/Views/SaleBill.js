@@ -209,6 +209,7 @@ function selectBillType(button) {
         $(".company-delivery").removeClass('open');
         $("#customerName").show();
         $("#orderDeliveredTime").removeClass('open');
+        $("#customerDeliveryTimePop").hide();
         $("#gift").addClass('open');
         $(".choose-Delivery .addCustomer").show();
         $(".order-input-container").hide();
@@ -220,6 +221,7 @@ function selectBillType(button) {
         $("#customerName").hide();
         $("#gift").removeClass('open');
         $("#orderDeliveredTime").removeClass('open');
+        $("#customerDeliveryTimePop").hide();
         $(".choose-Delivery .addCustomer").hide();
         $(".order-input-container").show();
 
@@ -231,6 +233,7 @@ function selectBillType(button) {
         $("#gift").removeClass('open');
         $("#customerName").show();
         $("#orderDeliveredTime").addClass('open');
+        $("#customerDeliveryTimePop").show();
         $(".choose-Delivery .addCustomer").show();
         $(".order-input-container").hide();
 
@@ -243,6 +246,7 @@ function selectBillType(button) {
         $("#gift").removeClass('open');
         $("#customerName").show();
         $("#orderDeliveredTime").addClass('open');
+        $("#customerDeliveryTimePop").show();
         $(".choose-Delivery .addCustomer").show();
         $(".order-input-container").show();
 

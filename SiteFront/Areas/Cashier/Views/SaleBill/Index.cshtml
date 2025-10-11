@@ -5,9 +5,9 @@
 <style>
     .order-input-container {
         /* margin: 15px 0;
-        display: flex;
-        flex-direction: column;
-        max-width: 300px; */
+                display: flex;
+                flex-direction: column;
+                max-width: 300px; */
         text-align: center;
     }
 
@@ -56,87 +56,87 @@
         white-space: nowrap;
     }
 
-    .filter-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.5s;
-    }
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
 
-    .filter-btn:hover::before {
-        left: 100%;
-    }
+        .filter-btn:hover::before {
+            left: 100%;
+        }
 
-    .filter-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
+        .filter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
 
-    .filter-btn.active {
+        .filter-btn.active {
             /* color: rgba(0,0,0,0.25) !important; */
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    }
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
 
-    .filter-btn[data-filter="all"] {
-        border-color: #007bff;
-        color: #007bff;
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    }
+        .filter-btn[data-filter="all"] {
+            border-color: #007bff;
+            color: #007bff;
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        }
 
-    .filter-btn[data-filter="all"]:not(.active) {
-        background: transparent;
-    }
+            .filter-btn[data-filter="all"]:not(.active) {
+                background: transparent;
+            }
 
-    .filter-btn[data-filter="meat"] {
-        border-color: #dc3545;
-        color: #dc3545;
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    }
+        .filter-btn[data-filter="meat"] {
+            border-color: #dc3545;
+            color: #dc3545;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
 
-    .filter-btn[data-filter="meat"]:not(.active) {
-        background: transparent;
-    }
+            .filter-btn[data-filter="meat"]:not(.active) {
+                background: transparent;
+            }
 
-    .filter-btn[data-filter="chicken"] {
-        border-color: #28a745;
-        color: #28a745;
-        background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-    }
+        .filter-btn[data-filter="chicken"] {
+            border-color: #28a745;
+            color: #28a745;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+        }
 
-    .filter-btn[data-filter="chicken"]:not(.active) {
-        background: transparent;
-    }
+            .filter-btn[data-filter="chicken"]:not(.active) {
+                background: transparent;
+            }
 
-    .filter-btn[data-filter="mixed"] {
-        border-color: #ffc107;
-        color: #ffc107;
-        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-    }
+        .filter-btn[data-filter="mixed"] {
+            border-color: #ffc107;
+            color: #ffc107;
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+        }
 
-    .filter-btn[data-filter="mixed"]:not(.active) {
-        background: transparent;
-    }
+            .filter-btn[data-filter="mixed"]:not(.active) {
+                background: transparent;
+            }
 
-    .filter-btn.active[data-filter="all"] {
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    }
+        .filter-btn.active[data-filter="all"] {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        }
 
-    .filter-btn.active[data-filter="meat"] {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    }
+        .filter-btn.active[data-filter="meat"] {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
 
-    .filter-btn.active[data-filter="chicken"] {
-        background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-    }
+        .filter-btn.active[data-filter="chicken"] {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+        }
 
-    .filter-btn.active[data-filter="mixed"] {
-        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-    }
+        .filter-btn.active[data-filter="mixed"] {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+        }
 
     /* Delivery Button Styles */
     .delivery-btn:hover {
@@ -165,30 +165,30 @@
         overflow: hidden;
     }
 
-    .delivery-area-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(111, 66, 193, 0.1), transparent);
-        transition: left 0.5s;
-    }
+        .delivery-area-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(111, 66, 193, 0.1), transparent);
+            transition: left 0.5s;
+        }
 
-    .delivery-area-card:hover::before {
-        left: 100%;
-    }
+        .delivery-area-card:hover::before {
+            left: 100%;
+        }
 
-    .delivery-area-card:hover {
-        transform: translateY(-5px);
-        border-color: #6f42c1;
-        box-shadow: 0 8px 25px rgba(111, 66, 193, 0.2);
-    }
+        .delivery-area-card:hover {
+            transform: translateY(-5px);
+            border-color: #6f42c1;
+            box-shadow: 0 8px 25px rgba(111, 66, 193, 0.2);
+        }
 
-    .delivery-area-card:active {
-        transform: translateY(-2px);
-    }
+        .delivery-area-card:active {
+            transform: translateY(-2px);
+        }
 
     .delivery-area-name {
         font-size: 16px;
@@ -215,6 +215,155 @@
         border-color: #6f42c1;
         box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
     }
+
+    /* Customer Form Delivery Fields Styling */
+    .FormControll {
+        margin-bottom: 15px;
+    }
+
+        .FormControll label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .FormControll .input-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .FormControll .input-container input[type="text"] {
+                flex: 1;
+                padding: 10px 12px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                background-color: #f8f9fa;
+            }
+
+                .FormControll .input-container input[type="text"]:focus {
+                    outline: none;
+                    border-color: #6f42c1;
+                    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+                    background-color: white;
+                }
+
+            .FormControll .input-container button {
+                padding: 10px 12px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 45px;
+            }
+
+                .FormControll .input-container button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+                }
+
+                .FormControll .input-container button:active {
+                    transform: translateY(0);
+                }
+
+    /* Delivery Time Input Styling */
+    #customerDeliveryTime {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+        #customerDeliveryTime:focus {
+            outline: none;
+            border-color: #6f42c1;
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+            background-color: white;
+        }
+
+        #customerDeliveryTime:hover {
+            border-color: #6f42c1;
+            background-color: white;
+        }
+
+    /* Form Section Styling */
+    .form_wapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0;
+    }
+
+    .form-row {
+        display: grid;
+        gap: 20px;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .form-row.first-row {
+        grid-template-columns: 1fr 1fr;
+        display: grid !important;
+    }
+
+    .form-row.second-row {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        display: grid !important;
+    }
+
+    .form-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+
+    /* Button Hover Effects */
+    .Buttons button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .Buttons button:active {
+        transform: translateY(0);
+    }
+
+    .Buttons button[onclick="addNewCustomer()"]:hover {
+        background: linear-gradient(135deg, #5a32a3, #4a2a8a) !important;
+        box-shadow: 0 4px 12px rgba(111, 66, 193, 0.4);
+    }
+
+    .Buttons button[id="closeModel"]:hover {
+        background: #d0d0d0 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Add Button Hover Effects */
+    .add-button:hover {
+        background: #218838 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    }
+
+    .add-button:active {
+        transform: translateY(0);
+    }
+
+    /* Modal Z-Index Fix */
+    #modal[data-modal="add-coustomer"] {
+        z-index: 10000;
+    }
 </style>
 <div class="container">
     <div class="Sidebar">
@@ -236,17 +385,17 @@
                     {
                         <li style="text-align:center;border-radius: 10px;background-color: white;">
                             <h3>@dagagHole.Name</h3>
-                                <div>
-                                    @if (dagagHole.EndTime != null)
-                                    {
-                                        <h4> الفتح  : @dagagHole.EndTime</h4>
-                                    }
-                                    else
-                                    {
-                                        <h4> الفتح : ____</h4>
-                                    }
-                                    <h4 style="color:red;">العدد : @dagagHole.Amount</h4>
-                                </div>
+                            <div>
+                                @if (dagagHole.EndTime != null)
+                                {
+                                    <h4> الفتح  : @dagagHole.EndTime</h4>
+                                }
+                                else
+                                {
+                                    <h4> الفتح : ____</h4>
+                                }
+                                <h4 style="color:red;">العدد : @dagagHole.Amount</h4>
+                            </div>
                         </li>
                     }
                     <li style="text-align:center;border-radius: 10px;background-color: black;color:white;">
@@ -302,7 +451,7 @@
                         <button class="button" id="reactionary">تعديل فواتير</button>
                         <a asp-action="AllDayBill" asp-controller="SaleBill">
                             <button class="button">
-                                 فواتير اليوم
+                                فواتير اليوم
                             </button>
                         </a>
 
@@ -321,10 +470,10 @@
                         <div class="reactionary">
                             <div class="form-reactionary">
                                 <form>
-                                    <select asp-items="@(new SelectList(Model.SaleBills,"Id","Name"))" class="billId">
+                                    <select asp-items="@(new SelectList(Model.SaleBills, "Id", "Name"))" class="billId">
                                         <option value="">اختار فاتورة</option>
                                     </select>
-                                    <select asp-items="@(new SelectList(Model.Products,"Id","Name"))" class="productId">
+                                    <select asp-items="@(new SelectList(Model.Products, "Id", "Name"))" class="productId">
                                         <option value="">اختار الصنف</option>
                                     </select>
                                     <input type="hidden" class="categoryId" />
@@ -485,7 +634,7 @@
                                 <div class="total_item" id="customerName">
                                     <p>العميل</p>
                                     <span></span>
-                                    <input type="hidden"/>
+                                    <input type="hidden" />
                                 </div>
                                 @* <div class="total_item" id="customerReceive">
                                     <p>استلام العميل</p>
@@ -496,7 +645,7 @@
                                     @* <input type="time" style="width:120px;height:30px;text-align:center" /> *@
                                     <input id="timePicker" type="text" style="width:120px;height:30px;text-align:center" readonly />
                                     @* value="@DateTime.Now.ToString("HH:mm")" *@
-                                </div> 
+                                </div>
 
                                 <div class="total_item open" id="gift">
                                     <p>تعيين كهدية</p>
@@ -515,76 +664,138 @@
 
                     <!-- Form Add Coustomer-->
                     <div id="modal" data-modal="add-coustomer">
-                        <div class="modal-content">
+                        <div class="modal-content" style="max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto;">
                             <div class="close_modal">
                                 <i class="fa-solid fa-xmark"></i>
                             </div>
-                            <button style="width:80px;height:30px;" onclick="pasteClipboardContent()">Paste</button>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px;">
+                                <h3 style="margin: 0; color: #333; font-size: 20px;">
+                                    <i class="fa-solid fa-user-plus" style="margin-left: 8px; color: #6f42c1;"></i>
+                                    إضافة عميل جديد
+                                </h3>
+                                <button style="width:80px;height:38px; background: #6f42c1;margin-left: 50px; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="pasteClipboardContent()">
+                                    Paste
+                                </button>
+                            </div>
                             <form method="post" id="customerForm">
-                                <div class="form_wapper">
-                                    <div class="FormControll">
-                                        <label asp-for="CustomerRegisterVM.Phone">رقم الهاتف</label>
-                                        <input type="text"
-                                               onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode))) return false;"
-                                               asp-for="CustomerRegisterVM.Phone"
-                                               maxlength="11"
-                                               onchange="GetCustomerData(),validatePhone();"
-                                               onkeyup="validatePhone();"
-                                               required />
-                                        <span id="phoneVal" class="text-danger" style="display:none;">
-                                            <i id="phoneLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
-                                        </span>
-                                    </div>
-                                    <div class="FormControll">
-                                        <label asp-for="CustomerRegisterVM.Name">اسم العميل</label>
-                                        <input type="text" asp-for="CustomerRegisterVM.Name" onkeyup="validateName();" onchange="validateName();" required />
-                                        <span id="nameVal" class="text-danger" style="display:none;">
-                                            <i id="nameLamp" class="fas fa-lightbulb" style="font-size:25px;"></i> 
-                                        </span>
-                                    </div>
-                                    <div class="FormControll">
-                                        <label asp-for="CustomerRegisterVM.AnotherPhone">رقم الهاتف اخر</label>
-                                        <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
-                                               asp-for="CustomerRegisterVM.AnotherPhone" maxlength="11" />
-                                    </div>
-                                    <div class="FormControll" id="address1">
-                                        <label asp-for="CustomerRegisterVM.Address">العنوان</label>
-                                        <div class="input-container">
-                                            <input type="text" asp-for="CustomerRegisterVM.Address" onkeyup="validateAddress();" onchange="validateAddress();" required />
-                                            <input type="checkbox" style="width:14px;height:14px;padding:0;" checked />
-                                            <button type="button" class="add-button">+</button>
+                                <div class="form_wapper" style="display: flex; flex-direction: column; gap: 20px; padding: 0;">
+                                    <!-- الصف الأول - التوصيل والوقت -->
+                                    <div class="form-row first-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0; margin-bottom: 20px;">
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" style="margin-bottom: 15px;">
+                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">منطقة التوصيل</label>
+                                                <div class="input-container" style="display: flex; align-items: center; gap: 8px;">
+                                                    <input type="text" asp-for="CustomerRegisterVM.DeliveryRegion" id="customerDeliveryRegion" placeholder="اختر منطقة التوصيل" readonly style="flex: 1; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa;" />
+                                                    <button type="button" onclick="openDeliveryModalForCustomer()" style="height: 35px;background: #6f42c1; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
+                                                        <i class="fa-solid fa-truck"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <span id="addressVal" class="text-danger" style="display:none;">
-                                            <i id="addressLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
-                                        </span>
-                                    </div>
-                                    <div class="FormControll" id="address2">
-                                        <label asp-for="CustomerRegisterVM.Address2">عنوان 2</label>
-                                        <div class="input-container">
-                                            <input type="text" asp-for="CustomerRegisterVM.Address2" />
-                                            <input type="checkbox" style="width:14px;height:14px;" />
-                                            <button type="button" class="add-button">+</button>
+
+                                        <div id="customerDeliveryTimePop" class="form-column" style="display: none; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" style="margin-bottom: 15px;">
+                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">وقت الاستلام</label>
+                                                <input type="text" asp-for="CustomerRegisterVM.OrderDeliveredTime" id="customerDeliveryTime" placeholder="اختر وقت الاستلام" readonly style="width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa; cursor: pointer;" />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="FormControll" id="address3">
-                                        <label asp-for="CustomerRegisterVM.Address3">عنوان 3</label>
-                                        <div class="input-container">
-                                            <input type="text" asp-for="CustomerRegisterVM.Address3" />
-                                            <input type="checkbox" style="width:14px;height:14px;" />
-                                            <button type="button" class="add-button">+</button>
+
+                                    <!-- الصف الثاني - بيانات العميل -->
+                                    <div class="form-row second-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; padding: 0; margin-bottom: 20px;">
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" style="margin-bottom: 15px;">
+                                                <label asp-for="CustomerRegisterVM.Phone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">رقم الهاتف</label>
+                                                <input type="text"
+                                                       onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode))) return false;"
+                                                       asp-for="CustomerRegisterVM.Phone"
+                                                       maxlength="11"
+                                                       onchange="GetCustomerData(),validatePhone();"
+                                                       onkeyup="validatePhone();"
+                                                       required 
+                                                       style="width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa;" />
+                                                <span id="phoneVal" class="text-danger" style="display:none;">
+                                                    <i id="phoneLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" style="margin-bottom: 15px;">
+                                                <label asp-for="CustomerRegisterVM.Name" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">اسم العميل</label>
+                                                <input type="text" asp-for="CustomerRegisterVM.Name" onkeyup="validateName();" onchange="validateName();" required style="width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa;" />
+                                                <span id="nameVal" class="text-danger" style="display:none;">
+                                                    <i id="nameLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" style="margin-bottom: 15px;">
+                                                <label asp-for="CustomerRegisterVM.AnotherPhone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">رقم الهاتف اخر</label>
+                                                <input type="text" onkeypress="if (isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"
+                                                       asp-for="CustomerRegisterVM.AnotherPhone" maxlength="11" 
+                                                       style="width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa;" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" id="address1" style="margin-bottom: 15px;">
+                                                <label asp-for="CustomerRegisterVM.Address" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">العنوان الرئيسي</label>
+                                                <div class="input-container" style="display: flex; align-items: center; gap: 8px;">
+                                                    <input type="text" asp-for="CustomerRegisterVM.Address" onkeyup="validateAddress();" onchange="validateAddress();" required placeholder="أدخل العنوان الرئيسي" style="flex: 1; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa;" />
+                                                    <input type="checkbox" style="width:16px;height:16px;padding:0; cursor: pointer;" checked />
+                                                    <button type="button" class="add-button" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
+                                                </div>
+                                                <span id="addressVal" class="text-danger" style="display:none;">
+                                                    <i id="addressLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="FormControll" id="address4">
-                                        <label asp-for="CustomerRegisterVM.Address4">عنوان 4</label>
-                                        <div class="input-container">
-                                            <input type="text" asp-for="CustomerRegisterVM.Address4"/>
-                                            <input type="checkbox" style="width:14px;height:14px;" />
+
+                                    <!-- الصف الثالث - العناوين الإضافية -->
+                                    <div class="form-row second-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; padding: 0; margin-bottom: 20px;">
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" id="address2" style="margin-bottom: 15px;">
+                                                <label asp-for="CustomerRegisterVM.Address2" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">عنوان إضافي 2</label>
+                                                <div class="input-container" style="display: flex; align-items: center; gap: 8px;">
+                                                    <input type="text" asp-for="CustomerRegisterVM.Address2" placeholder="عنوان إضافي (اختياري)" style="flex: 1; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa;" />
+                                                    <input type="checkbox" style="width:16px;height:16px; cursor: pointer;" />
+                                                    <button type="button" class="add-button" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" id="address3" style="margin-bottom: 15px;">
+                                                <label asp-for="CustomerRegisterVM.Address3" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">عنوان إضافي 3</label>
+                                                <div class="input-container" style="display: flex; align-items: center; gap: 8px;">
+                                                    <input type="text" asp-for="CustomerRegisterVM.Address3" placeholder="عنوان إضافي (اختياري)" style="flex: 1; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa;" />
+                                                    <input type="checkbox" style="width:16px;height:16px; cursor: pointer;" />
+                                                    <button type="button" class="add-button" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <div class="FormControll" id="address4" style="margin-bottom: 15px;">
+                                                <label asp-for="CustomerRegisterVM.Address4" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">عنوان إضافي 4</label>
+                                                <div class="input-container" style="display: flex; align-items: center; gap: 8px;">
+                                                    <input type="text" asp-for="CustomerRegisterVM.Address4" placeholder="عنوان إضافي (اختياري)" style="flex: 1; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa;" />
+                                                    <input type="checkbox" style="width:16px;height:16px; cursor: pointer;" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                            <!-- عمود فارغ للتوازن -->
                                         </div>
                                     </div>
                                 </div>
-                                <div class="Buttons">
-                                    <button type="button" onclick="addNewCustomer()">اضافة</button>
-                                    <button type="button" id="closeModel">الغاء</button>
+                                <div class="Buttons" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 20px; border-top: 2px solid #f0f0f0;">
+                                    <button type="button" id="closeModel" style="padding: 10px 20px; background: #e0e0e0; color: #333; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">إلغاء</button>
+                                    <button type="button" onclick="addNewCustomer()" style="padding: 10px 20px; background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">إضافة العميل</button>
                                 </div>
                             </form>
                         </div>
@@ -616,7 +827,7 @@
                                                              loading="lazy" />
                                                         <div>
                                                             <h3>@dagagHole.Name</h3>
-                                                            @if(dagagHole.EndTime != null)
+                                                            @if (dagagHole.EndTime != null)
                                                             {
                                                                 <h5> الفتح  : @dagagHole.EndTime</h5>
                                                             }
@@ -646,7 +857,7 @@
                                                              loading="lazy" />
                                                         <div>
                                                             <h3>@meatHole.Name</h3>
-                                                            @if(meatHole.EndTime != null)
+                                                            @if (meatHole.EndTime != null)
                                                             {
                                                                 <h5> الفتح : @meatHole.EndTime</h5>
                                                             }
@@ -721,16 +932,43 @@
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
-                        
+
                         <!-- Search Box -->
                         <div style="margin-bottom: 20px;">
-                            <input type="text" id="deliverySearch" placeholder="البحث في المناطق..." 
+                            <input type="text" id="deliverySearch" placeholder="البحث في المناطق..."
                                    style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s;"
                                    onkeyup="filterDeliveryAreas()">
                         </div>
-                        
+
                         <!-- Delivery Areas Grid -->
                         <div id="deliveryAreasGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                            <!-- Areas will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Delivery Areas Modal -->
+                <div id="customerDeliveryModal" class="delivery-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10002; justify-content: center; align-items: center;">
+                    <div class="delivery-modal-content" style="background: white; border-radius: 15px; padding: 25px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px;">
+                            <h3 style="margin: 0; color: #333; font-size: 24px;">
+                                <i class="fa-solid fa-truck" style="margin-left: 10px; color: #6f42c1;"></i>
+                                مناطق التوصيل للعميل
+                            </h3>
+                            <button id="closeCustomerDeliveryModal" style="background: none; border: none; font-size: 24px; color: #999; cursor: pointer; padding: 5px;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+
+                        <!-- Search Box -->
+                        <div style="margin-bottom: 20px;">
+                            <input type="text" id="customerDeliverySearch" placeholder="البحث في المناطق..."
+                                   style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s;"
+                                   onkeyup="filterCustomerDeliveryAreas()">
+                        </div>
+
+                        <!-- Delivery Areas Grid -->
+                        <div id="customerDeliveryAreasGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
                             <!-- Areas will be loaded here -->
                         </div>
                     </div>
@@ -760,7 +998,7 @@
                             </div>
 
                             <!-- زر التوصيل -->
-                            <button id="deliveryBtn" class="delivery-btn" style="padding: 10px 20px; background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3); transition: all 0.3s ease;">
+                            <button  id="deliveryBtn" class="delivery-btn" style="padding: 10px 20px; background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3); transition: all 0.3s ease;">
                                 <i class="fa-solid fa-truck" style="margin-left: 8px;"></i>
                                 التوصيل
                             </button>
@@ -768,7 +1006,7 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="List-Items" id="allProducts">
                         <partial name="_PartialProducts" model="Model.ProductGetVM" />
                     </div>
@@ -864,7 +1102,7 @@
         // Product Filter Functionality
         const filterButtons = document.querySelectorAll('.filter-btn');
         const allProducts = document.querySelectorAll('#allProducts .Card');
-        
+
         // Store original products data
         const originalProducts = Array.from(allProducts).map(card => ({
             element: card,
@@ -878,10 +1116,10 @@
                 filterButtons.forEach(btn => {
                     btn.classList.remove('active');
                 });
-                
+
                 // Add active class to clicked button
                 this.classList.add('active');
-                
+
                 // Filter products
                 const filterType = this.dataset.filter;
                 filterProducts(filterType);
@@ -958,7 +1196,7 @@
         function renderDeliveryAreas(areas) {
             const grid = document.getElementById('deliveryAreasGrid');
             grid.innerHTML = '';
-            
+
             areas.forEach(area => {
                 const card = document.createElement('div');
                 card.className = 'delivery-area-card';
@@ -973,7 +1211,7 @@
 
         function filterDeliveryAreas() {
             const searchTerm = document.getElementById('deliverySearch').value.toLowerCase();
-            const filteredAreas = deliveryAreas.filter(area => 
+            const filteredAreas = deliveryAreas.filter(area =>
                 area.region.toLowerCase().includes(searchTerm)
             );
             renderDeliveryAreas(filteredAreas);
@@ -982,10 +1220,10 @@
         function selectDeliveryArea(area) {
             selectedDeliveryPrice = area.deliveryPrice;
             selectedDeliveryArea = area.region;
-            
+            document.getElementById('customerDeliveryRegion').value = area.region;
             // Close modal
             document.getElementById('deliveryModal').style.display = 'none';
-            
+
             // Add delivery to bill
             addDeliveryToBill(area);
         }
@@ -1016,7 +1254,7 @@
                 </div>
             `;
             productList.appendChild(deliveryItem);
-            
+
             // Update total
             updateTotal();
         }
@@ -1027,6 +1265,10 @@
                 deliveryItem.remove();
                 selectedDeliveryPrice = 0;
                 selectedDeliveryArea = '';
+                const deliveryRegionInput = document.getElementById('customerDeliveryRegion');
+                if (deliveryRegionInput) {
+                    deliveryRegionInput.value = '';
+                }
                 updateTotal();
             }
         }
@@ -1052,6 +1294,115 @@
         function updateTotal() {
             calculateBillTotal();
         }
+
+        // Customer Delivery Functions
+        let customerDeliveryAreas = [];
+        let selectedCustomerDeliveryPrice = 0;
+        let selectedCustomerDeliveryArea = '';
+
+        // Load delivery areas for customer form
+        async function loadCustomerDeliveryAreas() {
+            try {
+                const response = await fetch('/Managment/DriverPrice/GetAllAreas');
+                if (response.ok) {
+                    customerDeliveryAreas = await response.json();
+                    renderCustomerDeliveryAreas(customerDeliveryAreas);
+                } else {
+                    console.error('Failed to load delivery areas');
+                    // Fallback data for testing
+                    customerDeliveryAreas = [
+                        { id: 1, region: 'الكرادة', deliveryPrice: 5000 },
+                        { id: 2, region: 'الجادرية', deliveryPrice: 3000 },
+                        { id: 3, region: 'المنصور', deliveryPrice: 4000 },
+                        { id: 4, region: 'البياع', deliveryPrice: 6000 },
+                        { id: 5, region: 'الزعفرانية', deliveryPrice: 8000 }
+                    ];
+                    renderCustomerDeliveryAreas(customerDeliveryAreas);
+                }
+            } catch (error) {
+                console.error('Error loading delivery areas:', error);
+                // Fallback data for testing
+                customerDeliveryAreas = [
+                    { id: 1, region: 'الكرادة', deliveryPrice: 5000 },
+                    { id: 2, region: 'الجادرية', deliveryPrice: 3000 },
+                    { id: 3, region: 'المنصور', deliveryPrice: 4000 },
+                    { id: 4, region: 'البياع', deliveryPrice: 6000 },
+                    { id: 5, region: 'الزعفرانية', deliveryPrice: 8000 }
+                ];
+                renderCustomerDeliveryAreas(customerDeliveryAreas);
+            }
+        }
+
+        function renderCustomerDeliveryAreas(areas) {
+            const grid = document.getElementById('customerDeliveryAreasGrid');
+            grid.innerHTML = '';
+
+            areas.forEach(area => {
+                const card = document.createElement('div');
+                card.className = 'delivery-area-card';
+                card.innerHTML = `
+                    <div class="delivery-area-name">${area.region}</div>
+                    <div class="delivery-area-price">${area.deliveryPrice} دينار</div>
+                `;
+                card.onclick = () => selectCustomerDeliveryArea(area);
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCustomerDeliveryAreas() {
+            const searchTerm = document.getElementById('customerDeliverySearch').value.toLowerCase();
+            const filteredAreas = customerDeliveryAreas.filter(area =>
+                area.region.toLowerCase().includes(searchTerm)
+            );
+            renderCustomerDeliveryAreas(filteredAreas);
+        }
+
+        function selectCustomerDeliveryArea(area) {
+            selectedCustomerDeliveryPrice = area.deliveryPrice;
+            selectedCustomerDeliveryArea = area.region;
+            // Update the customer form fields
+            document.getElementById('customerDeliveryRegion').value = area.region;
+
+            // Add delivery to bill automatically
+            addDeliveryToBill(area);
+
+            // Close modal
+            document.getElementById('customerDeliveryModal').style.display = 'none';
+        }
+
+        function openDeliveryModalForCustomer() {
+            document.getElementById('customerDeliveryModal').style.display = 'flex';
+            loadCustomerDeliveryAreas();
+        }
+
+
+        // Initialize delivery time picker for customer form
+        function initializeCustomerDeliveryTime() {
+            const timeInput = document.getElementById('customerDeliveryTime');
+            if (timeInput) {
+                timeInput.addEventListener('click', function() {
+                    // Open the existing pickup time modal
+                    document.getElementById('pickupTimeModal').style.display = 'flex';
+                });
+            }
+        }
+
+        // Event listeners for customer delivery modal
+        document.getElementById('closeCustomerDeliveryModal').addEventListener('click', function() {
+            document.getElementById('customerDeliveryModal').style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('customerDeliveryModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // Initialize customer delivery time picker when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCustomerDeliveryTime();
+        });
     </script>
 }
 

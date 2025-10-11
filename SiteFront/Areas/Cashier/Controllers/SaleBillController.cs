@@ -181,7 +181,16 @@ namespace SiteFront.Areas.Cashier.Controllers
                     customerDb.LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
                     _customerRepo.Add(customerDb);
                     await _customerRepo.SaveAllAsync();
-                    return Ok(customerDb.Id);
+                    
+                    // Return customer data with delivery information
+                    var result = new
+                    {
+                        customerId = customerDb.Id,
+                        deliveryPrice = model.CustomerRegisterVM.DeliveryPrice,
+                        deliveryRegion = model.CustomerRegisterVM.DeliveryRegion,
+                        orderDeliveredTime = model.CustomerRegisterVM.OrderDeliveredTime
+                    };
+                    return Ok(result);
                 }
                 else
                 {
@@ -195,7 +204,16 @@ namespace SiteFront.Areas.Cashier.Controllers
                     checkCustomer.AnotherPhone = model.CustomerRegisterVM.AnotherPhone;
                     _customerRepo.Update(checkCustomer);
                     await _customerRepo.SaveAllAsync();
-                    return Ok(checkCustomer.Id);
+                    
+                    // Return customer data with delivery information
+                    var result = new
+                    {
+                        customerId = checkCustomer.Id,
+                        deliveryPrice = model.CustomerRegisterVM.DeliveryPrice,
+                        deliveryRegion = model.CustomerRegisterVM.DeliveryRegion,
+                        orderDeliveredTime = model.CustomerRegisterVM.OrderDeliveredTime
+                    };
+                    return Ok(result);
                 }
             }
             else
