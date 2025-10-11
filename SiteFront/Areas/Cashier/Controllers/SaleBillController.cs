@@ -683,23 +683,20 @@ namespace SiteFront.Areas.Cashier.Controllers
 
         private string GenerateReceipt(BillHallPrintVM model)
         {
-            // Define the custom page size (80 mm wide)
             float pageWidth = 80f * 2.8346f; // 80mm to points (1mm = 2.8346 points)
-                                             //float pageHeight = 297f * 2.8346f;
             int rowCount = model.BillDetailRegisterVM.Count;
-            float rowHeight = 20f;            // متوسط ارتفاع لكل صف
-            float headerHeight = 150f;        // اللوجو + البيانات
-            float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
+            float rowHeight = 25f;
+            float headerHeight = 160f;
+            float footerHeight = 120f;
 
-            // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
             float extraContentHeight = 0f;
-            if (model.Discount != 0) extraContentHeight += 20f;
-            if (model.DeliveryPrice != 0) extraContentHeight += 20f;
-            if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
-            //extraContentHeight += 5f; // للسعر الكلي والفواصل
-
+            if (model.Discount != 0) extraContentHeight += 25f;
+            if (model.DeliveryPrice != 0) extraContentHeight += 25f;
+            if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 25f;
             float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
-            Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
+            if (pageHeight > 14300f)
+                pageHeight = 14300f;
+            Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0);
 
             // Set up a memory stream to create the PDF
             using (MemoryStream workStream = new MemoryStream())
