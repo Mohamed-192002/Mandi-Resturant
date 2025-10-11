@@ -124,7 +124,15 @@ namespace SiteFront.Areas.Managment.Controllers
         {
             try
             {
-                var areas = await _driverPriceRepo.GetAllAsync(g => g.IsDeleted == false, true);
+              //  var areas = await _driverPriceRepo.GetAllAsync(g => g.IsDeleted == false, true);
+              var areas =new List<DriverPrice>
+                {
+                    new DriverPrice { Id = 1, Region = "السعر 1", DeliveryPrice = 1000m },
+                    new DriverPrice { Id = 1, Region = "السعر 2", DeliveryPrice = 2000m },
+                    new DriverPrice { Id = 1, Region = "السعر 3", DeliveryPrice = 3000m },
+                    new DriverPrice { Id = 1, Region = "السعر 4", DeliveryPrice = 4000m },
+                    new DriverPrice { Id = 3, Region = "مجانا", DeliveryPrice = 0m }
+                };
                 var areasData = areas.Select(a => new { 
                     id = a.Id, 
                     region = a.Region, 
