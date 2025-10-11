@@ -449,7 +449,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     var printerName2 = _configuration["DeliveryPrinterName"];
-                    await PrintPdfAsync(filePathBill, printerName);
+                    //await PrintPdfAsync(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName);
                     await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
@@ -539,7 +540,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                         //var printerName = _configuration["CashierPrinterName"];
                         var printerName = print.Name;
                         var printerName2 = _configuration["SafaryPrinterName"];
-                        await PrintPdfAsync(filePathBill, printerName);
+                        //await PrintPdfAsync(filePathBill, printerName);
+                        await ApiHelper.SendToApi(filePathBill, printerName);
                         await PrintPdfAsync(filePathBill, printerName2);
                     }
                     catch (Exception ex)

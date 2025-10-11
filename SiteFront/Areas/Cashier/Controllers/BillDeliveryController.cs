@@ -10,6 +10,7 @@ using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using SiteFront.Services;
 using System.Diagnostics;
 
 namespace SiteFront.Areas.Cashier.Controllers
@@ -165,7 +166,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     var printerName2 = _configuration["DeliveryPrinterName"];
-                    await PrintPdfAsync(filePathBill, printerName);
+                    //  await PrintPdfAsync(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName);
                     await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
@@ -201,7 +203,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Vat = model.Vat,
                     DeliveryPrice = model.DeliveryPrice,
                     FinalTotal = model.FinalTotal,
-                    OrderDeliveredTime = string.IsNullOrEmpty(model.OrderDeliveredTime)? null: TimeOnly.Parse(model.OrderDeliveredTime),
+                    OrderDeliveredTime = string.IsNullOrEmpty(model.OrderDeliveredTime) ? null : TimeOnly.Parse(model.OrderDeliveredTime),
                     Notes = model.Notes,
                     MoneyDelivered = false,
                     CustomerAddress = model.CustomerAddress,
@@ -306,7 +308,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     var printerName2 = _configuration["DeliveryPrinterName"];
-                    await PrintPdfAsync(filePathBill, printerName);
+                    //await PrintPdfAsync(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName);
                     await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
@@ -853,7 +856,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                         throw new Exception("Printer not registered for user.");
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
-                    await PrintPdfAsync(filePathBill, printerName);
+                    //await PrintPdfAsync(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName);
                 }
                 catch (Exception ex)
                 {
@@ -877,14 +881,14 @@ namespace SiteFront.Areas.Cashier.Controllers
             float rowHeight = 20f;            // متوسط ارتفاع لكل صف
             float headerHeight = 150f;        // اللوجو + البيانات
             float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
-            
+
             // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
             float extraContentHeight = 0f;
             if (model.Discount != 0) extraContentHeight += 20f;
             if (model.DeliveryPrice != 0) extraContentHeight += 20f;
             if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
             //extraContentHeight += 1f; // للسعر الكلي والفواصل
-            
+
             float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
             Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
 
@@ -1004,6 +1008,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 return filePath; // Return filePath
             }
         }
+
 
         static async Task PrintPdfAsync(string pdfFilePath, string printerName)
         {

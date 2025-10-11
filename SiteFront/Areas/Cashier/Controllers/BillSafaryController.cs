@@ -9,6 +9,7 @@ using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using SiteFront.Services;
 using System.Diagnostics;
 using Document = iTextSharp.text.Document;
 
@@ -128,7 +129,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     var printerName2 = _configuration["SafaryPrinterName"];
-                    await PrintPdfAsync(filePathBill, printerName);
+                    //await PrintPdfAsync(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName);
                     await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
@@ -509,7 +511,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                         throw new Exception("Printer not registered for user.");
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
-                    await PrintPdfAsync(filePathBill, printerName);
+                    //await PrintPdfAsync(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName);
                 }
                 catch (Exception ex)
                 {
@@ -719,7 +722,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                     throw new Exception("Printer not registered for user.");
                 //var printerName = _configuration["CashierPrinterName"];
                 var printerName = print.Name;
-                await PrintPdfAsync(filePathBill, printerName);
+                //await PrintPdfAsync(filePathBill, printerName);
+                await ApiHelper.SendToApi(filePathBill, printerName);
                 return Ok();
             }
             else
