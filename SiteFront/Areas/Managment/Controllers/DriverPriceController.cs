@@ -131,6 +131,7 @@ namespace SiteFront.Areas.Managment.Controllers
                     new DriverPrice { Id = 1, Region = "السعر 2", DeliveryPrice = 2000m },
                     new DriverPrice { Id = 1, Region = "السعر 3", DeliveryPrice = 3000m },
                     new DriverPrice { Id = 1, Region = "السعر 4", DeliveryPrice = 4000m },
+                    new DriverPrice { Id = 1, Region = "السعر 5", DeliveryPrice = 5000m },
                     new DriverPrice { Id = 3, Region = "مجانا", DeliveryPrice = 0m }
                 };
                 var areasData = areas.Select(a => new { 

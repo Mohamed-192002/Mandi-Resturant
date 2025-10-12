@@ -382,10 +382,11 @@ function addNewCustomer() {
             success: function (data) {
                 Modal_Customer.classList.remove("open");
                 toastr.success("تم الاضافة بنجاح");
+                debugger
                 //console.log(data);
                 const $total = $(".total_wapper");
                 $total.find("#customerName span").text(name);
-                $total.find("#customerName span").attr('id', data);
+                $total.find("#customerName span").attr('id', data.customerId);
                 $("#customerName input[type='hidden']").val(checkedAddress);
             },
             error: function () {
