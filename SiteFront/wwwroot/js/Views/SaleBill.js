@@ -385,7 +385,7 @@ function addNewCustomer() {
     var deliveryRegion = document.querySelector('.delivery-item');
 
     if (selectedType == 3) {
-        if (deliveredTime === "" || deliveryRegion=== "") {
+        if (deliveredTime === "" || deliveryRegion === "") {
             return;
         }
     }
@@ -744,9 +744,10 @@ async function CreateBill() {
         }
         //Customer
         var customerId = $("#customerName span").attr('id');
-        if (customerId == undefined) {
-            customerId = null;
-        }
+        customerId = null;
+        //if (customerId == undefined) {
+        //    customerId = null;
+        //}
         //Delivery
         var deliveryId = $("#deliveryId").val();
         if (deliveryId == 0) {
