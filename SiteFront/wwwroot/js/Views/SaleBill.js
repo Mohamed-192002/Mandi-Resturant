@@ -213,6 +213,7 @@ function selectBillType(button) {
         $("#gift").addClass('open');
         $(".choose-Delivery .addCustomer").show();
         $(".order-input-container").hide();
+        $("#AreaPricing").hide();
     }
     else if (selectedType == 2) {
         $(".add-Tables").addClass('open');
@@ -224,7 +225,7 @@ function selectBillType(button) {
         $("#customerDeliveryTimePop").hide();
         $(".choose-Delivery .addCustomer").hide();
         $(".order-input-container").show();
-
+        $("#AreaPricing").show();
     }
     else if (selectedType == 3) {
         $(".add-Tables").addClass('open');
@@ -236,6 +237,7 @@ function selectBillType(button) {
         $("#customerDeliveryTimePop").show();
         $(".choose-Delivery .addCustomer").show();
         $(".order-input-container").hide();
+        $("#AreaPricing").show();
 
 
     }
@@ -249,6 +251,7 @@ function selectBillType(button) {
         $("#customerDeliveryTimePop").show();
         $(".choose-Delivery .addCustomer").show();
         $(".order-input-container").show();
+        $("#AreaPricing").hide();
 
 
     }
@@ -290,6 +293,41 @@ function addSelectedHoles() {
 //        }
 //    });
 //}
+function validateOrderDeliveredTime() {
+    debugger;
+    const $total = $(".total_wapper");
+    const deliveredTime = $total.find("#orderDeliveredTime input").val();
+    const deliveredTimeLamp = document.getElementById("deliveredTimeLamp");
+    const deliveredTimeVal = document.getElementById("deliveredTimeVal");
+
+    if (deliveredTime === "") {
+        deliveredTimeLamp.style.color = "red";
+        deliveredTimeLamp.classList.add("flicker");
+        deliveredTimeVal.style.display = "inline";
+    } else {
+        deliveredTimeVal.style.display = "none";
+    }
+}
+function validateDeliveryRegion() {
+    debugger;
+    const $total = $(".total_wapper");
+    //const deliveryRegion = $total.find("#customerDeliveryRegion").val();
+    const deliveryRegionLamp = document.getElementById("deliveryRegionLamp");
+    const deliveryRegionVal = document.getElementById("deliveryRegionVal");
+    var deliveryRegion = document.querySelector('.delivery-item');
+    //if (deliveryItem) {
+    //    var deliveryPriceText = deliveryItem.querySelector('.delivery-area-price').textContent;
+    //    deliveryPrice = parseFloat(deliveryPriceText.replace(/[^\d.]/g, ''));
+    //    deliveryPrice = isNaN(deliveryPrice) ? 0 : deliveryPrice;
+    //}
+    if (deliveryRegion === "" || deliveryRegion === null || deliveryRegion === undefined) {
+        deliveryRegionLamp.style.color = "red";
+        deliveryRegionLamp.classList.add("flicker");
+        deliveryRegionVal.style.display = "inline";
+    } else {
+        deliveryRegionVal.style.display = "none";
+    }
+}
 function validatePhone() {
     const phone = document.getElementById("CustomerRegisterVM_Phone").value.trim();
     const phoneLamp = document.getElementById("phoneLamp");
@@ -334,14 +372,33 @@ function addNewCustomer() {
     validatePhone();
     validateName();
     validateAddress();
+    validateOrderDeliveredTime();
+    validateDeliveryRegion();
     var data = new FormData(document.getElementById("customerForm"));
     var phone = data.get("CustomerRegisterVM.Phone");
     var name = data.get("CustomerRegisterVM.Name");
     var address = data.get("CustomerRegisterVM.Address");
+    debugger;
+    var selectedType = $('input[name="billType"]:checked').val();
+    const $total = $(".total_wapper");
+    const deliveredTime = $total.find("#orderDeliveredTime input").val();
+    var deliveryRegion = document.querySelector('.delivery-item');
+
+    if (selectedType == 3) {
+        if (deliveredTime === "" || deliveryRegion=== "") {
+            return;
+        }
+    }
+    if (selectedType == 4) {
+        if (deliveredTime === "") {
+            return;
+        }
+    }
 
     if (phone === "" || name === "" || address === "") {
         return;
     }
+
     let isValid = true;
     let isCheckboxChecked = false;
     // Validate checkboxes and their corresponding input fields
@@ -418,6 +475,8 @@ function GetCustomerData() {
                 validatePhone();
                 validateName();
                 validateAddress();
+                validateOrderDeliveredTime();
+                validateDeliveryRegion();
             },
             error: function () {
                 $("#CustomerRegisterVM_Name").val('');

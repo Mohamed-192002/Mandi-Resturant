@@ -681,7 +681,7 @@
                                 <div class="form_wapper" style="display: flex; flex-direction: column; gap: 20px; padding: 0;">
                                     <!-- الصف الأول - التوصيل والوقت -->
                                     <div class="form-row first-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0; margin-bottom: 20px;">
-                                        <div class="form-column" style="display: flex; flex-direction: column; gap: 15px;">
+                                        <div id="AreaPricing" class="form-column" style="display: none; flex-direction: column; gap: 15px;">
                                             <div class="FormControll" style="margin-bottom: 15px;">
                                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">منطقة التوصيل</label>
                                                 <div class="input-container" style="display: flex; align-items: center; gap: 8px;">
@@ -690,6 +690,9 @@
                                                         <i class="fa-solid fa-truck"></i>
                                                     </button>
                                                 </div>
+                                                    <span id="deliveryRegionVal" class="text-danger" style="display:none;">
+                                                        <i id="deliveryRegionLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
+                                                    </span>
                                             </div>
                                         </div>
 
@@ -697,7 +700,11 @@
                                             <div class="FormControll" style="margin-bottom: 15px;">
                                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 14px;">وقت الاستلام</label>
                                                 <input type="text" asp-for="CustomerRegisterVM.OrderDeliveredTime" id="customerDeliveryTime" placeholder="اختر وقت الاستلام" readonly style="width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f8f9fa; cursor: pointer;" />
+                                                <span id="deliveredTimeVal" class="text-danger" style="display:none;">
+                                                    <i id="deliveredTimeLamp" class="fas fa-lightbulb" style="font-size:25px;"></i>
+                                                </span>
                                             </div>
+
                                         </div>
                                     </div>
 
@@ -909,7 +916,7 @@
                                 <option value="45">45</option>
                             </select>
                             <select id="pickupPeriod" style="padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;">
-                                <option value="صباحا">صباحا</option>
+                                @* <option value="صباحا">صباحا</option> *@
                                 <option value="مساءا">مساءا</option>
                             </select>
                         </div>
