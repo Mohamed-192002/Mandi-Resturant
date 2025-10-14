@@ -160,14 +160,14 @@ namespace SiteFront.Areas.Cashier.Controllers
                     if (user == null)
                         throw new Exception("User not found.");
                     // Get the printer names from configuration
-                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
                     if (print == null)
                         throw new Exception("Printer not registered for user.");
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     var printerName2 = _configuration["DeliveryPrinterName"];
                     //  await PrintPdfAsync(filePathBill, printerName);
-                    await ApiHelper.SendToApi(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
                     await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
@@ -302,14 +302,14 @@ namespace SiteFront.Areas.Cashier.Controllers
                     if (user == null)
                         throw new Exception("User not found.");
                     // Get the printer names from configuration
-                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
                     if (print == null)
                         throw new Exception("Printer not registered for user.");
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     var printerName2 = _configuration["DeliveryPrinterName"];
                     //await PrintPdfAsync(filePathBill, printerName);
-                    await ApiHelper.SendToApi(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
                     await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
@@ -851,13 +851,13 @@ namespace SiteFront.Areas.Cashier.Controllers
                     if (user == null)
                         throw new Exception("User not found.");
                     // Get the printer names from configuration
-                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
                     if (print == null)
                         throw new Exception("Printer not registered for user.");
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     //await PrintPdfAsync(filePathBill, printerName);
-                    await ApiHelper.SendToApi(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
                 }
                 catch (Exception ex)
                 {

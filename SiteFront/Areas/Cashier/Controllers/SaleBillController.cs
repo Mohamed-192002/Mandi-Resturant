@@ -181,7 +181,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     customerDb.LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
                     _customerRepo.Add(customerDb);
                     await _customerRepo.SaveAllAsync();
-                    
+
                     // Return customer data with delivery information
                     var result = new
                     {
@@ -204,7 +204,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     checkCustomer.AnotherPhone = model.CustomerRegisterVM.AnotherPhone;
                     _customerRepo.Update(checkCustomer);
                     await _customerRepo.SaveAllAsync();
-                    
+
                     // Return customer data with delivery information
                     var result = new
                     {
@@ -294,7 +294,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 Date = b.Date,
                 FinalTotal = b.FinalTotal,
                 OrderNumber = b.OrderNumber,
-                DeliveryPrice=b.DeliveryPrice,
+                DeliveryPrice = b.DeliveryPrice,
                 DeliveryName = b.DeliveryId != null ? _deliveryRepo.GetByIdAsync((int)b.DeliveryId).Result.Name : null,
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
@@ -369,7 +369,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 DriverId = (int)(b.DriverId != null ? b.DriverId : 0),
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
-                DeliveryPrice= b.DeliveryPrice,
+                DeliveryPrice = b.DeliveryPrice,
                 CustomerPhone = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Phone : null,
                 BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == b.Id).Result.Select(c => new BillDetailRegisterVM
                 {
@@ -461,14 +461,14 @@ namespace SiteFront.Areas.Cashier.Controllers
                     if (user == null)
                         throw new Exception("User not found.");
                     // Get the printer names from configuration
-                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
                     if (print == null)
                         throw new Exception("Printer not registered for user.");
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     var printerName2 = _configuration["DeliveryPrinterName"];
                     //await PrintPdfAsync(filePathBill, printerName);
-                    await ApiHelper.SendToApi(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
                     await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
@@ -499,7 +499,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 FinalTotal = b.FinalTotal,
                 CustomerName = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Name : null,
                 CustomerAddress = b.CustomerAddress,
-                DeliveryPrice= b.DeliveryPrice,
+                DeliveryPrice = b.DeliveryPrice,
                 CustomerPhone = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Phone : null,
                 BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == b.Id).Result.Select(c => new BillDetailRegisterVM
                 {
@@ -552,14 +552,14 @@ namespace SiteFront.Areas.Cashier.Controllers
                         if (user == null)
                             throw new Exception("User not found.");
                         // Get the printer names from configuration
-                        var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                        var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
                         if (print == null)
                             throw new Exception("Printer not registered for user.");
                         //var printerName = _configuration["CashierPrinterName"];
                         var printerName = print.Name;
                         var printerName2 = _configuration["SafaryPrinterName"];
                         //await PrintPdfAsync(filePathBill, printerName);
-                        await ApiHelper.SendToApi(filePathBill, printerName);
+                        await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
                         await PrintPdfAsync(filePathBill, printerName2);
                     }
                     catch (Exception ex)

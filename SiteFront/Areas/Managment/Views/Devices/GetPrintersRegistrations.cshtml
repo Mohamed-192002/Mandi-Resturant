@@ -27,6 +27,7 @@
                         <th> تسلسل</th>
                         <th>المستخدم</th>
                         <th>اسم الطابعه</th>
+                        <th>IP Address</th>
                         <th>تعديل</th>
                     </tr>
                 </thead>
@@ -38,6 +39,7 @@
                             <td>@(index++)</td>
                             <td> @item.User.Name</td>
                             <td> @item.Name</td>
+                            <td> @item.IpAddress</td>
                             <td>
                                 <a asp-action="DeletePrinterRegistration" onclick="return confirm('Are you sure you want to delete this?')" asp-route-id="@item.Id">
                                     <i class="fa-solid fa-trash" style="color: var(--bg-delete);"></i>

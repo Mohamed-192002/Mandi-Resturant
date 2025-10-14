@@ -123,14 +123,14 @@ namespace SiteFront.Areas.Cashier.Controllers
                     if (user == null)
                         throw new Exception("User not found.");
                     // Get the printer names from configuration
-                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
                     if (print == null)
                         throw new Exception("Printer not registered for user.");
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     var printerName2 = _configuration["SafaryPrinterName"];
                     //await PrintPdfAsync(filePathBill, printerName);
-                    await ApiHelper.SendToApi(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
                     await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
@@ -506,13 +506,13 @@ namespace SiteFront.Areas.Cashier.Controllers
                     if (user == null)
                         throw new Exception("User not found.");
                     // Get the printer names from configuration
-                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
                     if (print == null)
                         throw new Exception("Printer not registered for user.");
                     //var printerName = _configuration["CashierPrinterName"];
                     var printerName = print.Name;
                     //await PrintPdfAsync(filePathBill, printerName);
-                    await ApiHelper.SendToApi(filePathBill, printerName);
+                    await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
                 }
                 catch (Exception ex)
                 {
@@ -535,14 +535,14 @@ namespace SiteFront.Areas.Cashier.Controllers
             float rowHeight = 20f;            // متوسط ارتفاع لكل صف
             float headerHeight = 150f;        // اللوجو + البيانات
             float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
-            
+
             // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
             float extraContentHeight = 0f;
             if (model.Discount != 0) extraContentHeight += 20f;
             if (model.DeliveryPrice != 0) extraContentHeight += 20f;
             if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
             //extraContentHeight += 5f; // للسعر الكلي والفواصل
-            
+
             float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
             Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
 
@@ -717,13 +717,13 @@ namespace SiteFront.Areas.Cashier.Controllers
                 if (user == null)
                     throw new Exception("User not found.");
                 // Get the printer names from configuration
-                var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id);
+                var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
                 if (print == null)
                     throw new Exception("Printer not registered for user.");
                 //var printerName = _configuration["CashierPrinterName"];
                 var printerName = print.Name;
                 //await PrintPdfAsync(filePathBill, printerName);
-                await ApiHelper.SendToApi(filePathBill, printerName);
+                await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
                 return Ok();
             }
             else
@@ -735,19 +735,19 @@ namespace SiteFront.Areas.Cashier.Controllers
         private string GenerateAllDayReceipt(BillHallPrintVM model)
         {
             float pageWidth = 80f * 2.8346f;
-          //float pageHeight = 297f * 2.8346f;
+            //float pageHeight = 297f * 2.8346f;
             int rowCount = model.BillDetailRegisterVM.Count;
             float rowHeight = 20f;
             float headerHeight = 150f;
             float footerHeight = 100f;
-            
+
             // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
             float extraContentHeight = 0f;
             if (model.Discount != 0) extraContentHeight += 20f;
             if (model.DeliveryPrice != 0) extraContentHeight += 20f;
             if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
-           // extraContentHeight += 30f; // للسعر الكلي والفواصل
-            
+            // extraContentHeight += 30f; // للسعر الكلي والفواصل
+
             float pageHeight = headerHeight + (rowCount * rowHeight) + extraContentHeight + footerHeight;
             Document document = new Document(new Rectangle(pageWidth, pageHeight), 1, 1, 0, 0); // Margins (left, right, top, bottom)
 

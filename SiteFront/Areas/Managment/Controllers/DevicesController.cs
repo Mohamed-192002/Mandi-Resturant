@@ -176,6 +176,7 @@ namespace SiteFront.Areas.Managment.Controllers
                 if (existingPrinter != null)
                 {
                     existingPrinter.Name = model.Name;
+                    existingPrinter.IpAddress = model.IpAddress;
                     _printerRegistrationRepo.Update(existingPrinter);
                     await _printerRegistrationRepo.SaveAllAsync();
                     _toastNotification.AddSuccessToastMessage("تم تحديث الطابعة بنجاح");
@@ -186,6 +187,7 @@ namespace SiteFront.Areas.Managment.Controllers
                     {
                         UserId = model.UserId,
                         Name = model.Name,
+                        IpAddress = model.IpAddress,
                         IsDeleted = false
                     };
                     _printerRegistrationRepo.Add(printer);
