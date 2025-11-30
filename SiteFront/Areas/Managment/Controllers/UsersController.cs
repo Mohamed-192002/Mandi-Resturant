@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.Common;
 using Core.Dtos;
 using Core.Dtos.UserDto;
 using Core.Entities;

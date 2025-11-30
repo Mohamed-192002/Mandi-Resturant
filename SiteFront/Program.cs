@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using SiteFront.Hubs;
 using SiteFront.Services;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 

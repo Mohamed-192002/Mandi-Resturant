@@ -373,7 +373,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 saleBillById.Total = model.BillDetailRegisterVM.Sum(b => b.TotalPrice);
                 saleBillById.LastEditDate = DateTime.Now;
                 saleBillById.LastEditUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-                saleBillById.FinalTotal = Math.Round(model.BillDetailRegisterVM.Sum(b => b.TotalPrice) * (1 + saleBillById.Vat * 0.01) - saleBillById.Discount, 1);
+                saleBillById.FinalTotal = Math.Round((model.BillDetailRegisterVM.Sum(b => b.TotalPrice) * (1 + saleBillById.Vat * 0.01) - saleBillById.Discount) + saleBillById.DeliveryPrice, 1);
                 _saleBillRepo.Update(saleBillById);
                 await _saleBillRepo.SaveAllAsync();
 

@@ -18,14 +18,14 @@ namespace Core.ViewModels.CustomerVM
         public string? Address2 { get; set; }
         public string? Address3 { get; set; }
         public string? Address4 { get; set; }
-        
+
         // Delivery fields
         public double? DeliveryPrice { get; set; }
         public string? DeliveryRegion { get; set; }
-        
+
         // Delivery time field
         public TimeOnly? OrderDeliveredTime { get; set; }
-        
+
         public Guid CreatedUser { get; set; }
         public Guid LastEditUser { get; set; }
         public DateTime CreatedDate { get; set; }

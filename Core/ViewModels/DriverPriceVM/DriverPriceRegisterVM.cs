@@ -12,7 +12,7 @@ namespace Core.ViewModels.DriverPriceVM
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
         [Range(0.01, double.MaxValue, ErrorMessage = "يجب أن يكون السعر أكبر من صفر")]
         public decimal DeliveryPrice { get; set; }
-        
+
         public Guid CreatedUser { get; set; }
         public Guid LastEditUser { get; set; }
         public DateTime CreatedDate { get; set; }

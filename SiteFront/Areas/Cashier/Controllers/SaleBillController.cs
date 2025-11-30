@@ -15,7 +15,6 @@ using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using SiteFront.Services;
 using System.Diagnostics;

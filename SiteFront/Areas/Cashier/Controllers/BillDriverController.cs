@@ -3,13 +3,9 @@ using Core.Common.Enums;
 using Core.Entities;
 using Core.Interfaces;
 using Core.ViewModels.HoleVM;
-using Core.ViewModels.SaleBillPrintVM;
 using Core.ViewModels.SaleBillVM;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace SiteFront.Areas.Cashier.Controllers
 {

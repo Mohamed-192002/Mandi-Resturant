@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text;
+﻿using System.Text;
 
 namespace SiteFront.Services
 {
@@ -12,7 +11,7 @@ namespace SiteFront.Services
             string data = $"{base64}|{printerName}";
 
             // 🔹 Get the local IP address dynamically
-          //  string localIp = GetLocalIPAddress();
+            //  string localIp = GetLocalIPAddress();
 
             using (var client = new HttpClient())
             {
