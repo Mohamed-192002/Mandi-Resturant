@@ -107,7 +107,8 @@ namespace SiteFront.Areas.Owner.Controllers
                 var driverById = await _driverRepo.GetByIdAsync(id);
                 if (driverById == null)
                     return NotFound();
-                _driverRepo.Delete(driverById);
+                driverById.IsDeleted = true;
+                _driverRepo.Update(driverById);
                 await _driverRepo.SaveAllAsync();
                 _toastNotification.AddSuccessToastMessage("تم الحذف بنجاح");
 

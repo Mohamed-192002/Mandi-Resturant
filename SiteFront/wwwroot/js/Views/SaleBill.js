@@ -250,7 +250,7 @@ function selectBillType(button) {
         $("#orderDeliveredTime").addClass('open');
         $("#customerDeliveryTimePop").show();
         $(".choose-Delivery .addCustomer").show();
-        $(".order-input-container").show();
+        $(".order-input-container").hide();
         $("#AreaPricing").hide();
 
 
