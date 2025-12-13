@@ -279,7 +279,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Vat = model.Vat,
                     DeliveryPrice = model.DeliveryPrice,
                     Notes = model.Notes,
-                    OrderNumber=model.OrderNumber,
+                    OrderNumber = model.OrderNumber,
                     CashierName = _userRepo.GetByIdAsync(saleBillDb.CreatedUser).Result.Name
                 };
                 if (model.CustomerAddress != null)
@@ -919,7 +919,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                         throw new Exception("User not found.");
                     // Get the printer names from configuration
                     var printerName2 = _configuration["SafaryPrinterName"];
-                    // await PrintPdfAsync(filePathBill, printerName2);
+                    await PrintPdfAsync(filePathBill, printerName2);
                 }
                 catch (Exception ex)
                 {
