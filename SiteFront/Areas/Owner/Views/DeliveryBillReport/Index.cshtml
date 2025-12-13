@@ -14,6 +14,7 @@
 
     <div style="width: 90%; margin: 50px auto">
         <form method="post" asp-action="Search">
+            @Html.AntiForgeryToken()
             <div class="form_wapper"
                  style="
                       grid-template-columns: repeat(
@@ -62,12 +63,13 @@
                         <th>اجمالي الطلب</th>
                         <th> التاريخ</th>
                         <th>التحصيل</th>
+                        <th>الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.DeliveryBillGetVM)
                     {
-                        <tr>
+                        <tr id="row-@item.Id">
                             <td>@(index++)</td>
                             <td>@item.DeliveryName</td>
                             <td>@item.Id</td>
@@ -75,12 +77,29 @@
                             <td>@item.Date</td>
                             @if (item.MoneyDelivered)
                             {
-                                <td style="color: green;">مدفوعة </td>
+                                <td style="color: green;" id="status-@item.Id">مدفوعة </td>
                             }
                             else
                             {
-                                <td style="color: red;">غير مدفوعة </td>
+                                <td style="color: red;" id="status-@item.Id">غير مدفوعة </td>
                             }
+                            <td>
+                                @if (!item.MoneyDelivered)
+                                {
+                                    <button type="button" 
+                                            class="btn btn-success btn-sm pay-btn" 
+                                            data-bill-id="@item.Id"
+                                            style="background-color: #28a745; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                        <i class="fa fa-money-bill"></i> دفع
+                                    </button>
+                                }
+                                else
+                                {
+                                    <span style="color: green;">
+                                        <i class="fa fa-check-circle"></i> مدفوعة
+                                    </span>
+                                }
+                            </td>
                         </tr>
                     }
                     @if (Model.DeliveryBillGetVM != null && Model.DeliveryBillGetVM.Count() > 0)
@@ -88,9 +107,10 @@
                         <tr>
                             <td>@(Model.DeliveryBillGetVM.Count() + 1)</td>
                             <td style="color: green;font-size: 1.25rem;">اجمالي المدفوع :</td>
-                            <td style="color: green;font-size: 1.25rem;"> @Model.TotalPaid</td>
+                            <td style="color: green;font-size: 1.25rem;" id="total-paid"> @Model.TotalPaid</td>
                             <td style="color: red;font-size: 1.25rem;">اجمالي الغير مدفوع :</td>
-                            <td style="color: red;font-size: 1.25rem;">@Model.TotalUnPaid</td>
+                            <td style="color: red;font-size: 1.25rem;" id="total-unpaid">@Model.TotalUnPaid</td>
+                            <td>_______</td>
                             <td>_______</td>
                         </tr>
                     }
@@ -99,4 +119,135 @@
         </div>
     </div>
 </section>
+
+<style>
+.pay-btn {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.pay-btn:hover {
+    background-color: #218838 !important;
+}
+
+.pay-btn:disabled {
+    background-color: #6c757d !important;
+    cursor: not-allowed !important;
+}
+
+.paid-status {
+    color: #28a745 !important;
+    font-weight: bold !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // التعامل مع أزرار الدفع
+    document.querySelectorAll('.pay-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const billId = this.getAttribute('data-bill-id');
+            const row = document.getElementById('row-' + billId);
+            const statusCell = document.getElementById('status-' + billId);
+            const actionCell = this.parentElement;
+            
+            // تأكيد العملية
+            if (confirm('هل أنت متأكد من تسجيل هذه الفاتورة كمدفوعة؟')) {
+                // تعطيل الزر أثناء المعالجة
+                this.disabled = true;
+                this.innerHTML = '<i class="fa fa-spinner fa-spin"></i> جاري المعالجة...';
+                
+                // إرسال طلب AJAX
+                const formData = new FormData();
+                formData.append('billId', billId);
+                const token = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (token) {
+                    formData.append('__RequestVerificationToken', token.value);
+                }
+                
+                fetch('@Url.Action("MarkAsPaid", "DeliveryBillReport")', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // تحديث حالة الفاتورة في الجدول
+                        statusCell.style.color = 'green';
+                        statusCell.textContent = 'مدفوعة';
+                        
+                        // تحديث عمود الإجراءات
+                        actionCell.innerHTML = '<span style="color: green;"><i class="fa fa-check-circle"></i> مدفوعة</span>';
+                        
+                        // تحديث الإجماليات
+                        updateTotals(parseFloat(row.cells[3].textContent));
+                        
+                        // إظهار رسالة نجاح
+                        showMessage('تم تحديث حالة الدفع بنجاح', 'success');
+                    } else {
+                        // إعادة تفعيل الزر في حالة الخطأ
+                        this.disabled = false;
+                        this.innerHTML = '<i class="fa fa-money-bill"></i> دفع';
+                        showMessage(data.message || 'حدث خطأ أثناء تحديث حالة الدفع', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // إعادة تفعيل الزر في حالة الخطأ
+                    this.disabled = false;
+                    this.innerHTML = '<i class="fa fa-money-bill"></i> دفع';
+                    showMessage('حدث خطأ في الاتصال', 'error');
+                });
+            }
+        });
+    });
+    
+    // دالة تحديث الإجماليات
+    function updateTotals(amount) {
+        const totalPaidElement = document.getElementById('total-paid');
+        const totalUnpaidElement = document.getElementById('total-unpaid');
+        
+        if (totalPaidElement && totalUnpaidElement) {
+            const currentPaid = parseFloat(totalPaidElement.textContent) || 0;
+            const currentUnpaid = parseFloat(totalUnpaidElement.textContent) || 0;
+            
+            totalPaidElement.textContent = (currentPaid + amount).toFixed(2);
+            totalUnpaidElement.textContent = (currentUnpaid - amount).toFixed(2);
+        }
+    }
+    
+    // دالة إظهار الرسائل
+    function showMessage(message, type) {
+        // إنشاء عنصر الرسالة
+        const messageDiv = document.createElement('div');
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            z-index: 9999;
+            max-width: 300px;
+            ${type === 'success' ? 'background-color: #28a745;' : 'background-color: #dc3545;'}
+        `;
+        messageDiv.textContent = message;
+        
+        // إضافة الرسالة إلى الصفحة
+        document.body.appendChild(messageDiv);
+        
+        // إزالة الرسالة بعد 3 ثوان
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.parentNode.removeChild(messageDiv);
+            }
+        }, 3000);
+    }
+});
+</script>
 

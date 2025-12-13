@@ -73,5 +73,29 @@ namespace SiteFront.Areas.Owner.Controllers
             };
             return View("Index", deliveryBillReportVM);
         }
+
+        [HttpPost]
+        [Authorize("Permissions.DeliveryBillReportIndex")]
+        public async Task<IActionResult> MarkAsPaid(int billId)
+        {
+            try
+            {
+                var bill = await _saleBillRepo.GetByIdAsync(billId);
+                if (bill == null)
+                {
+                    return Json(new { success = false, message = "الفاتورة غير موجودة" });
+                }
+
+                bill.MoneyDelivered = true;
+                bill.LastEditDate = DateTime.Now;
+                _saleBillRepo.Update(bill);
+
+                return Json(new { success = true, message = "تم تحديث حالة الدفع بنجاح" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "حدث خطأ أثناء تحديث حالة الدفع" });
+            }
+        }
     }
 }
