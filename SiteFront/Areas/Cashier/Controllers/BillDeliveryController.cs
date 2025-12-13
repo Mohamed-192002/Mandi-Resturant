@@ -212,6 +212,9 @@ namespace SiteFront.Areas.Cashier.Controllers
                 await _saleBillRepo.SaveAllAsync();
 
                 var today = DateTime.Today;
+                var compareTime = string.IsNullOrWhiteSpace(model.OrderDeliveredTime)
+                            ? TimeOnly.FromDateTime(DateTime.Now)
+                            : TimeOnly.Parse(model.OrderDeliveredTime);
                 //All Holes
                 var dagagHoleDataVM = _holeRepo.GetAllAsync(c => !c.IsDeleted && c.HoleType == HoleType.دجاج, true).Result
                          .Select(h => new DagagHoleDataVM
@@ -224,9 +227,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                              Amount = _chickenHoleMovementRepo.GetAllAsync(c => c.HoleId == h.Id && c.Date.Date == today.Date).Result
                                            .Sum(c => c.AmountIn - c.AmountOut)
                          })
-                        .Where(d => d.EndTime.HasValue
-                                     && !string.IsNullOrWhiteSpace(model.OrderDeliveredTime)
-                                     && d.EndTime.Value < TimeOnly.Parse(model.OrderDeliveredTime))
+                        .Where(d => d.EndTime.HasValue && d.EndTime.Value < compareTime)
 
                          .ToList();
 
@@ -244,10 +245,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                        HalfNafrAmount = (int)_meatHoleMovementRepo.GetAllAsync(m => m.HoleId == h.Id && m.Date.Date == today.Date).Result
                                       .Sum(c => c.HalfNafrAmountIn - c.HalfNafrAmountOut),
                    })
-                   .Where(d => d.EndTime.HasValue
-                                 && !string.IsNullOrWhiteSpace(model.OrderDeliveredTime)
-                                 && d.EndTime.Value < TimeOnly.Parse(model.OrderDeliveredTime))
-
+                   .Where(d => d.EndTime.HasValue && d.EndTime.Value < compareTime)
                    .ToList();
 
                 //BillDetail
