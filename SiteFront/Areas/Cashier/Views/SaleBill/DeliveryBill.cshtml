@@ -211,9 +211,10 @@
     @await Component.InvokeAsync("NToastNotify")
     <script type="text/javascript">
         function changeDelivered(d) {
+            debugger
             $.ajax({
                 type:'POST',
-                url:'/Cashier/SaleBill/ChangeBillDelivered?id='+d.id,
+                url:'/Cashier/BillDelivery/ChangeBillDeliveredForDeliveryBill?id='+d.id,
                 success: function () {
                     toastr.success("تم التحصيل");
                     setTimeout(function () {

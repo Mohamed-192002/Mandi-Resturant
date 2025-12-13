@@ -20,5 +20,7 @@ namespace Core.ViewModels.SaleBillPrintVM
         public string? Notes { get; set; }
         public TimeOnly? OrderDeliveredTime { get; set; }
         public string? CashierName { get; set; }
+        public string? OrderNumber { get; set; }
+
     }
 }

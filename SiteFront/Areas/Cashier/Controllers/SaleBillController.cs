@@ -654,8 +654,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 return NotFound();
             }
         }
-
-
+      
         [HttpGet]
         public async Task<IActionResult> getProductPrice(int productId)
         {

@@ -279,6 +279,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Vat = model.Vat,
                     DeliveryPrice = model.DeliveryPrice,
                     Notes = model.Notes,
+                    OrderNumber=model.OrderNumber,
                     CashierName = _userRepo.GetByIdAsync(saleBillDb.CreatedUser).Result.Name
                 };
                 if (model.CustomerAddress != null)
@@ -870,6 +871,73 @@ namespace SiteFront.Areas.Cashier.Controllers
             }
         }
 
+        [HttpPost("ChangeBillDeliveredForDeliveryBill")]
+        public async Task<IActionResult> ChangeBillDeliveredForDeliveryBill(int id)
+        {
+            var deliverySaleBillById = await _saleBillRepo.GetByIdAsync(id);
+            if (deliverySaleBillById != null)
+            {
+                ////////////////// printer
+                try
+                {
+                    //For Print AllBill
+                    var billHallPrintVM = new BillHallPrintVM
+                    {
+                        Billnumber = deliverySaleBillById.Id.ToString(),
+                        Date = deliverySaleBillById.Date,
+                        BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == deliverySaleBillById.Id).Result.Select(c => new BillDetailRegisterVM
+                        {
+                            PName = _productRepo.GetByIdAsync(c.ProductId).Result.Name,
+                            Price = c.Price,
+                            Amount = c.Amount,
+                            TotalPrice = c.TotalPrice
+                        }).ToList(),
+                        TotalPrice = deliverySaleBillById.FinalTotal,
+                        Discount = deliverySaleBillById.Discount,
+                        Vat = deliverySaleBillById.Vat,
+                        DeliveryPrice = deliverySaleBillById.DeliveryPrice,
+                        Notes = deliverySaleBillById.Notes,
+                        OrderNumber = deliverySaleBillById.OrderNumber,
+                        CashierName = _userRepo.GetByIdAsync(deliverySaleBillById.CreatedUser).Result.Name
+                    };
+                    if (!string.IsNullOrEmpty(deliverySaleBillById.CustomerAddress))
+                    {
+                        billHallPrintVM.CustomerAddress = deliverySaleBillById.CustomerAddress;
+                    }
+                    if (deliverySaleBillById.CustomerId != null)
+                    {
+                        billHallPrintVM.CustomerPhone = _customerRepo.GetByIdAsync((int)deliverySaleBillById.CustomerId).Result.Phone;
+                        billHallPrintVM.CustomerName = _customerRepo.GetByIdAsync((int)deliverySaleBillById.CustomerId).Result.Name;
+                    }
+                    if (deliverySaleBillById.DeliveryId != 0)
+                    {
+                        billHallPrintVM.DeliveryName = _deliveryRepo.GetByIdAsync((int)deliverySaleBillById.DeliveryId).Result.Name;
+                    }
+                    var filePathBill = GenerateReceipt(billHallPrintVM);
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    if (user == null)
+                        throw new Exception("User not found.");
+                    // Get the printer names from configuration
+                    var printerName2 = _configuration["SafaryPrinterName"];
+                    // await PrintPdfAsync(filePathBill, printerName2);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(new { error = "PRINT_ERROR", message = "Printing failed: " + ex.Message });
+                }
+                //////////////////
+                deliverySaleBillById.MoneyDelivered = true;
+                deliverySaleBillById.DateDelivered = DateTime.Now;
+                deliverySaleBillById.UserDelivered = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+                _saleBillRepo.Update(deliverySaleBillById);
+                await _saleBillRepo.SaveAllAsync();
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
         private string GenerateReceipt(BillHallPrintVM model)
         {
@@ -884,6 +952,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
             float extraContentHeight = 0f;
             if (model.Discount != 0) extraContentHeight += 20f;
+            if (!string.IsNullOrEmpty(model.OrderNumber)) extraContentHeight += 20f;
             if (model.DeliveryPrice != 0) extraContentHeight += 20f;
             if (!string.IsNullOrEmpty(model.Notes)) extraContentHeight += 20f;
             //extraContentHeight += 1f; // للسعر الكلي والفواصل
@@ -940,6 +1009,10 @@ namespace SiteFront.Areas.Cashier.Controllers
                 if (!string.IsNullOrEmpty(model.CustomerPhone))
                 {
                     infoTable.AddCell(new PdfPCell(new Phrase($" هاتف العميل : {model.CustomerPhone}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
+                }
+                if (!string.IsNullOrEmpty(model.OrderNumber))
+                {
+                    infoTable.AddCell(new PdfPCell(new Phrase($"رقم الطلب : {model.OrderNumber}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
                 }
 
                 document.Add(infoTable); // Add the info table to the document
