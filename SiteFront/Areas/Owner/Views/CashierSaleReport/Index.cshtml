@@ -1,4 +1,5 @@
 ﻿@model CashierSaleMainVM
+@using Core.Common.Enums
 @{
     ViewData["Title"] = "تقرير مبيعات الكاشير";
     int index = 1;
@@ -18,7 +19,7 @@
                  style="
                       grid-template-columns: repeat(
                         auto-fit,
-                        minmax(calc(95% / 4), 1fr)
+                        minmax(calc(95% / 5), 1fr)
                       );
                     ">
                 <div class="FormControll">
@@ -29,12 +30,23 @@
                     <span asp-validation-for="UserId" class="text-danger"></span>
                 </div>
                 <div class="FormControll">
+                    <label asp-for="BillType">نوع الفاتورة</label>
+                    <select asp-for="BillType">
+                        <option value="">جميع الأنواع</option>
+                        <option value="@((int)BillType.Safary)">سفاري</option>
+                        <option value="@((int)BillType.Reservation)">حجز مسبق</option>
+                        <option value="@((int)BillType.Driver)">دليفري المطعم</option>
+                        <option value="@((int)BillType.Delivery)">دليفري الشركات</option>
+                    </select>
+                    <span asp-validation-for="BillType" class="text-danger"></span>
+                </div>
+                <div class="FormControll">
                     <label asp-for="FromDate">بداية الفترة</label>
                     <input type="date" asp-for="FromDate" />
                     <span asp-validation-for="FromDate" class="text-danger"></span>
                 </div>
                 <div class="FormControll">
-                    <label asp-for="ToDate">بداية الفترة</label>
+                    <label asp-for="ToDate">نهاية الفترة</label>
                     <input type="date" asp-for="ToDate" />
                     <span asp-validation-for="ToDate" class="text-danger"></span>
                 </div>

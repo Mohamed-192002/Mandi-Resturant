@@ -15,6 +15,98 @@
         border-radius: 6px;
     }
 
+    /* Driver Assignment Modal Styles */
+    .driver-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .driver-modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        min-width: 400px;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .driver-modal-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .driver-modal-message {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+
+    .driver-modal-info {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        text-align: right;
+    }
+
+    .driver-modal-info p {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+
+    .driver-modal-info strong {
+        color: #333;
+    }
+
+    .driver-modal-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .driver-modal-btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .driver-modal-btn-confirm {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .driver-modal-btn-confirm:hover {
+        background-color: #218838;
+    }
+
+    .driver-modal-btn-cancel {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .driver-modal-btn-cancel:hover {
+        background-color: #c82333;
+    }
+
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -210,6 +302,21 @@
             </div>
         </div>
     </div>
+
+    <!-- Driver Assignment Modal -->
+    <div id="driverModal" class="driver-modal-overlay">
+        <div class="driver-modal-content">
+            <div class="driver-modal-title">تأكيد إرسال الطلب للسائق</div>
+            <div class="driver-modal-message">هل أنت متأكد من إرسال هذا الطلب للسائق المحدد؟</div>
+            <div class="driver-modal-info" id="orderInfo">
+                <!-- سيتم ملء المعلومات هنا بواسطة JavaScript -->
+            </div>
+            <div class="driver-modal-buttons">
+                <button class="driver-modal-btn driver-modal-btn-confirm" onclick="confirmDriverAssignment()">نعم، إرسال للسائق</button>
+                <button class="driver-modal-btn driver-modal-btn-cancel" onclick="cancelDriverAssignment()">إلغاء</button>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript" src="~/assets/js/Cashier.js"></script>
     <script type="text/javascript" src="~/assets/js/main.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
@@ -315,16 +422,45 @@
             }
         }
 
+        let currentDriverSelection = null;
+
         function sendToDriver(selectElement) {
             var $select = $(selectElement);
             var driverId = $select.val();
             var saleBillId = $select.data("salebillid");
-            //console.log(driverId, saleBillId);
-            //return;
+            
             if (driverId) {
+                // حفظ بيانات الاختيار الحالي
+                currentDriverSelection = {
+                    selectElement: selectElement,
+                    driverId: driverId,
+                    saleBillId: saleBillId,
+                    driverName: $select.find('option:selected').text(),
+                    customerName: $select.closest('tr').find('td:nth-child(3)').text(),
+                    customerAddress: $select.closest('tr').find('td:nth-child(4)').text(),
+                    orderNumber: $select.closest('tr').find('td:nth-child(6)').text(),
+                    totalAmount: $select.closest('tr').find('td:nth-child(8)').text()
+                };
+
+                // ملء معلومات الطلب في الـ modal
+                document.getElementById('orderInfo').innerHTML = `
+                    <p><strong>السائق:</strong> ${currentDriverSelection.driverName}</p>
+                    <p><strong>العميل:</strong> ${currentDriverSelection.customerName}</p>
+                    <p><strong>العنوان:</strong> ${currentDriverSelection.customerAddress}</p>
+                    <p><strong>رقم الطلب:</strong> ${currentDriverSelection.orderNumber}</p>
+                    <p><strong>المبلغ الإجمالي:</strong> ${currentDriverSelection.totalAmount}</p>
+                `;
+
+                // إظهار الـ modal
+                document.getElementById('driverModal').style.display = 'block';
+            }
+        }
+
+        function confirmDriverAssignment() {
+            if (currentDriverSelection) {
                 $.ajax({
                     type: 'POST',
-                    url: '/Cashier/SaleBill/HandleBillDriver?driverId=' + driverId + '&saleBillId=' + saleBillId,
+                    url: '/Cashier/SaleBill/HandleBillDriver?driverId=' + currentDriverSelection.driverId + '&saleBillId=' + currentDriverSelection.saleBillId,
                     success: function () {
                         toastr.success("تم ارسال البيانات إلي السائق");
                         setTimeout(function () {
@@ -339,11 +475,32 @@
                         else if (xhr.responseJSON?.error === "MESSAGE_ERROR") {
                             toastr.error("حدث خطأ أثناء إرسال الرسالة حاول مجددا");
                         }
-
+                        // إعادة تعيين الـ select إلى القيمة الافتراضية في حالة الخطأ
+                        currentDriverSelection.selectElement.value = "";
                     }
                 });
             }
+            // إخفاء الـ modal
+            document.getElementById('driverModal').style.display = 'none';
         }
+
+        function cancelDriverAssignment() {
+            if (currentDriverSelection) {
+                // إعادة تعيين الـ select إلى القيمة الافتراضية
+                currentDriverSelection.selectElement.value = "";
+            }
+            // إخفاء الـ modal
+            document.getElementById('driverModal').style.display = 'none';
+            currentDriverSelection = null;
+        }
+
+        // إغلاق الـ modal عند الضغط خارجه
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('driverModal');
+            if (event.target === modal) {
+                cancelDriverAssignment();
+            }
+        });
     </script>
 </body>
 </html>

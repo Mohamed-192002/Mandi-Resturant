@@ -90,6 +90,10 @@ namespace SiteFront.Areas.Owner.Controllers
             {
                 cashierSaleBills = cashierSaleBills.Where(s => s.Date.Date <= model.ToDate.Value.Date);
             }
+            if (model.BillType != null)
+            {
+                cashierSaleBills = cashierSaleBills.Where(s => s.BillType == model.BillType);
+            }
             var cashierSaleBillIds = cashierSaleBills.Select(c => c.Id);
             var earnSaleReportVM = _saleBillDetailRepo.GetAllAsync(s => cashierSaleBillIds.Contains(s.SaleBillId)).Result
                 .GroupBy(s => s.ProductId).Select(s => new EarnSaleReportVM
@@ -119,6 +123,7 @@ namespace SiteFront.Areas.Owner.Controllers
                 FromDate = model.FromDate,
                 ToDate = model.ToDate,
                 UserId = model.UserId,
+                BillType = model.BillType,
                 TotalSale = earnSaleReportVM.Sum(e => e.TotalSalePrice),
                 TotalEarn = earnSaleReportVM.Sum(e => e.TotalProductEarn)
             };

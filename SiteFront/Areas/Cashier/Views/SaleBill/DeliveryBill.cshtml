@@ -14,6 +14,81 @@
         font-size: 18px;
         border-radius: 6px;
     }
+
+    /* Popup Styles */
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .popup-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        min-width: 350px;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .popup-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .popup-message {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 25px;
+        line-height: 1.5;
+    }
+
+    .popup-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .popup-btn {
+        padding: 10px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .popup-btn-confirm {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .popup-btn-confirm:hover {
+        background-color: #218838;
+    }
+
+    .popup-btn-cancel {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .popup-btn-cancel:hover {
+        background-color: #c82333;
+    }
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -148,6 +223,18 @@
             </div>
         </div>
     </div>
+
+    <!-- Custom Popup -->
+    <div id="confirmPopup" class="popup-overlay">
+        <div class="popup-content">
+            <div class="popup-title">تأكيد العملية</div>
+            <div class="popup-message">هل أنت متأكد من تحصيل هذه الفاتورة؟</div>
+            <div class="popup-buttons">
+                <button class="popup-btn popup-btn-confirm" onclick="confirmDelivery()">نعم، متأكد</button>
+                <button class="popup-btn popup-btn-cancel" onclick="cancelDelivery()">إلغاء</button>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript" src="~/assets/js/Cashier.js"></script>
     <script type="text/javascript" src="~/assets/js/main.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
@@ -210,22 +297,53 @@
     <partial name="_ValidationScriptsPartial" />
     @await Component.InvokeAsync("NToastNotify")
     <script type="text/javascript">
+        let currentCheckbox = null;
+
         function changeDelivered(d) {
-            debugger
-            $.ajax({
-                type:'POST',
-                url:'/Cashier/BillDelivery/ChangeBillDeliveredForDeliveryBill?id='+d.id,
-                success: function () {
-                    toastr.success("تم التحصيل");
-                    setTimeout(function () {
-                        window.location.href = "/Cashier/SaleBill/DeliveryBill";
-                    }, 500);
-                },
-                error: function () {
-                    toastr.error("لم يتم التحصيل برجاء المحاولة لاحقا");
-                }
-            });
+            currentCheckbox = d;
+            // إظهار الـ popup المخصص
+            document.getElementById('confirmPopup').style.display = 'block';
         }
+
+        function confirmDelivery() {
+            if (currentCheckbox) {
+                debugger
+                $.ajax({
+                    type:'POST',
+                    url:'/Cashier/BillDelivery/ChangeBillDeliveredForDeliveryBill?id='+currentCheckbox.id,
+                    success: function () {
+                        toastr.success("تم التحصيل");
+                        setTimeout(function () {
+                            window.location.href = "/Cashier/SaleBill/DeliveryBill";
+                        }, 500);
+                    },
+                    error: function () {
+                        toastr.error("لم يتم التحصيل برجاء المحاولة لاحقا");
+                        currentCheckbox.checked = false;
+                    }
+                });
+            }
+            // إخفاء الـ popup
+            document.getElementById('confirmPopup').style.display = 'none';
+        }
+
+        function cancelDelivery() {
+            if (currentCheckbox) {
+                // إلغاء تحديد الـ checkbox
+                currentCheckbox.checked = false;
+            }
+            // إخفاء الـ popup
+            document.getElementById('confirmPopup').style.display = 'none';
+            currentCheckbox = null;
+        }
+
+        // إغلاق الـ popup عند الضغط خارجه
+        document.addEventListener('click', function(event) {
+            const popup = document.getElementById('confirmPopup');
+            if (event.target === popup) {
+                cancelDelivery();
+            }
+        });
     </script>
 </body>
 </html>
