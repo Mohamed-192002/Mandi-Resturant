@@ -77,7 +77,10 @@
                                         <td>@item.FinalTotal</td>
                                         <td>
                                             @(item.OrderDeliveredTime.HasValue
-                                                                                    ? item.OrderDeliveredTime.Value.ToString("hh:mm tt")
+                                                                                    ? item.OrderDeliveredTime.Value
+                                                                                    .ToString("hh:mm tt")
+                                                                                    .Replace("AM", "صباحا")
+                                                                                    .Replace("PM", "مساءا")
                                                                                     : "لم يتم الاستلام")
 
                                         </td>
