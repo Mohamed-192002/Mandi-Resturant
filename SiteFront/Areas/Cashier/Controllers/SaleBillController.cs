@@ -501,6 +501,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 CustomerAddress = b.CustomerAddress,
                 DeliveryPrice = b.DeliveryPrice,
                 CustomerPhone = b.CustomerId != null ? _customerRepo.GetByIdAsync((int)b.CustomerId).Result.Phone : null,
+                OrderDeliveredTime = b.OrderDeliveredTime,
                 BillDetailRegisterVM = _saleBillDetailRepo.GetAllAsync(c => c.SaleBillId == b.Id).Result.Select(c => new BillDetailRegisterVM
                 {
                     PName = _productRepo.GetByIdAsync(c.ProductId).Result.Name,
