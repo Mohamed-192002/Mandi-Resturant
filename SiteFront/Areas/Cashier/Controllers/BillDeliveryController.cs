@@ -944,7 +944,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                                              //float pageHeight = 297f * 2.8346f;
             int rowCount = model.BillDetailRegisterVM.Count;
             float rowHeight = 20f;            // متوسط ارتفاع لكل صف
-            float headerHeight = 150f;        // اللوجو + البيانات
+            float headerHeight = 160f;        // اللوجو + البيانات
             float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
 
             // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)

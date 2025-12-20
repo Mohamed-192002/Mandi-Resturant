@@ -397,7 +397,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             var saleBillById = await _saleBillRepo.GetByIdAsync(saleBillId);
             if (saleBillById == null)
                 return NotFound();
-            var customer = await _customerRepo.GetByIdAsync((int)saleBillById.CustomerId);
+            var customer = await _customerRepo.GetByIdAsync((int)(saleBillById.CustomerId ?? 0));
             var saleBillDetails = await _saleBillDetailRepo.GetAllAsync(s => s.SaleBillId == saleBillId);
             string billDetails = "";
             foreach (var item in saleBillDetails)
@@ -445,7 +445,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                         Notes = saleBillById.Notes,
                         OrderDeliveredTime = saleBillById.OrderDeliveredTime,
                         CashierName = _userRepo.GetByIdAsync(saleBillById.CreatedUser).Result.Name,
-                        CustomerAddress = saleBillById.CustomerAddress
+                        CustomerAddress = saleBillById.CustomerAddress,
+                        CustomerName= customer.Name
                     };
                     if (saleBillById.CustomerId != null)
                     {
@@ -521,6 +522,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                 {
                     try
                     {
+                        var customer = await _customerRepo.GetByIdAsync((int)SaleBillById.CustomerId);
                         //For Print AllBill
                         var billHallPrintVM = new BillHallPrintVM
                         {
@@ -540,7 +542,8 @@ namespace SiteFront.Areas.Cashier.Controllers
                             Notes = SaleBillById.Notes,
                             OrderDeliveredTime = SaleBillById.OrderDeliveredTime,
                             CashierName = _userRepo.GetByIdAsync(SaleBillById.CreatedUser).Result.Name,
-                            CustomerAddress = SaleBillById.CustomerAddress
+                            CustomerAddress = SaleBillById.CustomerAddress,
+                            CustomerName = customer.Name
                         };
                         if (SaleBillById.CustomerId != null)
                         {
@@ -704,7 +707,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             float pageWidth = 80f * 2.8346f; // 80mm to points (1mm = 2.8346 points)
             int rowCount = model.BillDetailRegisterVM.Count;
             float rowHeight = 25f;
-            float headerHeight = 160f;
+            float headerHeight = 190f;
             float footerHeight = 120f;
 
             float extraContentHeight = 0f;
@@ -761,6 +764,10 @@ namespace SiteFront.Areas.Cashier.Controllers
                 if (!string.IsNullOrEmpty(model.CustomerAddress))
                 {
                     infoTable.AddCell(new PdfPCell(new Phrase($" عنوان العميل : {model.CustomerAddress}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
+                }
+                if (!string.IsNullOrEmpty(model.CustomerName))
+                {
+                    infoTable.AddCell(new PdfPCell(new Phrase($" اسم العميل : {model.CustomerName}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
                 }
                 if (!string.IsNullOrEmpty(model.CustomerPhone))
                 {

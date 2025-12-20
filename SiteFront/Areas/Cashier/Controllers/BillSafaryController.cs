@@ -32,6 +32,7 @@ namespace SiteFront.Areas.Cashier.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IRepository<User> _userRepo;
         private readonly IRepository<PrinterRegistration> _printerRegistration;
+        private readonly IRepository<Customer> _customerRepo;
 
         public BillSafaryController(IMapper mapper,
             IRepository<SaleBill> saleBillRepo,
@@ -44,7 +45,8 @@ namespace SiteFront.Areas.Cashier.Controllers
             IConfiguration configuration,
             UserManager<User> userManager,
             IRepository<User> userRepo,
-            IRepository<PrinterRegistration> printerRegistration)
+            IRepository<PrinterRegistration> printerRegistration,
+            IRepository<Customer> customerRepo)
         {
             _mapper = mapper;
             _saleBillRepo = saleBillRepo;
@@ -58,6 +60,7 @@ namespace SiteFront.Areas.Cashier.Controllers
             _userManager = userManager;
             _userRepo = userRepo;
             _printerRegistration = printerRegistration;
+            _customerRepo = customerRepo;
         }
 
         [HttpPost("SaveSaleSafary")]
@@ -102,7 +105,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     await HandleMeatNafr(saleDetail.ProductId, saleDetail.Amount, saleBillDb.Id);
                     await HandleMeatHalfNafr(saleDetail.ProductId, saleDetail.Amount, saleBillDb.Id);
                 }
-
+                var customer = await _customerRepo.GetByIdAsync((int)(saleBillDb.CustomerId ?? 0));
                 //For Print AllBill
                 var billHallPrintVM = new BillHallPrintVM
                 {
@@ -114,6 +117,9 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Vat = model.Vat,
                     DeliveryPrice = model.DeliveryPrice,
                     Notes = model.Notes,
+                    CustomerName=customer.Name,
+                    CustomerAddress=customer.Address,
+                    CustomerPhone=customer.Phone,
                     CashierName = _userRepo.GetByIdAsync(saleBillDb.CreatedUser).Result.Name
                 };
                 try
@@ -486,6 +492,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                     await HandleMeatNafr(saleDetail.ProductId, saleDetail.Amount, saleBillById.Id);
                     await HandleMeatHalfNafr(saleDetail.ProductId, saleDetail.Amount, saleBillById.Id);
                 }
+                var customer = await _customerRepo.GetByIdAsync((int)(saleBillById.CustomerId ?? 0));
 
                 //For Print AllBill
                 var billHallPrintVM = new BillHallPrintVM
@@ -497,6 +504,9 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Discount = saleBillById.Discount,
                     Vat = saleBillById.Vat,
                     Notes = saleBillById.Notes,
+                    CustomerName = customer.Name,
+                    CustomerAddress = customer.Address,
+                    CustomerPhone = customer.Phone,
                     CashierName = _userRepo.GetByIdAsync(saleBillById.CreatedUser).Result.Name
                 };
                 try
@@ -533,7 +543,7 @@ namespace SiteFront.Areas.Cashier.Controllers
                                              //float pageHeight = 297f * 2.8346f;
             int rowCount = model.BillDetailRegisterVM.Count;
             float rowHeight = 20f;            // متوسط ارتفاع لكل صف
-            float headerHeight = 150f;        // اللوجو + البيانات
+            float headerHeight = 200f;        // اللوجو + البيانات
             float footerHeight = 100f;        // الفوتر (الشركة - الخطوط)
 
             // حساب المحتوى الإضافي (الخصم، التوصيل، الملاحظات)
@@ -581,6 +591,18 @@ namespace SiteFront.Areas.Cashier.Controllers
                 infoTable.AddCell(new PdfPCell(new Phrase($"رقم الفاتورة : {model.Billnumber}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
                 infoTable.AddCell(new PdfPCell(new Phrase($"تاريخ الفاتورة : {model.Date}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
                 infoTable.AddCell(new PdfPCell(new Phrase($" كاشير : {model.CashierName}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
+                if (!string.IsNullOrEmpty(model.CustomerAddress))
+                {
+                    infoTable.AddCell(new PdfPCell(new Phrase($" عنوان العميل : {model.CustomerAddress}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
+                }
+                if (!string.IsNullOrEmpty(model.CustomerName))
+                {
+                    infoTable.AddCell(new PdfPCell(new Phrase($" اسم العميل : {model.CustomerName}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
+                }
+                if (!string.IsNullOrEmpty(model.CustomerPhone))
+                {
+                    infoTable.AddCell(new PdfPCell(new Phrase($" هاتف العميل : {model.CustomerPhone}", arabicFont)) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER });
+                }
                 document.Add(infoTable); // Add the info table to the document
 
                 PdfPTable infoTable2 = new PdfPTable(1);
