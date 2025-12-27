@@ -492,42 +492,40 @@ namespace SiteFront.Areas.Cashier.Controllers
                     await HandleMeatNafr(saleDetail.ProductId, saleDetail.Amount, saleBillById.Id);
                     await HandleMeatHalfNafr(saleDetail.ProductId, saleDetail.Amount, saleBillById.Id);
                 }
-                var customer = await _customerRepo.GetByIdAsync((int)(saleBillById.CustomerId ?? 0));
+                //var customer = await _customerRepo.GetByIdAsync((int)(saleBillById.CustomerId ?? 0));
 
-                //For Print AllBill
-                var billHallPrintVM = new BillHallPrintVM
-                {
-                    Billnumber = saleBillById.Id.ToString(),
-                    Date = saleBillById.Date,
-                    BillDetailRegisterVM = model.BillDetailRegisterVM,
-                    TotalPrice = saleBillById.FinalTotal,
-                    Discount = saleBillById.Discount,
-                    Vat = saleBillById.Vat,
-                    Notes = saleBillById.Notes,
-                    CustomerName = customer?.Name,
-                    CustomerAddress = customer?.Address,
-                    CustomerPhone = customer?.Phone,
-                    CashierName = _userRepo.GetByIdAsync(saleBillById.CreatedUser).Result.Name
-                };
-                try
-                {
-                    var filePathBill = GenerateReceipt(billHallPrintVM);
-                    var user = await _userManager.GetUserAsync(HttpContext.User);
-                    if (user == null)
-                        throw new Exception("User not found.");
-                    // Get the printer names from configuration
-                    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
-                    if (print == null)
-                        throw new Exception("Printer not registered for user.");
-                    //var printerName = _configuration["CashierPrinterName"];
-                    var printerName = print.Name;
-                    //await PrintPdfAsync(filePathBill, printerName);
-                    await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(new { error = "PRINT_ERROR", message = "Printing failed: " + ex.Message });
-                }
+                ////For Print AllBill
+                //var billHallPrintVM = new BillHallPrintVM
+                //{
+                //    Billnumber = saleBillById.Id.ToString(),
+                //    Date = saleBillById.Date,
+                //    BillDetailRegisterVM = model.BillDetailRegisterVM,
+                //    TotalPrice = saleBillById.FinalTotal,
+                //    Discount = saleBillById.Discount,
+                //    Vat = saleBillById.Vat,
+                //    Notes = saleBillById.Notes,
+                //    CustomerName = customer?.Name,
+                //    CustomerAddress = customer?.Address,
+                //    CustomerPhone = customer?.Phone,
+                //    CashierName = _userRepo.GetByIdAsync(saleBillById.CreatedUser).Result.Name
+                //};
+                //try
+                //{
+                //    var filePathBill = GenerateReceipt(billHallPrintVM);
+                //    var user = await _userManager.GetUserAsync(HttpContext.User);
+                //    if (user == null)
+                //        throw new Exception("User not found.");
+                //    // Get the printer names from configuration
+                //    var print = await _printerRegistration.SingleOrDefaultAsync(x => x.UserId == user.Id && !x.IsDeleted);
+                //    if (print == null)
+                //        throw new Exception("Printer not registered for user.");
+                //    var printerName = print.Name;
+                //    await ApiHelper.SendToApi(filePathBill, printerName, print.IpAddress);
+                //}
+                //catch (Exception ex)
+                //{
+                //    return BadRequest(new { error = "PRINT_ERROR", message = "Printing failed: " + ex.Message });
+                //}
                 return Ok();
             }
             catch (Exception ex)

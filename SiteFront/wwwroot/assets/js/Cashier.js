@@ -199,6 +199,9 @@ window.initEditBillModalEvents = function () {
             e.preventDefault();
             e.stopPropagation();
 
+            // Show Loader
+            $(".loader").fadeIn();
+
             const $reactionaryButton = $(this).closest(".reactionary-button");
             const saleBillId = $reactionaryButton.find(".saleBillId").val();
 
@@ -234,6 +237,7 @@ window.initEditBillModalEvents = function () {
             // Check availability using the helper function
             const result = await checkHolesAmount(items);
             if (!result) {
+                $(".loader").fadeOut(); // Hide loader if check fails
                 return;
             }
 
@@ -247,17 +251,32 @@ window.initEditBillModalEvents = function () {
                     if (typeof toastr !== 'undefined') toastr.success("تم تعديل الفاتورة بنجاح");
                     setTimeout(function () {
                         window.location.reload();
-                    }, 100); // Reduced delay to 1s for better UX
+                    }, 500);
+                    // Make sure loader stays until reload or hide it if we want
+                    // $(".loader").fadeOut(); // Usually we want to keep it until reload
                 },
                 error: function (xhr, status, error) {
+                    $(".loader").fadeOut(); // Hide loader on error
                     if (typeof toastr !== 'undefined') toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
-                    // Optional: redirect on error too? SaleBill.js did.
                     setTimeout(function () {
                         window.location.reload();
-                    }, 100);
+                    }, 500);
                 }
             });
         });
+        // 9. Close Modal Logic
+        $(document).off('click', '#modal.add-reactionary .close_modal, #modal.add-reactionary .close_modal i').on('click', '#modal.add-reactionary .close_modal, #modal.add-reactionary .close_modal i', function () {
+            const $modal = $(this).closest('#modal.add-reactionary');
+            $modal.removeClass('open');
+
+            // If it's the dynamic modal wrapper in ResturantDelivery/DeliveryBill, hide it too
+            const $wrapper = $modal.closest('#editBillModal');
+            if ($wrapper.length > 0) {
+                $wrapper.hide();
+                $wrapper.empty(); // Optional: Clear content so it reloads fresh next time
+            }
+        });
+
     } else {
         // Fallback or original vanilla implementation if someone prefers
         // For this task, we strongly prefer the jQuery delegation to handle dynamic content automatically

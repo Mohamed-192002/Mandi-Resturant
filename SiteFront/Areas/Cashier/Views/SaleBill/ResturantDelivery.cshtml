@@ -130,6 +130,7 @@
     <link rel="stylesheet" href="~/assets/css/table.css" />
     <link rel="stylesheet" href="~/assets/css/global.css" />
     <link rel="stylesheet" href="~/assets/css/cashier.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" />
 
     <title>طلبات دليفري المطعم</title>
 </head>
@@ -170,6 +171,7 @@
                                     <th> الاجمالي</th>
                                     <th>التفاصيل</th>
                                     <th>الوقت</th>
+                                    <th>تعديل</th>
                                     <th>الحذف</th>
                                     @* <th>التحصيل</th> *@
                                 </tr>
@@ -268,6 +270,11 @@
                                             <td> _____</td>
                                         }
                                         <td style="text-align:center;">
+                                            <button onclick="openEditModal(@item.Id)" class="btn btn-primary" style="cursor: pointer;background: transparent; border: none; color: #007bff; font-size: 18px;">
+                                                <i class="fa-solid fa-edit"></i>
+                                            </button>
+                                        </td>
+                                        <td style="text-align:center;">
                                             <button onclick="deleteBill(@item.Id)"
                                                     title="حذف الطلب"
                                                     style="background-color: transparent;
@@ -317,9 +324,15 @@
             </div>
         </div>
     </div>
+    <!-- Edit Bill Modal -->
+    <div id="editBillModal" style="display: none;">
+        <!-- Content loaded via AJAX -->
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script type="text/javascript" src="~/assets/js/Cashier.js"></script>
     <script type="text/javascript" src="~/assets/js/main.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -501,6 +514,35 @@
                 cancelDriverAssignment();
             }
         });
+
+        // Open Edit Modal Function
+        function openEditModal(id) {
+            $.ajax({
+                url: "/Cashier/SaleBill/GetEditBillModal?billId=" + id,
+                type: "GET",
+                success: function (data) {
+                    $("#editBillModal").html(data);
+                    $("#editBillModal").css("display", "flex");
+                    
+                    // Show the inner modal explicitly and add open class for animation/style
+                    setTimeout(function() {
+                        const innerModal = document.querySelector("#editBillModal #modal");
+                        if (innerModal) {
+                            innerModal.style.display = "flex";
+                            innerModal.classList.add("open");
+                        }
+                    }, 50);
+
+                    // Re-initialize events for the new content
+                    if (window.initEditBillModalEvents) {
+                        window.initEditBillModalEvents();
+                    }
+                },
+                error: function () {
+                    if(typeof toastr !== 'undefined') toastr.error("حدث خطأ أثناء تحميل الفاتورة");
+                }
+            });
+        }
     </script>
 </body>
 </html>

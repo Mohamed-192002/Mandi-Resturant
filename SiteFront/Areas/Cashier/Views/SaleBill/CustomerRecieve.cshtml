@@ -59,6 +59,7 @@
                                     <th>الاجمالي</th>
                                     <th>وقت الاستلام</th>
                                     <th>التفاصيل</th>
+                                    <th>تعديل</th>
                                     <th>الطباعة</th>
                                     <th>تحويل للتوصيل</th>
                                     <th>إلغاء</th>
@@ -108,6 +109,11 @@
                                             </table>
                                         </td>
                                         <td>
+                                            <button onclick="openEditModal(@item.Id)" class="btn btn-primary" style="cursor:pointer; background: transparent; border: none; color: #007bff; font-size: 18px;">
+                                                <i class="fa-solid fa-edit"></i>
+                                            </button>
+                                        </td>
+                                        <td>
                                             <a onclick="printAndDelivered(this)" id="@item.Id" style="background-color:blue; border-radius: 5px; padding: 7px 30px; color: #fff;cursor:pointer;">طباعة</a>
                                         </td>
                                         <td>
@@ -128,9 +134,15 @@
             </div>
         </div>
     </div>
+    </div>
+    <!-- Edit Bill Modal -->
+    <div id="editBillModal" style="display: none;">
+        <!-- Content loaded via AJAX -->
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/assets/js/Cashier.js"></script>
     <script type="text/javascript" src="~/assets/js/main.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -191,6 +203,35 @@
             }
         });
 
+        }
+
+        // Open Edit Modal Function
+        function openEditModal(id) {
+            $.ajax({
+                url: "/Cashier/SaleBill/GetEditBillModal?billId=" + id,
+                type: "GET",
+                success: function (data) {
+                    $("#editBillModal").html(data);
+                    $("#editBillModal").css("display", "flex");
+                    
+                    // Show the inner modal explicitly and add open class for animation/style
+                    setTimeout(function() {
+                        const innerModal = document.querySelector("#editBillModal #modal");
+                        if (innerModal) {
+                            innerModal.style.display = "flex";
+                            innerModal.classList.add("open");
+                        }
+                    }, 50);
+
+                    // Re-initialize events for the new content
+                    if (window.initEditBillModalEvents) {
+                        window.initEditBillModalEvents();
+                    }
+                },
+                error: function () {
+                    if(typeof toastr !== 'undefined') toastr.error("حدث خطأ أثناء تحميل الفاتورة");
+                }
+            });
         }
     </script>
 </body>

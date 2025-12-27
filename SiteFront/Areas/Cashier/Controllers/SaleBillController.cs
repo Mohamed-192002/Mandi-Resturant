@@ -407,8 +407,9 @@ namespace SiteFront.Areas.Cashier.Controllers
             }
             billDetails = billDetails.TrimEnd('|', ' ');
 
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             //string message = $"قم بتوصيل طلب رقم {saleBillById.Id} الي العميل {customer.Name} في عنوان {customer.Address} ورقم هاتفه {customer.Phone}. تفاصيل الطلب : ({billDetails}) ,السعر الكلي :  {saleBillById.FinalTotal}";
-            string message = $"قم بتوصيل طلب\n" +
+            string message = $"قام الكاشير {currentUser?.Name} بإرسال طلب\n" +
                  $"رقم الطلب : {saleBillById.Id}\n" +
                  $"اسم العميل: {customer.Name}\n" +
                  $"العنوان : {customer.Address}\n" +

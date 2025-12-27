@@ -50,3 +50,16 @@ window.onload = () => {
       loader && document.body.removeChild(loader);
     });
 };
+
+// Global Search Functionality
+// Global Search Functionality
+document.addEventListener('keyup', function (e) {
+  if (e.target && e.target.id === 'searchInput') {
+    const value = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll("table tbody tr");
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.indexOf(value) > -1 ? "" : "none";
+    });
+  }
+});
