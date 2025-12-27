@@ -89,6 +89,46 @@
     .popup-btn-cancel:hover {
         background-color: #c82333;
     }
+
+    /* Edit Modal Styles */
+    #editBillModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #editBillModal .modal-content {
+        background: white;
+        border-radius: 8px;
+        max-width: 90%;
+        max-height: 90%;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .edit-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .edit-btn:hover {
+        background-color: #0056b3 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -150,6 +190,7 @@
                                     <th>التوصيل</th>
                                     <th> الاجمالي</th>
                                     <th> التفاصيل</th>
+                                    <th>تعديل</th>
                                     <th>التحصيل</th>
                                 </tr>
                             </thead>
@@ -205,6 +246,11 @@
                                             </table>
                                         </td>
                                         <td>
+                                            <button class="edit-btn" onclick="openEditModal(@item.Id)">
+                                                <i class="fa-solid fa-edit"></i> تعديل
+                                            </button>
+                                        </td>
+                                        <td>
                                             <input type="checkbox" id="@item.Id" onclick="changeDelivered(this)" />
                                         </td>
                                     </tr>
@@ -235,9 +281,15 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Bill Modal -->
+    <div id="editBillModal" style="display: none;">
+        <!-- سيتم تحميل محتوى _EditBillModal.cshtml هنا -->
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/assets/js/Cashier.js"></script>
     <script type="text/javascript" src="~/assets/js/main.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -283,7 +335,7 @@
                     dataSrc: 2,
                     startRender: function (rows, group) {
                         return $('<tr/>')
-                            .append('<td colspan="10" class="customer-group">👤 العميل :  ' + group + '</td>');
+                            .append('<td colspan="11" class="customer-group">👤 العميل :  ' + group + '</td>');
                     }
                 },
                 columnDefs: [
@@ -342,6 +394,76 @@
             const popup = document.getElementById('confirmPopup');
             if (event.target === popup) {
                 cancelDelivery();
+            }
+        });
+
+        // دالة فتح مودال التعديل
+        function openEditModal(billId) {
+            console.log('Opening modal for bill ID:', billId);
+            
+            // إظهار المودال مع loader
+            $('#editBillModal').html('<div style="display: flex; justify-content: center; align-items: center; height: 200px; color: white; font-size: 18px;"><i class="fa fa-spinner fa-spin"></i> جاري التحميل...</div>');
+            $('#editBillModal').css('display', 'flex');
+            
+            // تحميل محتوى المودال من الخادم
+            $.ajax({
+                url: '/Cashier/SaleBill/GetEditBillModal',
+                type: 'GET',
+                data: { billId: billId },
+                success: function(data) {
+                    console.log('Modal data loaded successfully');
+                    $('#editBillModal').html(data);
+                    
+                    // Force the inner modal to show
+                    // The _EditBillModal contains a div with id="modal" class="add-reactionary"
+                    // We need to make sure it's visible. Based on Cashier.js, it uses .open class or we can just ensure it is displayed.
+                    // However, in Index.cshtml, the structure seems to rely on #modal having display property
+                    
+                    var innerModal = $('#editBillModal').find('#modal');
+                    if(innerModal.length > 0) {
+                       innerModal.css('display', 'flex'); // Force flex display as requested
+                       innerModal.addClass('open'); // Add open class just in case styles depend on it
+                    }
+                    
+                    // Re-attach event listeners for the dynamic content
+                    // Using the new shared function in Cashier.js
+                    if (typeof window.initEditBillModalEvents === 'function') {
+                        // We actually don't even need to call this if we used document-level delegation in Cashier.js,
+                        // but calling it ensures that if we change implementation to direct binding later, it still works.
+                        // However, with delegated events (on document), it just works.
+                        // But let's call it just to be safe or if re-initialization is needed for some reason.
+                        // Actually, since I switched to delegated events in Cashier.js, I don't need to call ANYTHING here!
+                        // The events are bound to 'document', so they will work for the new elements automatically.
+                        // BUT, purely to be safe and explicit:
+                        // window.initEditBillModalEvents(); 
+                    }
+                    
+                    // Note: Since we refactored Cashier.js to use $(document).on(click, selector), 
+                    // we don't technically need any JS here for the buttons to work!
+                    // This is the beauty of delegation.
+                    
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading modal:', error);
+                    $('#editBillModal').hide();
+                    if (typeof toastr !== 'undefined') {
+                        toastr.error('حدث خطأ في تحميل نافذة التعديل');
+                    } else {
+                        alert('حدث خطأ في تحميل نافذة التعديل');
+                    }
+                }
+            });
+        }
+
+        // إغلاق المودال
+        $(document).on('click', '.close_modal', function() {
+            $('#editBillModal').hide();
+        });
+
+        // إغلاق المودال عند الضغط خارجه
+        $(document).on('click', '#editBillModal', function(e) {
+            if (e.target === this) {
+                $('#editBillModal').hide();
             }
         });
     </script>

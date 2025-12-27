@@ -1,0 +1,93 @@
+@model Core.ViewModels.SaleBillVM.SaleBillMainVM
+
+<!-- Modal for Edit Bills / موديل تعديل الفواتير -->
+<div id="modal" class="add-reactionary">
+    <div class="modal-content">
+        <div class="close_modal">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <button id="new-reactionary">اضافة</button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="billSearchInput" style="font-size: 14px; color: #333; white-space: nowrap;">البحث:</label>
+                <input type="text" id="billSearchInput" placeholder="رقم الفاتورة..." 
+                       style="width: 150px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                       oninput="filterBillsBySearch()" />
+                <button type="button" onclick="clearBillSearch()" 
+                        style="padding: 6px 10px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                    مسح
+                </button>
+            </div>
+        </div>
+
+        <!-- Add new item form -->
+        <div class="reactionary">
+            <div class="form-reactionary">
+                <form>
+                    <select asp-items="@(new SelectList(Model.SaleBills, "Id", "Name"))" class="billId">
+                        <option value="">اختار فاتورة</option>
+                    </select>
+                    <select asp-items="@(new SelectList(Model.Products, "Id", "Name"))" class="productId">
+                        <option value="">اختار الصنف</option>
+                    </select>
+                    <input type="hidden" class="categoryId" />
+                    <input type="text" class="price" placeholder="السعر" readonly />
+                    <input type="text" class="amount" placeholder="الكمية" value="1" />
+                    <input type="text" class="discount" placeholder="الخصم" value="0" />
+                    <input type="text" class="total" placeholder="السعر الكلي" readonly />
+                    <button type="button">اضافة</button>
+                </form>
+            </div>
+
+            <!-- Bills wrapper -->
+            <div class="reactionary_wapper">
+                @if (Model.SaleBillRefundVM != null)
+                {
+                    @foreach (var saleBill in Model.SaleBillRefundVM)
+                    {
+                        <div class="reactionary-button">
+                            <input type="hidden" value="@saleBill.Id" class="saleBillId" />
+                            <input type="hidden" value="@saleBill.BillType" class="refundBillType" />
+                            <button>فاتورة @saleBill.Id</button>
+                            <i class="fa-solid fa-print print"></i>
+                        </div>
+
+                        <div class="reactionary-decs">
+                            <!-- Header row -->
+                            <div class="item">
+                                <span style="width:150px;height:auto;text-align:center;display: block;">الصنف</span>
+                                <span style="width:70px;height:auto;text-align:center; display: block;">السعر</span>
+                                <span style="width:70px;height:auto;text-align:center; display: block;">الكمية</span>
+                                <span style="width:70px;height:auto;text-align:center; display: block;">الخصم</span>
+                                <span style="width:70px;height:auto;text-align:center; display: block;">السعر الكلي</span>
+                                <span style="width:auto;height:auto;text-align:center; display: block;">حذف</span>
+                            </div>
+
+                            <!-- Bill items -->
+                            @if (saleBill.BillDetailRegisterVM != null)
+                            {
+                                @foreach (var itemDetails in saleBill.BillDetailRegisterVM)
+                                {
+                                    <div class="item">
+                                        <input type="hidden" value="@itemDetails.ProductId" class="productId" />
+                                        <span class="productName" style="width:150px;height:auto;text-align:center;display: block;">@itemDetails.PName</span>
+                                        <span class="price" style="width:70px;height:auto;text-align:center;display: block;">@itemDetails.Price</span>
+                                        <input type="text" class="amount" value="@itemDetails.Amount" style="width:70px;height:30px;text-align:center" />
+                                        <input type="text" class="discount" value="@itemDetails.Discount" style="width:70px;height:30px;text-align:center" />
+                                        <span class="total" style="width:70px;height:auto;text-align:center;display: block;">@itemDetails.TotalPrice</span>
+                                        <span style="width:auto;height:auto;text-align:center; display: block;">
+                                            <button class="delete-btn">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

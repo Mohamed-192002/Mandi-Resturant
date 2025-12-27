@@ -26,10 +26,10 @@
 
     @RenderBody()
 
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/assets/js/Cashier.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/assets/js/main.js" asp-append-version="true"></script>
 
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/select2/js/select2.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
     @await Component.InvokeAsync("NToastNotify")

@@ -841,6 +841,76 @@ namespace SiteFront.Areas.Cashier.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetEditBillModal(int billId)
+        {
+            try
+            {
+                // الحصول على بيانات الفاتورة
+                var saleBill = await _saleBillRepo.GetByIdAsync(billId);
+                if (saleBill == null)
+                    return Json(new { error = "الفاتورة غير موجودة" });
+
+                // الحصول على المنتجات
+                var products = await _productRepo.GetAllAsync(c => !c.IsDeleted, true);
+                var productGetVM = _mapper.Map<List<ProductGetVM>>(products);
+
+                // الحصول على الفواتير لليوم الحالي
+                var saleBills = new List<CommonDrop>
+                    {
+                        new CommonDrop
+                        {
+                            Id = saleBill.Id,
+                            Name = saleBill.Id.ToString()
+                        }
+                    };
+
+
+                // إنشاء بيانات الفاتورة للتعديل
+                var saleBillDetails = await _saleBillDetailRepo.GetAllAsync(d => d.SaleBillId == saleBill.Id);
+                var billDetailRegisterVM = new List<BillDetailRegisterVM>();
+                
+                foreach (var detail in saleBillDetails)
+                {
+                    var product = await _productRepo.GetByIdAsync(detail.ProductId);
+                    billDetailRegisterVM.Add(new BillDetailRegisterVM
+                    {
+                        SaleBillId = detail.SaleBillId,
+                        Amount = detail.Amount,
+                        Price = detail.Price,
+                        ProductId = detail.ProductId,
+                        TotalPrice = detail.TotalPrice,
+                        Discount = detail.Discount,
+                        PName = product?.Name ?? "غير محدد"
+                    });
+                }
+
+                var saleBillRefundVM = new List<SaleBillRefundVM>
+                {
+                    new SaleBillRefundVM
+                    {
+                        Id = saleBill.Id,
+                        BillType = saleBill.BillType,
+                        BillDetailRegisterVM = billDetailRegisterVM
+                    }
+                };
+
+                var saleBillMainVM = new SaleBillMainVM
+                {
+                    ProductGetVM = productGetVM,
+                    Products = _mapper.Map<List<CommonDrop>>(products),
+                    SaleBillRefundVM = saleBillRefundVM,
+                    SaleBills = saleBills
+                };
+
+                return PartialView("~/Views/Shared/_EditBillModal.cshtml", saleBillMainVM);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "حدث خطأ في تحميل بيانات الفاتورة", message = ex.Message });
+            }
+        }
+
         static async Task PrintPdfAsync(string pdfFilePath, string printerName)
         {
             // Ensure the PDF file exists

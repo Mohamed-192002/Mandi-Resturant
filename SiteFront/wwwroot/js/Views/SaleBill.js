@@ -1209,20 +1209,7 @@ async function CreateBill() {
 
 };
 
-function checkHolesAmount(billDetailRegisterVM) {
-    return $.ajax({
-        url: '/Cashier/BillSafary/CheckHolesAmount',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(billDetailRegisterVM)
-    }).then(
-        () => true,
-        () => {
-            toastr.error("الكمية الموجودة في الفاتورة غير متوفرة");
-            return false;
-        }
-    );
-}
+// function checkHolesAmount(billDetailRegisterVM) { ... } -> Moved to Cashier.js
 
 function checkDeliveryHolesAmount(checkDeliveryHoleAmountVM) {
     return $.ajax({
@@ -1260,195 +1247,21 @@ function checkDeliveryHolesAmountByTime(checkDeliveryHoleAmountVM) {
 //Delete Row
 
 
-$(".reactionary-decs").on("click", ".delete-btn", function () {
-    $(this).closest(".item").remove();
-});
+// Delete logic moved to Cashier.js
 
 
-$(".reactionary-decs").on("input", ".amount, .discount", function () {
-    const $item = $(this).closest(".item");
-    const $price = $item.find(".price");
-    const $amount = $item.find(".amount");
-    const $discount = $item.find(".discount");
-    const $total = $item.find(".total");
-
-    const updateTotal = () => {
-        const price = parseFloat($price.text()) || 0;
-        const amount = parseFloat($amount.val()) || 0;
-        const discount = parseFloat($discount.val()) || 0;
-
-        const total = amount * price - discount;
-        $total.text(total.toFixed(2)); // Update total with 2 decimal places
-    };
-
-    updateTotal(); // Update total immediately after input
-
-    // Attach the event for input changes
-    $amount.on("input", updateTotal);
-    $discount.on("input", updateTotal);
-});
+// List input logic moved to Cashier.js
 
 //Add New Item To Bill
-$(".form-reactionary form .productId").on("change", function () {
-    var productId = $(this).val();
-    var $form = $(this).closest("form");
-    var $price = $form.find(".price");
-    var $categoryId = $form.find(".categoryId");
-    var $total = $form.find(".total");
-    $.ajax({
-        type: 'GET',
-        url: '/Cashier/SaleBill/getProductPrice?productId=' + productId,
-        success: function (data) {
-            console.log(data);
-            $price.val(data.price);
-            $total.val(data.price);
-            $categoryId.val(data.categoryId);
-        },
-        error: function () {
+// Product ID change logic moved to Cashier.js
 
-        }
-    });
-});
+// Form input logic moved to Cashier.js
 
-$(".form-reactionary form").on("input", ".amount, .discount", function () {
-    var $form = $(this).closest("form");
-    var $price = $form.find(".price");
-    var $amount = $form.find(".amount");
-    var $discount = $form.find(".discount");
-    var $total = $form.find(".total");
+// Form logic moved to Cashier.js
+// $(".form-reactionary form button").on("click", ...);
 
-    var price = parseFloat($price.val()) || 0;
-    var amount = parseFloat($amount.val()) || 0;
-    var discount = parseFloat($discount.val()) || 0;
-    var total = (price * amount) - discount;
-
-    total = total < 0 ? 0 : total;
-    $total.val(total.toFixed(2));
-});
-
-$(".form-reactionary form button").on("click", function () {
-    var $form = $(this).closest("form");
-    var $billId = $form.find(".billId").val();
-    var $productId = $form.find(".productId").val();
-    var $productName = $form.find(".productId option:selected").text();
-    var $categoryId = $form.find(".categoryId").val();
-    var $price = $form.find(".price").val();
-    var $amount = parseFloat($form.find(".amount").val());
-    var $discount = parseFloat($form.find(".discount").val());
-    var $total = parseFloat($form.find(".total").val());
-
-    // console.log('$billId : ' + $billId, ' , $productId : ' + $productId, ' , $productName : ' + $productName, ' , $price : ' + $price, ' , $amount : ' + $amount, ' , $discount :' + $discount, ' , $total : ' + $total);
-    if ($billId && $productId && $productName && $price && $amount && $total) {
-        // Find the bill that matches the billId
-        $(".reactionary_wapper .reactionary-button").each(function () {
-            var currentBillId = $(this).find(".saleBillId").val();
-            if (currentBillId === $billId) {
-                var $billDesc = $(this).next(".reactionary-decs");
-                var $existingItem = $billDesc.find(".item").filter(function () {
-                    return $(this).find(".productId").val() === $productId;
-                });
-
-                if ($existingItem.length > 0) {
-                    var currentAmount = parseFloat($existingItem.find(".amount").val());
-                    var newAmount = currentAmount + $amount;
-                    $existingItem.find(".amount").val(newAmount);
-                    var newTotal = newAmount * parseFloat($price) - parseFloat($discount);
-                    $existingItem.find(".total").text(newTotal);
-                } else {
-                    // Create a new item element if the product doesn't exist
-                    var newItem = `
-                        <div class="item">
-                            <input type="hidden" value="${$categoryId}" class="categoryId">
-                            <input type="hidden" value="${$productId}" class="productId">
-                            <span class="productName" style="width:150px;height:auto;text-align:center;display: block;">${$productName}</span>
-                            <span class="price" style="width:70px;height:auto;text-align:center;display: block;">${$price}</span>
-                            <input type="text" class="amount" value="${$amount}" style="width:70px;height:30px;text-align:center">
-                            <input type="text" class="discount" value="${$discount}" style="width:70px;height:30px;text-align:center">
-                            <span class="total" style="width:70px;height:auto;text-align:center;display: block;">${$total}</span>
-                            <span style="width:auto;height:auto;text-align:center; display: block;">
-                                <button class="delete-btn">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </span>
-                        </div>
-                    `;
-                    $billDesc.append(newItem);
-                }
-
-                // Convert Modal
-                add_newItem.innerHTML = "اضافة";
-                add_newItem.style = "background: var(--color-primary)";
-                document.querySelector("header #modal.add-reactionary .form-reactionary").style = `display: none`;
-                document.querySelector("header #modal.add-reactionary .reactionary_wapper").style = `display: flex`;
-                if (!$(this).hasClass("active")) {
-                    $(this).find("button").click();
-                }
-                return false;
-            }
-        });
-    } else {
-        alert("تأكد من ادخال كل الحقول");
-    }
-});
-
-//Update Bill
-$(".fa-print").on("click", async function () {
-    const $reactionaryButton = $(this).closest(".reactionary-button");
-    const saleBillId = $reactionaryButton.find(".saleBillId").val();
-    const refundBillType = $reactionaryButton.find(".refundBillType").val();
-
-    const $reactionaryDecs = $reactionaryButton.next(".reactionary-decs");
-    const items = $reactionaryDecs.find(".item").slice(1).map(function () {
-        const $item = $(this);
-
-        const categoryId = $item.find(".categoryId").val();
-        const productId = $item.find(".productId").val();
-        const pName = $item.find(".productName").text().trim();
-        const price = parseFloat($item.find(".price").text().trim()) || 0;
-        const amount = parseFloat($item.find(".amount").val().trim()) || 0;
-        const discount = parseFloat($item.find(".discount").val().trim()) || 0;
-        const totalPrice = parseFloat($item.find(".total").text().trim()) || 0;
-
-        return {
-            categoryId,
-            productId,
-            pName,
-            price,
-            amount,
-            discount,
-            totalPrice,
-        };
-    }).get();
-
-    const SaleBillRefundVM = {
-        id: saleBillId,
-        billDetailRegisterVM: items,
-    };
-
-    const result = await checkHolesAmount(items);
-    if (!result) {
-        return;
-    }
-
-    $.ajax({
-        url: '/Cashier/BillSafary/UpdateSaleSafary',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(SaleBillRefundVM),
-        success: function (response) {
-            toastr.success("تم تعديل الفاتورة بنجاح");
-            setTimeout(function () {
-                window.location.href = "/Cashier/SaleBill/Index";
-            }, 5000);
-        },
-        error: function (xhr, status, error) {
-            toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
-            setTimeout(function () {
-                window.location.href = "/Cashier/SaleBill/Index";
-            }, 5000);
-        }
-    });
-});
+// Print logic moved to Cashier.js
+// $(".fa-print").on("click", async function () { ... });
 
 async function pasteClipboardContent() {
     try {
