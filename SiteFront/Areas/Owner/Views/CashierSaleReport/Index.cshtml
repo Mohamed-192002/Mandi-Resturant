@@ -75,6 +75,9 @@
                         <th>الكمية المباعة</th>
                         <th> اجمالي سعر البيع</th>
                         <th> اجمالي ربح المنتج</th>
+                        <th>نفر</th>
+                        <th>نصف نفر</th>
+                        <th>دجاج</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,6 +92,9 @@
                             <td>@item.TotalAmount</td>
                             <td>@item.TotalSalePrice</td>
                             <td>@item.TotalProductEarn</td>
+                            <td>@item.NafrDisplay</td>
+                            <td>@item.HalfNafrDisplay</td>
+                            <td>@item.DagagDisplay</td>
                         </tr>
                     }
                     @if (Model.EarnSaleReportVM != null && Model.EarnSaleReportVM.Count() > 0)
@@ -102,6 +108,9 @@
                             <td style="color: green;font-size: 1.25rem;"> اجمالي الربح :</td>
                             <td style="color: green;font-size: 1.25rem;">@Model.TotalEarn</td>
                             <td> ______ </td>
+                            <td style="color: blue;font-size: 1.25rem;">@(Model.TotalNafr > 0 ? Model.TotalNafr.ToString() : "-")</td>
+                            <td style="color: blue;font-size: 1.25rem;">@(Model.TotalHalfNafr > 0 ? Model.TotalHalfNafr.ToString() : "-")</td>
+                            <td style="color: blue;font-size: 1.25rem;">@(Model.TotalDagag > 0 ? Model.TotalDagag.ToString() : "-")</td>
                         </tr>
                     }
                 </tbody>

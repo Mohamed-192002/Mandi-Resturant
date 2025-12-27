@@ -504,9 +504,9 @@ namespace SiteFront.Areas.Cashier.Controllers
                     Discount = saleBillById.Discount,
                     Vat = saleBillById.Vat,
                     Notes = saleBillById.Notes,
-                    CustomerName = customer.Name,
-                    CustomerAddress = customer.Address,
-                    CustomerPhone = customer.Phone,
+                    CustomerName = customer?.Name,
+                    CustomerAddress = customer?.Address,
+                    CustomerPhone = customer?.Phone,
                     CashierName = _userRepo.GetByIdAsync(saleBillById.CreatedUser).Result.Name
                 };
                 try

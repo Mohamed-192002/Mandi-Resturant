@@ -465,7 +465,20 @@
                         <div class="close_modal">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <button id="new-reactionary">اضافة</button>
+                        
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <button id="new-reactionary">اضافة</button>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <label for="billSearchInput" style="font-size: 14px; color: #333; white-space: nowrap;">البحث:</label>
+                                <input type="text" id="billSearchInput" placeholder="رقم الفاتورة..." 
+                                       style="width: 150px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                                       oninput="filterBillsBySearch()" />
+                                <button type="button" onclick="clearBillSearch()" 
+                                        style="padding: 6px 10px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                    مسح
+                                </button>
+                            </div>
+                        </div>
                         <!-- Add new -->
                         <div class="reactionary">
                             <div class="form-reactionary">
@@ -1410,6 +1423,37 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeCustomerDeliveryTime();
         });
+
+        // Bill Search Functions
+        function filterBillsBySearch() {
+            const searchValue = document.getElementById('billSearchInput').value.trim();
+            const billButtons = document.querySelectorAll('.reactionary-button');
+            
+            billButtons.forEach(function(billButton) {
+                const billIdInput = billButton.querySelector('.saleBillId');
+                const billId = billIdInput ? billIdInput.value : '';
+                
+                // Get the corresponding bill details container
+                const billDetails = billButton.nextElementSibling;
+                
+                if (searchValue === '' || billId.includes(searchValue)) {
+                    billButton.style.display = 'flex';
+                    if (billDetails && billDetails.classList.contains('reactionary-decs')) {
+                        billDetails.style.display = 'block';
+                    }
+                } else {
+                    billButton.style.display = 'none';
+                    if (billDetails && billDetails.classList.contains('reactionary-decs')) {
+                        billDetails.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function clearBillSearch() {
+            document.getElementById('billSearchInput').value = '';
+            filterBillsBySearch();
+        }
     </script>
 }
 

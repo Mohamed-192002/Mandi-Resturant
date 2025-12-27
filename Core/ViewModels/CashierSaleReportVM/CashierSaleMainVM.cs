@@ -14,5 +14,8 @@ namespace Core.ViewModels.CashierSaleReportVM
         public List<EarnSaleReportVM>? EarnSaleReportVM { get; set; }
         public double TotalSale { get; set; }
         public double TotalEarn { get; set; }
+        public int TotalNafr { get; set; }
+        public int TotalHalfNafr { get; set; }
+        public double TotalDagag { get; set; }
     }
 }

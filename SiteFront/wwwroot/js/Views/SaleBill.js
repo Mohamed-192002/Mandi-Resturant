@@ -1439,13 +1439,13 @@ $(".fa-print").on("click", async function () {
             toastr.success("تم تعديل الفاتورة بنجاح");
             setTimeout(function () {
                 window.location.href = "/Cashier/SaleBill/Index";
-            }, 1000);
+            }, 5000);
         },
         error: function (xhr, status, error) {
             toastr.error("لم يتم حفظ الفاتورة بشكل صحيح برجاء المحاولة مرة أخري");
             setTimeout(function () {
                 window.location.href = "/Cashier/SaleBill/Index";
-            }, 1000);
+            }, 5000);
         }
     });
 });

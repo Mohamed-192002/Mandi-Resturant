@@ -51,7 +51,11 @@ namespace SiteFront.Areas.Owner.Controllers
                     ProductEarn = s.Average(p => p.Price) - _productRepo.GetByIdAsync(s.Key).Result.CostPrice,
                     TotalAmount = s.Sum(p => p.Amount),
                     TotalSalePrice = s.Average(p => p.Price) * s.Sum(p => p.Amount),
-                    TotalProductEarn = s.Sum(p => p.Amount) * (s.Average(p => p.Price) - _productRepo.GetByIdAsync(s.Key).Result.CostPrice)
+                    TotalProductEarn = s.Sum(p => p.Amount) * (s.Average(p => p.Price) - _productRepo.GetByIdAsync(s.Key).Result.CostPrice),
+                    Nafr = _productRepo.GetByIdAsync(s.Key).Result.Nafr ?? 0,
+                    HalfNafr = _productRepo.GetByIdAsync(s.Key).Result.HalfNafr ?? 0,
+                    Dagag = _productRepo.GetByIdAsync(s.Key).Result.Dagag ?? 0,
+                    HalfDagag = _productRepo.GetByIdAsync(s.Key).Result.HalfDagag ?? 0
                 }).ToList();
             var roleId = _roleRepo.SingleOrDefaultAsync(r => r.Name == "Cashier").Result.Id;
             var userIds = _userRoleRepo.GetAllAsync(u => u.RoleId == roleId).Result.Select(u => u.UserId).ToList();
@@ -69,7 +73,10 @@ namespace SiteFront.Areas.Owner.Controllers
                 EarnSaleReportVM = earnSaleReportVM,
                 Users = users.ToList(),
                 TotalSale = earnSaleReportVM.Sum(e => e.TotalSalePrice),
-                TotalEarn = earnSaleReportVM.Sum(e => e.TotalProductEarn)
+                TotalEarn = earnSaleReportVM.Sum(e => e.TotalProductEarn),
+                TotalNafr = earnSaleReportVM.Sum(e => e.TotalNafrAmount),
+                TotalHalfNafr = earnSaleReportVM.Sum(e => e.TotalHalfNafrAmount),
+                TotalDagag = earnSaleReportVM.Sum(e => e.TotalDagagAmount)
             };
             return View(cashierSaleMainVM);
         }
@@ -105,7 +112,11 @@ namespace SiteFront.Areas.Owner.Controllers
                     ProductEarn = s.Average(p => p.Price) - _productRepo.GetByIdAsync(s.Key).Result.CostPrice,
                     TotalAmount = s.Sum(p => p.Amount),
                     TotalSalePrice = s.Average(p => p.Price) * s.Sum(p => p.Amount),
-                    TotalProductEarn = s.Sum(p => p.Amount) * (s.Average(p => p.Price) - _productRepo.GetByIdAsync(s.Key).Result.CostPrice)
+                    TotalProductEarn = s.Sum(p => p.Amount) * (s.Average(p => p.Price) - _productRepo.GetByIdAsync(s.Key).Result.CostPrice),
+                    Nafr = _productRepo.GetByIdAsync(s.Key).Result.Nafr ?? 0,
+                    HalfNafr = _productRepo.GetByIdAsync(s.Key).Result.HalfNafr ?? 0,
+                    Dagag = _productRepo.GetByIdAsync(s.Key).Result.Dagag ?? 0,
+                    HalfDagag = _productRepo.GetByIdAsync(s.Key).Result.HalfDagag ?? 0
                 }).ToList();
             var roleId = _roleRepo.SingleOrDefaultAsync(r => r.Name == "Cashier").Result.Id;
             var userIds = _userRoleRepo.GetAllAsync(u => u.RoleId == roleId).Result.Select(u => u.UserId).ToList();
@@ -125,7 +136,10 @@ namespace SiteFront.Areas.Owner.Controllers
                 UserId = model.UserId,
                 BillType = model.BillType,
                 TotalSale = earnSaleReportVM.Sum(e => e.TotalSalePrice),
-                TotalEarn = earnSaleReportVM.Sum(e => e.TotalProductEarn)
+                TotalEarn = earnSaleReportVM.Sum(e => e.TotalProductEarn),
+                TotalNafr = earnSaleReportVM.Sum(e => e.TotalNafrAmount),
+                TotalHalfNafr = earnSaleReportVM.Sum(e => e.TotalHalfNafrAmount),
+                TotalDagag = earnSaleReportVM.Sum(e => e.TotalDagagAmount)
             };
             return View("Index", cashierSaleMainVM);
         }
