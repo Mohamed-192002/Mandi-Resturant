@@ -21,5 +21,8 @@ namespace Core.ViewModels.DeliveryBillVM
         public List<BillDetailRegisterVM>? BillDetailRegisterVM { get; set; }
         public TimeOnly? OrderDeliveredTime { get; set; }
         public BillType BillType { get; set; }
+        public int TotalNafr { get; set; }
+        public int TotalHalfNafr { get; set; }
+        public int TotalDagag { get; set; }
     }
 }

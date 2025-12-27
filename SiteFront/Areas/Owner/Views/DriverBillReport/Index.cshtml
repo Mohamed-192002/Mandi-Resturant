@@ -57,8 +57,11 @@
                 <thead>
                     <tr>
                         <th> تسلسل</th>
-                        <th>سائق التوصيل</th>
                         <th>رقم الفاتورة</th>
+                        <th>نفر</th>
+                        <th>نصف نفر</th>
+                        <th>دجاج</th>
+                        <th>سائق التوصيل</th>
                         <th>اجمالي الطلب</th>
                         <th> التاريخ</th>
                         <th>التحصيل</th>
@@ -69,6 +72,10 @@
                     {
                         <tr>
                             <td>@(index++)</td>
+                            <td>@item.Id</td>
+                            <td>@(item.TotalNafr > 0 ? item.TotalNafr.ToString() : "-")</td>
+                            <td>@(item.TotalHalfNafr > 0 ? item.TotalHalfNafr.ToString() : "-")</td>
+                            <td>@(item.TotalDagag > 0 ? item.TotalDagag.ToString() : "-")</td>
                             @if(item.DriverName != null)
                             {
                                 <td>@item.DriverName</td>
@@ -76,7 +83,6 @@
                             else{
                                 <td>لم يحدد</td>
                             }
-                            <td>@item.Id</td>
                             <td>@item.FinalTotal</td>
                             <td>@item.Date</td>
                             @if (item.MoneyDelivered)
@@ -93,11 +99,14 @@
                     {
                         <tr>
                             <td>@(Model.DeliveryBillGetVM.Count() + 1)</td>
+                            <td>_______</td>
+                            <td style="color: blue;font-size: 1.25rem;">@(Model.TotalTotalNafr > 0 ? Model.TotalTotalNafr.ToString() : "-")</td>
+                            <td style="color: blue;font-size: 1.25rem;">@(Model.TotalTotalHalfNafr > 0 ? Model.TotalTotalHalfNafr.ToString() : "-")</td>
+                            <td style="color: blue;font-size: 1.25rem;">@(Model.TotalTotalDagag > 0 ? Model.TotalTotalDagag.ToString() : "-")</td>
                             <td style="color: green;font-size: 1.25rem;">اجمالي المدفوع :</td>
                             <td style="color: green;font-size: 1.25rem;"> @Model.TotalPaid</td>
                             <td style="color: red;font-size: 1.25rem;">اجمالي الغير مدفوع :</td>
                             <td style="color: red;font-size: 1.25rem;">@Model.TotalUnPaid</td>
-                            <td>_______</td>
                         </tr>
                     }
                 </tbody>

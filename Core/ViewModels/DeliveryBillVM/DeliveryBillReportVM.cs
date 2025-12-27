@@ -11,5 +11,8 @@ namespace Core.ViewModels.DeliveryBillVM
         public List<DeliveryBillGetVM> DeliveryBillGetVM { get; set; } = new List<DeliveryBillGetVM>();
         public double TotalPaid { get; set; }
         public double TotalUnPaid { get; set; }
+        public int TotalTotalNafr { get; set; }
+        public int TotalTotalHalfNafr { get; set; }
+        public int TotalTotalDagag { get; set; }
     }
 }
