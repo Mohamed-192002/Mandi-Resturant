@@ -47,7 +47,7 @@ namespace SiteFront.Areas.Owner.Controllers
                     {
                         bill.TotalNafr += (product.Nafr ?? 0) * detail.Amount;
                         bill.TotalHalfNafr += (product.HalfNafr ?? 0) * detail.Amount;
-                        bill.TotalDagag += (product.Dagag ?? 0) * detail.Amount;
+                        bill.TotalDagag += ((product.Dagag ?? 0) + (product.HalfDagag ?? 0) * 0.5) * detail.Amount;
                     }
                 }
             }
@@ -96,7 +96,7 @@ namespace SiteFront.Areas.Owner.Controllers
                     {
                         bill.TotalNafr += (product.Nafr ?? 0) * detail.Amount;
                         bill.TotalHalfNafr += (product.HalfNafr ?? 0) * detail.Amount;
-                        bill.TotalDagag += (product.Dagag ?? 0) * detail.Amount;
+                        bill.TotalDagag += ((product.Dagag ?? 0) + (product.HalfDagag ?? 0) * 0.5) * detail.Amount;
                     }
                 }
             }

@@ -23,6 +23,6 @@ namespace Core.ViewModels.DeliveryBillVM
         public BillType BillType { get; set; }
         public int TotalNafr { get; set; }
         public int TotalHalfNafr { get; set; }
-        public int TotalDagag { get; set; }
+        public double TotalDagag { get; set; }
     }
 }

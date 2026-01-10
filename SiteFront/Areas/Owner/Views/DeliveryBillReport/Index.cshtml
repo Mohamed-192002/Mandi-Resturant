@@ -121,7 +121,7 @@
                             <td style="color: green;font-size: 1.25rem;" id="total-paid"> @Model.TotalPaid</td>
                             <td style="color: red;font-size: 1.25rem;">اجمالي الغير مدفوع :</td>
                             <td style="color: red;font-size: 1.25rem;" id="total-unpaid">@Model.TotalUnPaid</td>
-                            <td>_______</td>
+                            @* <td>_______</td> *@
                         </tr>
                     }
                 </tbody>
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         actionCell.innerHTML = '<span style="color: green;"><i class="fa fa-check-circle"></i> مدفوعة</span>';
                         
                         // تحديث الإجماليات
-                        updateTotals(parseFloat(row.cells[3].textContent));
+                        updateTotals(parseFloat(row.cells[6].textContent));
                         
                         // إظهار رسالة نجاح
                         showMessage('تم تحديث حالة الدفع بنجاح', 'success');

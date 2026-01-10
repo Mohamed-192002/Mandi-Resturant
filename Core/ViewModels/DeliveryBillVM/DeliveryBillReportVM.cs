@@ -13,6 +13,6 @@ namespace Core.ViewModels.DeliveryBillVM
         public double TotalUnPaid { get; set; }
         public int TotalTotalNafr { get; set; }
         public int TotalTotalHalfNafr { get; set; }
-        public int TotalTotalDagag { get; set; }
+        public double TotalTotalDagag { get; set; }
     }
 }
